@@ -19,14 +19,14 @@ namespace ProyectoFinalAp2.Controllers
                 return Modificar(productos);
         }
 
-        private static bool Insertar(Productos productos)
+        private static bool Insertar(Productos producto)
         {
             bool paso = false;
             Context contexto = new Context();
 
             try
             {
-                contexto.Productos.Add(productos);
+                contexto.Productos.Add(producto);
                 paso = contexto.SaveChanges() > 0;
             }
             catch (Exception)
