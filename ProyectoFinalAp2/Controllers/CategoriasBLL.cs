@@ -9,27 +9,27 @@ using System.Threading.Tasks;
 
 namespace ProyectoFinalAp2.Controllers
 {
-    public class CategoriaControllers
+    public class CategoriasBLL
     {
-        private readonly Context db;
-
-        public CategoriaControllers()
+        public static bool Guardar(Categorias categoria)
         {
-            db = new Context();
+            if (!Existe(categoria.CategoriaId))
+                return Insertar(categoria);
+            else
+                return Modificar(categoria);
         }
 
-        public bool Guardar(Categorias categoria)
+        private static bool Insertar(Categorias categoria)
         {
             bool paso = false;
+            Context db = new Context();
             try
             {
                 if (db.Categorias.Add(categoria) != null)
                     paso = db.SaveChanges() > 0;
-
             }
             catch (Exception)
             {
-
                 throw;
             }
             finally
@@ -40,9 +40,31 @@ namespace ProyectoFinalAp2.Controllers
             return paso;
         }
 
-        public  bool Modificar(Categorias categorias)
+        public static bool Existe(int id)
+        {
+            Context contexto = new Context();
+            bool encontrado = false;
+
+            try
+            {
+                encontrado = contexto.Categorias.Any(e => e.CategoriaId == id);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                contexto.Dispose();
+            }
+
+            return encontrado;
+        }
+
+        public static bool Modificar(Categorias categorias)
         {
             bool paso = false;
+            Context db = new Context();
 
             try
             {
@@ -62,19 +84,19 @@ namespace ProyectoFinalAp2.Controllers
             return paso;
         }
 
-        public virtual bool Eliminar(int ID)
+        public static bool Eliminar(int ID)
         {
             bool paso = false;
+            Context db = new Context();
+
             try
             {
                 var aux = db.Categorias.Find(ID);
                 db.Categorias.Remove(aux);
-
                 paso = db.SaveChanges() > 0;
             }
             catch (Exception)
             {
-
                 throw;
             }
             finally
@@ -82,13 +104,13 @@ namespace ProyectoFinalAp2.Controllers
                 db.Dispose();
             }
 
-
             return paso;
         }
 
-        public Categorias Buscar(int ID)
+        public static Categorias Buscar(int ID)
         {
             Categorias categorias = new Categorias();
+            Context db = new Context();
 
             try
             {
@@ -96,7 +118,6 @@ namespace ProyectoFinalAp2.Controllers
             }
             catch (Exception)
             {
-
                 throw;
             }
             finally
@@ -107,5 +128,23 @@ namespace ProyectoFinalAp2.Controllers
             return categorias;
         }
 
+        public static List<Categorias> GetList(Expression<Func<Categorias, bool>> criterio)
+        {
+            List<Categorias> lista = new List<Categorias>();
+            Context contexto = new Context();
+            try
+            {
+                lista = contexto.Categorias.Where(criterio).ToList();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                contexto.Dispose();
+            }
+            return lista;
+        }
     }
 }

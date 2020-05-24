@@ -31,11 +31,15 @@
     <div class="card-header">
         <label for="PRODUCTOS">PRODUCTOS</label>
         <div class="input-group">
-            <select id="dropdowntipo" class="form-control">
+            <InputSelect @bind-Value="@entradaProductos.DetalleEntrada" class="form-control" @onchange="CargarProductos" @onclick="CargarProductos">
+                <option value="" disabled selected>Seleccione un Producto</option>
+                @foreach (var item in CargarCombo())
+                {
+                    <option value="@item.">@item.Descripcion</option>
+                }
+            </InputSelect>
+            <ValidationMessage For="(() => entradaProductos.DetalleEntrada)"></ValidationMessage>
 
-                <option value="Exemplo1">Exemplo1</option>
-                <option value="Exemplo2">Exemplo2</option>
-            </select>
             <div class="input-group-append">
                 <button type="button" class="btn btn-secondary" @onclick="Recargar"><span class="icon-update"></span>Recargar</button>
             </div>
@@ -65,6 +69,14 @@
             </tr>
         </thead>
         <tbody>
+            @foreach (var producto in entradaProductos.DetalleEntrada)
+            {
+                <tr>
+                    
+                    <td><button class="btn btn-primary">Editar</button></td>
+                    <td><button class="btn btn-danger">Eliminar</button></td>
+                </tr>
+            }
         </tbody>
     </table>
 
@@ -82,11 +94,33 @@
 @code {
 
     private EntradaProductos entradaProductos;
+    Productos productos = new Productos();
 
     protected override void OnInitialized()
     {
         Nuevo();
         Buscar();
+        CargarCombo();
+    }
+
+    private void CargarProductos()
+    {
+        try
+        {
+            productos = ProductosBLL.Buscar(Convert.ToInt32(entradaProductos.DetalleEntrada));
+        }
+        catch (Exception ex)
+        {
+            toast.ShowError(ex.ToString(), "Error");
+        }
+    }
+
+    private List<Productos> CargarCombo()
+    {
+        List<Productos> lista = new List<Productos>();
+        lista = ProductosBLL.GetList(p => true);
+
+        return lista;
     }
 
     private void Nuevo()
@@ -117,7 +151,7 @@
 
     private void Agregar()
     {
-
+        
     }
 
     private void Eliminar()

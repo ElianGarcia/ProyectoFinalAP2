@@ -21,9 +21,9 @@
 
     <label for="CATEGORIAS">CATEGORIAS</label>
     <div class="form-group">
-        <InputSelect @bind-Value="@productos.Categoria" class="form-inline " @onchange="CargarCategoria" @onclick="CargarCategoria">
+        <InputSelect @bind-Value="@productos.Categoria" class="form-control" @onchange="CargarCategoria" @onclick="CargarCategoria">
             <option value="" disabled selected>Seleccione una Categoria</option>
-            @foreach (var item in ListaCategorias)
+            @foreach (var item in CargarCombo())
             {
                 <option value="@item.CategoriaId">@item.Descripcion</option>
             }
@@ -79,36 +79,31 @@
 @code {
 
     Productos productos = new Productos();
-
-    RepositorioBase<Categorias> control = new RepositorioBase<Categorias>();
-    List<Categorias> ListaCategorias = new List<Categorias>();
     Categorias Categoria = new Categorias();
 
     protected override void OnInitialized()
     {
         Nuevo();
         Buscar();
-        control = new RepositorioBase<Categorias>();
-        ListaCategorias = control.GetList(e => true);
+        CargarCombo();
     }
 
     private void CargarCategoria()
     {
         try
         {
-            Categoria = control.Buscar(Convert.ToInt32(productos.Categoria));
+            Categoria = CategoriasBLL.Buscar(Convert.ToInt32(productos.Categoria));
         }
         catch (Exception ex)
         {
-
+            toast.ShowError(ex.ToString(), "Error");
         }
     }
 
     private List<Categorias> CargarCombo()
     {
-        RepositorioBase<Categorias> repositorio = new RepositorioBase<Categorias>();
         List<Categorias> lista = new List<Categorias>();
-        lista = repositorio.GetList(p => true);
+        lista = CategoriasBLL.GetList(p => true);
 
         return lista;
     }

@@ -51,8 +51,7 @@
 
     public bool ExisteEnLaBaseDeDatos(int id)
     {
-        CategoriaControllers control = new CategoriaControllers();
-        var encontrado = control.Buscar(id);
+        var encontrado = CategoriasBLL.Buscar(id);
         bool paso = true;
 
         if (encontrado == null)
@@ -65,8 +64,7 @@
 
     public bool ExisteEnLaBaseDeDatos()
     {
-        CategoriaControllers control = new CategoriaControllers();
-        Categorias encontrado = control.Buscar(categorias.CategoriaId);
+        Categorias encontrado = CategoriasBLL.Buscar(categorias.CategoriaId);
 
         return (encontrado != null);
     }
@@ -79,18 +77,17 @@
 
     void Guardar()
     {
-        CategoriaControllers control = new CategoriaControllers();
         bool paso = true;
         if (categorias.CategoriaId == 0)
         {
-            paso = control.Guardar(categorias);
+            paso = CategoriasBLL.Guardar(categorias);
 
         }
         else
         {
             if(ExisteEnLaBaseDeDatos()) //No esta funcionando esta validacion
             {
-                paso = control.Modificar(categorias);
+                paso = CategoriasBLL.Modificar(categorias);
             }
         }
 
@@ -104,12 +101,8 @@
     void Eliminar()
     {
         bool paso= true;
-        CategoriaControllers control = new CategoriaControllers();
-
         
-        paso = control.Eliminar(categorias.CategoriaId);
-
-        
+        paso = CategoriasBLL.Eliminar(categorias.CategoriaId);
 
         if (paso)
         {
@@ -123,8 +116,7 @@
     void Buscar()
     {
         estado = "";
-        CategoriaControllers control = new CategoriaControllers();
-        Categorias auxCategoria = control.Buscar(categorias.CategoriaId);
+        Categorias auxCategoria = CategoriasBLL.Buscar(categorias.CategoriaId);
 
         if (auxCategoria != null)
         {
