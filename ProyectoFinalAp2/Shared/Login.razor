@@ -1,0 +1,74 @@
+﻿@page  "/Login"
+@using ProyectoFinalAp2.Models
+@using ProyectoFinalAp2.Controllers
+@using System.Security.Claims
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject NavigationManager NavigationManager
+@inject IJSRuntime jsRunTime
+@inject IToastService toast
+
+<EditForm Model="@user">
+    <div>
+        <img src="/Resources/Logo.jpg" asp-append-version="true" width="300px" />
+    </div>
+
+    <div>
+        <h3 style="font-weight:bold; color:darkblue">ButterSoft Login</h3>
+    </div>
+
+    <label for="PersonaID">Usuario:</label>
+    <div class="col-12 row">
+        <select class="form-control" @bind="@user.UsuarioId" @onclick="CargarUsuarios">
+            <option value="" disabled selected>Seleccione su Usuario</option>
+            @foreach (var item in CargarCombo())
+            {
+                <option value="@item.UsuarioId">@item.NombreUsuario</option>
+            }
+        </select>
+    </div>    <br />
+
+    <label for="Contraseña">Contraseña:</label>
+    <div class="col-12 row">
+        <input type="password" class="form-control col-12" @bind="user.PassWord" placeholder="Contraseña" />
+    </div>    <br />
+
+    <div class="col-12 row">
+        <span class="col-12"></span>
+        <input type="submit" class="form-control btn btn-primary" value="Login" />
+    </div>
+</EditForm>
+
+@code {
+    Usuarios user = new Usuarios();
+
+    private List<Usuarios> CargarCombo()
+    {
+        List<Usuarios> lista = new List<Usuarios>();
+
+        try
+        {
+            lista = UsuariosBLL.GetList(p => true);
+        }
+        catch (Exception ex)
+        {
+            toast.ShowError(ex.ToString(), "Error");
+        }
+
+        return lista;
+    }
+
+    private void CargarUsuarios()
+    {
+        if (user.UsuarioId > 0)
+        {
+            try
+            {
+                user = UsuariosBLL.Buscar(Convert.ToInt32(user.UsuarioId));
+            }
+            catch (Exception ex)
+            {
+                toast.ShowError(ex.ToString(), "Error");
+            }
+        }
+    }
+}

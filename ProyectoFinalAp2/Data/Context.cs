@@ -23,6 +23,16 @@ namespace ProyectoFinalAp2.Data
                 CategoriaId = 1,
                 Descripcion = "CALZADOS"
             });
+
+            model.Entity<Usuarios>().HasData(new Usuarios
+            {
+                UsuarioId = 1,
+                Nombres = "Elian Garcia",
+                NombreUsuario = "Rguez12",
+                PassWord = "uMbRelLa1772",
+                FechaIngreso = DateTime.Now,
+                Nivel = "Administrador"
+            });
         }
 
         public DbSet<Facturas> Facturas { get; set; }
