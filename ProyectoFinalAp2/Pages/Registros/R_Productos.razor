@@ -1,0 +1,167 @@
+﻿@page "/Productos"
+@using ProyectoFinalAp2.Models
+@using ProyectoFinalAp2.Controllers
+@using ProyectoFinalAp2.Data
+
+@inject IToastService toast
+
+
+
+<EditForm Model="productos" OnValidSubmit="Guardar">
+    <DataAnnotationsValidator />
+    <div class="card"> 
+        <div class="card-header">
+            <h3>Registro de Productos</h3>
+        </div>
+
+        <div class="card-body">
+            <label for="Id">ID</label>
+            <div class="input-group">
+                <InputNumber @bind-Value="productos.ProductoId" class="form-control"></InputNumber>
+                <ValidationMessage For="(() => productos.ProductoId)"></ValidationMessage>
+            </div>
+
+            <div class="input-group-append">
+                <button type="button" class="btn btn-primary" @onclick="Buscar"><span class="icon-search"></span>Buscar</button>
+            </div>
+
+            <label for="CATEGORIAS">CATEGORIAS</label>
+            <div class="form-group">
+                <InputSelect @bind-Value="@productos.Categoria" class="form-control" @onchange="CargarCategoria" @onclick="CargarCategoria">
+                    <option value="" disabled selected>Seleccione una Categoria</option>
+                    @foreach (var item in CargarCombo())
+                    {
+                        <option value="@item.CategoriaId">@item.Descripcion</option>
+                    }
+                </InputSelect>
+                <ValidationMessage For="(() => productos.Categoria)"></ValidationMessage>
+            </div>
+
+            <div class="form-group">
+                <label for="DESCRIPCION">DESCRIPCION</label>
+                <InputText @bind-Value="productos.Descripcion" class="form-control"></InputText>
+                <ValidationMessage For="(() => productos.Descripcion)"></ValidationMessage>
+            </div>
+
+            <div class="form-group">
+                <label for="COSTO">COSTO</label>
+                <InputNumber @bind-Value="productos.Costo" class="form-control"></InputNumber>
+                <ValidationMessage For="(() => productos.Costo)"></ValidationMessage>
+            </div>
+
+            <div class="form-group">
+                <label for="PRECIO">PRECIO</label>
+                <InputNumber @bind-Value="productos.Precio" class="form-control"></InputNumber>
+                <ValidationMessage For="(() => productos.Precio)"></ValidationMessage>
+            </div>
+
+            <div class="form-group">
+                <label for="GANANCIA">GANANCIA</label>
+                <InputNumber @bind-Value="productos.Ganancia" class="form-control"></InputNumber>
+                <ValidationMessage For="(() => productos.Ganancia)"></ValidationMessage>
+            </div>
+
+            <div class="form-group">
+                <label for="FECHA">FECHA</label>
+                <InputDate @bind-Value="productos.Fecha" class="form-control"></InputDate>
+                <ValidationMessage For="(() => productos.Fecha)"></ValidationMessage>
+            </div>
+
+            <div class="form-group">
+                <label for="CANTIDAD">CANTIDAD</label>
+                <InputNumber @bind-Value="productos.Cantidad" class="form-control"></InputNumber>
+                <ValidationMessage For="(() => productos.Cantidad)"></ValidationMessage>
+            </div>
+
+            <div class="form-group">
+                <button type="button" class="btn btn-secondary" @onclick="Nuevo"><span class="icon-add"></span> Nuevo </button>
+                <button type="submit" class="btn btn-success" @onclick="Guardar"><span class="icon-save"></span> Guardar </button>
+                <button type="button" class="btn btn-danger" @onclick="Eliminar"><span class="icon-delete_forever"></span> Eliminar </button>
+            </div>
+        </div>
+    </div>
+</EditForm>
+
+
+@code {
+
+    Productos productos = new Productos();
+    Categorias Categoria = new Categorias();
+
+    protected override void OnInitialized()
+    {
+        Nuevo();
+        Buscar();
+        CargarCombo();
+    }
+
+    private void CargarCategoria()
+    {
+        try
+        {
+            Categoria = CategoriasBLL.Buscar(Convert.ToInt32(productos.Categoria));
+        }
+        catch (Exception ex)
+        {
+            toast.ShowError(ex.ToString(), "Error");
+        }
+    }
+
+    private List<Categorias> CargarCombo()
+    {
+        List<Categorias> lista = new List<Categorias>();
+        lista = CategoriasBLL.GetList(p => true);
+
+        return lista;
+    }
+
+    private void Nuevo()
+    {
+        productos = new Productos();
+    }
+
+    private void Guardar()
+    {
+        bool guardado = ProductosBLL.Guardar(productos);
+
+        if (guardado)
+        {
+            Nuevo();
+            toast.ShowSuccess("Guardado Corectamente");
+        }
+        else
+        {
+            toast.ShowError("No se pudo guardar");
+        }
+    }
+
+    private void Eliminar()
+    {
+        bool eliminado;
+
+        eliminado = ProductosBLL.Eliminar(productos.ProductoId);
+
+        if (eliminado)
+        {
+            Nuevo();
+            toast.ShowSuccess("Eliminado correctamente");
+        }
+        else
+        {
+            toast.ShowError("No se pudo eliminar");
+        }
+    }
+
+    private void Buscar()
+    {
+        if (productos.ProductoId > 0)
+        {
+            var Encontrado = ProductosBLL.Buscar(productos.ProductoId);
+
+            if (Encontrado != null)
+            {
+                this.productos = Encontrado;
+            }
+        }
+    }
+}

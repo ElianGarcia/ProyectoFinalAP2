@@ -10,12 +10,11 @@
 <EditForm Model="lista" OnValidSubmit="Imprimir">
     <DataAnnotationsValidator />
     <div class="input-group">
-        <input class="ml-3" type="checkbox" @bind-value="BuscarFecha" id="defaultCheck1"> Filtrar por Fecha
-        &emsp;
+        <input class="ml-3 mr-3" type="checkbox" @bind-value="BuscarFecha" id="defaultCheck1"> Filtrar por Fecha
         <label for="DesdeFecha">Desde: </label>
         <input id="DesdeFecha" type="date" @bind-value="DesdeFecha" class="form-control" input />
 
-        <label for="HastaFechaInput">&nbsp;&nbsp;Hasta: </label>
+        <label for="HastaFechaInput"class="mr-3">Hasta: </label>
         <input type="date" Id="HastaFechaInput" @bind-value="HastaFecha" class="form-control" />
     </div><br />
 

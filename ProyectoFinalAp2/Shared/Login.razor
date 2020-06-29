@@ -16,21 +16,15 @@
         <h3 style="font-weight:bold; color:darkblue">ButterSoft Login</h3>
     </div>
 
-    <label for="PersonaID">Usuario:</label>
+    <label for="Usuario">Nombre de Usuario:</label>
     <div class="col-12 row">
-        <select class="form-control" @bind="@user.UsuarioId" @onclick="CargarUsuarios">
-            <option value="" disabled selected>Seleccione su Usuario</option>
-            @foreach (var item in CargarCombo())
-            {
-                <option value="@item.UsuarioId">@item.NombreUsuario</option>
-            }
-        </select>
-    </div>    <br />
-
+        <input type="text" class="form-control col-12" @bind="user.NombreUsuario" placeholder="Contraseña" />
+    </div>
+    
     <label for="Contraseña">Contraseña:</label>
     <div class="col-12 row">
         <input type="password" class="form-control col-12" @bind="user.PassWord" placeholder="Contraseña" />
-    </div>    <br />
+    </div>
 
     <div class="col-12 row">
         <span class="col-12"></span>
@@ -41,34 +35,5 @@
 @code {
     Usuarios user = new Usuarios();
 
-    private List<Usuarios> CargarCombo()
-    {
-        List<Usuarios> lista = new List<Usuarios>();
-
-        try
-        {
-            lista = UsuariosBLL.GetList(p => true);
-        }
-        catch (Exception ex)
-        {
-            toast.ShowError(ex.ToString(), "Error");
-        }
-
-        return lista;
-    }
-
-    private void CargarUsuarios()
-    {
-        if (user.UsuarioId > 0)
-        {
-            try
-            {
-                user = UsuariosBLL.Buscar(Convert.ToInt32(user.UsuarioId));
-            }
-            catch (Exception ex)
-            {
-                toast.ShowError(ex.ToString(), "Error");
-            }
-        }
-    }
+    
 }

@@ -1,0 +1,53 @@
+﻿@page "/Reportes/Productos"
+@using ProyectoFinalAp2.Models;
+@using ProyectoFinalAp2.Controllers;
+
+<div class="card">
+    <div class="card-header">
+        <label for="FECHA" class="align-self-end">FECHA: @Fecha </label>
+
+        <div class="form-group">
+            <img class="align-content-center" src="C:\Users\Elian\source\repos\ProyectoFinalAp2-master\ProyectoFinalAp2-master\ProyectoFinalAp2\Resources\Logo.jpg" />
+        </div>
+
+        <h3 class="text-center text-black-50">ButterSoft</h3>
+        <h3 class="text-center text-black-50">Reporte de Productos</h3>
+    </div>
+
+    <div class="card-body">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th> ID de Producto </th>
+                    <th> Descripcion </th>
+                    <th> Cantidad </th>
+                    <th> Precio </th>
+                </tr>
+            </thead>
+            <tbody class="table-striped">
+                @foreach (var producto in Lista)
+                {
+                <tr>
+                    <td>@producto.ProductoId</td>
+                    <td>@producto.Descripcion</td>
+                    <td>@producto.Cantidad</td>
+                    <td>@producto.Precio</td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+
+@code {
+    List<Productos> Lista = new List<Productos>();
+    String Fecha;
+
+    protected override void OnInitialized()
+    {
+        Fecha = DateTime.Now.ToShortDateString();
+        Lista = ProductosBLL.GetList(e => true);
+    }
+}
