@@ -2,20 +2,29 @@
 @inject NavigationManager NavigationManager
 @inject AuthenticationStateProvider AuthenticationStateProvider
 
-<div class="sidebar">
-    <NavMenu/>
-</div>
+<AuthorizeView>
+    <Authorized>
+        <div class="sidebar">
+            <NavMenu />
+        </div>
 
-<div class="main">
-    <div class="top-row px-4">
-        <!-- BLAZOR COOKIE Auth Code (begin) -->
-        <Login />
-        <!-- BLAZOR COOKIE Auth Code (end) -->
-    </div>
+        <div class="main">
+            <div class="top-row px-4">
 
-    <div class="content px-4">
-        @Body
-    </div>
-</div>
+            </div>
+        </div>
+
+    </Authorized>
+
+    <NotAuthorized>
+        <div class="main">
+            <div class="content px-4">
+                <Login />
+                @Body
+            </div>
+        </div>
+    </NotAuthorized>
+
+</AuthorizeView>
 
 <BlazoredToasts />

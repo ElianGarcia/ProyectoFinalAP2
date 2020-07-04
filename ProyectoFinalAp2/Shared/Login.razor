@@ -12,28 +12,118 @@
 @inject IJSRuntime jsRunTime
 @inject IToastService toast
 
-<AuthorizeView>
-    <Authorized>
-        <b>Hola, @context.User.Identity.Name!</b>
-        <a class="ml-md-auto btn btn-primary"
-           href="/logout?returnUrl=/"
-           target="_top">Logout</a>
-    </Authorized>
-    <NotAuthorized>
-        <input class="form-control mr-3" type="text"
-               placeholder="Nombre de Usuario"
-               @bind="@Username"/>
-        
-        <input class="form-control mr-3" type="password"
-               placeholder="Contraseña"
-               @bind="@Password" />
-                     
-        <a class="ml-md-auto btn btn-primary"
-           href="/login?paramUsername=@encode(@Username)&paramPassword=@encode(@Password)"
-           target="_top">Login</a>
+<!DOCTYPE html>
+<html>
+<head>
 
-    </NotAuthorized>
-</AuthorizeView>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <link href="../wwwroot/css/Login.css" rel="stylesheet" />
+
+    <style>
+
+    html, body { background-image: url('https://c4.wallpaperflare.com/wallpaper/311/864/40/minimalism-blue-green-gradient-wallpaper-preview.jpg'); 
+                 background-size: cover; 
+                 background-repeat: no-repeat; height: 100%; font-family: 'Lucida Console', sans-serif; }
+
+        .container {
+            height: 100%;
+            align-content: center;
+        }
+
+        .card {
+            height: 370px;
+            margin-top: auto;
+            margin-bottom: auto;
+            width: 400px;
+            background-color: rgba(0,0,0,0.5) !important;
+        }
+
+        .card-header h3 {
+            color: white;
+        }
+
+        .login_btn {
+            color: black;
+            background-color: #2874A6;
+        }
+
+            .login_btn:hover {
+                color: black;
+                background-color: white;
+            }
+
+        .input-group-prepend span {
+            width: 50px;
+            background-color: #FFC312;
+            color: black;
+            border: 0 !important;
+        }
+
+        input:focus {
+            outline: 0 0 0 0 !important;
+            box-shadow: 0 0 0 0 !important;
+        }
+
+        .links {
+            color: white;
+        }
+
+            .links a {
+                margin-left: 4px;
+            }
+    </style>
+
+</head>
+
+<body>
+    <AuthorizeView>
+        <Authorized>
+            <b>Hola, @context.User.Identity.Name!</b>
+            <a class="ml-md-auto btn btn-primary"
+               href="/logout?returnUrl=/"
+               target="_top">Logout</a>
+        </Authorized>
+        <NotAuthorized>
+            <div class="container">
+                <div class="d-flex justify-content-center h-100">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Login</h3>
+                        </div>
+                        <div class="card-body">
+                            <form>
+                                <div class="input-group form-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fas fa-user"></i></span>
+                                    </div>
+                                    <input type="text" class="form-control" placeholder="Nombre de Usuario" @bind="@Username">
+
+                                </div>
+                                <div class="input-group form-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fas fa-key"></i></span>
+                                    </div>
+                                    <input type="password" class="form-control" placeholder="Contraseña" @bind="@Password">
+                                </div>
+                                <div class="form-group">
+                                    <input type="submit" value="Login" class="btn btn-outline-light form-control" href="/login?paramUsername=@encode(@Username)&paramPassword=@encode(@Password)">
+                                </div>
+                            </form>
+                        </div>
+                        <div class="card-footer">
+                            <div class="d-flex justify-content-center">
+                                <a href="#">Olvide mi contraseña!</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </NotAuthorized>
+    </AuthorizeView>
+</body>
+</html>
+
 
 @code {
     string Username;
