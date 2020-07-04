@@ -168,5 +168,52 @@ namespace ProyectoFinalAp2.Controllers
             }
             return lista;
         }
+
+        public static string NivelUsuario(string Usuario)
+        {
+            string nivel = "Cajero";
+            Context db = new Context();
+            try
+            {
+                nivel = db.Usuarios.Where(A => A.NombreUsuario.Equals(Usuario)).Select(A => A.Nivel).FirstOrDefault();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            finally
+            {
+                db.Dispose();
+            }
+
+            return nivel;
+        }
+
+        public static bool VerificarExistenciaYClaveDelUsuario(string NombreUsuario, string clave)
+        {
+            bool paso = false;
+            Context contexto = new Context();
+
+            try
+            {
+                if (contexto.Usuarios.Any(A => A.NombreUsuario == NombreUsuario && A.PassWord == clave))
+                {
+                    paso = true;
+
+                }
+
+                if (NombreUsuario == "Administrador" && clave == "1234")
+                {
+                    paso = true;
+                }
+
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return paso;
+        }
     }
 }

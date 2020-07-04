@@ -3,12 +3,14 @@
 @inject AuthenticationStateProvider AuthenticationStateProvider
 
 <div class="sidebar">
-    <NavMenu />
+    <NavMenu/>
 </div>
 
 <div class="main">
     <div class="top-row px-4">
-        <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
+        <!-- BLAZOR COOKIE Auth Code (begin) -->
+        <Login />
+        <!-- BLAZOR COOKIE Auth Code (end) -->
     </div>
 
     <div class="content px-4">

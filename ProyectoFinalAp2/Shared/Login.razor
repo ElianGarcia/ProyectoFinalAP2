@@ -1,39 +1,47 @@
 ﻿@page  "/Login"
 @using ProyectoFinalAp2.Models
 @using ProyectoFinalAp2.Controllers
+@using ProyectoFinalAp2.Pages.Login
 @using System.Security.Claims
+@using Microsoft.AspNetCore.Authentication;
+@using Microsoft.AspNetCore.Authentication.Cookies;
+@using System.Web;
+
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject NavigationManager NavigationManager
 @inject IJSRuntime jsRunTime
 @inject IToastService toast
 
-<EditForm Model="@user">
-    <div>
-        <img src="/Resources/Logo.jpg" asp-append-version="true" width="300px" />
-    </div>
+<AuthorizeView>
+    <Authorized>
+        <b>Hola, @context.User.Identity.Name!</b>
+        <a class="ml-md-auto btn btn-primary"
+           href="/logout?returnUrl=/"
+           target="_top">Logout</a>
+    </Authorized>
+    <NotAuthorized>
+        <input class="form-control mr-3" type="text"
+               placeholder="Nombre de Usuario"
+               @bind="@Username"/>
+        
+        <input class="form-control mr-3" type="password"
+               placeholder="Contraseña"
+               @bind="@Password" />
+                     
+        <a class="ml-md-auto btn btn-primary"
+           href="/login?paramUsername=@encode(@Username)&paramPassword=@encode(@Password)"
+           target="_top">Login</a>
 
-    <div>
-        <h3 style="font-weight:bold; color:darkblue">ButterSoft Login</h3>
-    </div>
-
-    <label for="Usuario">Nombre de Usuario:</label>
-    <div class="col-12 row">
-        <input type="text" class="form-control col-12" @bind="user.NombreUsuario" placeholder="Contraseña" />
-    </div>
-    
-    <label for="Contraseña">Contraseña:</label>
-    <div class="col-12 row">
-        <input type="password" class="form-control col-12" @bind="user.PassWord" placeholder="Contraseña" />
-    </div>
-
-    <div class="col-12 row">
-        <span class="col-12"></span>
-        <input type="submit" class="form-control btn btn-primary" value="Login" />
-    </div>
-</EditForm>
+    </NotAuthorized>
+</AuthorizeView>
 
 @code {
-    Usuarios user = new Usuarios();
+    string Username;
+    string Password;
+    string message = "Usuario / contraseña incorrectos";
 
-    
+    private string encode(string param)
+    {
+        return HttpUtility.UrlEncode(param);
+    }
 }

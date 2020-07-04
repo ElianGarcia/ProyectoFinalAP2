@@ -14,6 +14,9 @@ using ProyectoFinalAp2.Controllers;
 using ProyectoFinalAp2.Data;
 using ProyectoFinalAp2.Models;
 using Blazored.Toast;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Http;
+using System.Net.Http;
 
 namespace ProyectoFinalAp2
 {
@@ -30,8 +33,30 @@ namespace ProyectoFinalAp2
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            // ******
+            // BLAZOR COOKIE Auth Code (begin)
+            services.Configure<CookiePolicyOptions>(options =>
+            {
+                options.CheckConsentNeeded = context => true;
+                options.MinimumSameSitePolicy = SameSiteMode.None;
+            });
+            services.AddAuthentication(
+                CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie();
+            // BLAZOR COOKIE Auth Code (end)
+            // ******
             services.AddRazorPages();
             services.AddServerSideBlazor();
+            // ******
+            // BLAZOR COOKIE Auth Code (begin)
+            // From: https://github.com/aspnet/Blazor/issues/1554
+            // HttpContextAccessor
+            services.AddHttpContextAccessor();
+            services.AddScoped<HttpContextAccessor>();
+            services.AddHttpClient();
+            services.AddScoped<HttpClient>();
+            // BLAZOR COOKIE Auth Code (end)
+            // ******
             services.AddBlazoredToast();
             services.AddScoped<Categorias>();
             services.AddScoped<Clientes>();
@@ -56,10 +81,24 @@ namespace ProyectoFinalAp2
 
             app.UseRouting();
 
+            // ******
+            // BLAZOR COOKIE Auth Code (begin)
+            app.UseHttpsRedirection();
+            app.UseStaticFiles();
+            app.UseCookiePolicy();
+            app.UseAuthentication();
+            // BLAZOR COOKIE Auth Code (end)
+            // ******
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapBlazorHub();
                 endpoints.MapFallbackToPage("/_Host");
+                // ******
+                // BLAZOR COOKIE Auth Code (begin)
+                endpoints.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}");
+                // BLAZOR COOKIE Auth Code (end)
+                // ******
             });
         }
     }

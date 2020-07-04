@@ -238,6 +238,17 @@ namespace ProyectoFinalAp2.Migrations
                     b.HasKey("UsuarioId");
 
                     b.ToTable("Usuarios");
+
+                    b.HasData(
+                        new
+                        {
+                            UsuarioId = 1,
+                            FechaIngreso = new DateTime(2020, 7, 4, 11, 2, 33, 321, DateTimeKind.Local).AddTicks(3464),
+                            Nivel = "Administrador",
+                            NombreUsuario = "Rguez12",
+                            Nombres = "Elian Garcia",
+                            PassWord = "uMbRelLa1772"
+                        });
                 });
 
             modelBuilder.Entity("Entidades.DetalleEntradaProductos", b =>
