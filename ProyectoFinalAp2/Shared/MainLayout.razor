@@ -10,7 +10,13 @@
 
         <div class="main">
             <div class="top-row px-4">
-
+                <b>Hola, @context.User.Identity.Name!</b>
+                <a class="ml-md-auto btn btn-primary"
+                   href="/logout?returnUrl=/"
+                   target="_top">Logout</a>
+            </div>
+            <div class="content px-4">
+                @Body
             </div>
         </div>
 
@@ -20,7 +26,6 @@
         <div class="main">
             <div class="content px-4">
                 <Login />
-                @Body
             </div>
         </div>
     </NotAuthorized>

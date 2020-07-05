@@ -9,8 +9,8 @@ using ProyectoFinalAp2.Data;
 namespace ProyectoFinalAp2.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20200704150233_third_Migration")]
-    partial class third_Migration
+    [Migration("20200705121144_New_Migration")]
+    partial class New_Migration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -245,7 +245,7 @@ namespace ProyectoFinalAp2.Migrations
                         new
                         {
                             UsuarioId = 1,
-                            FechaIngreso = new DateTime(2020, 7, 4, 11, 2, 33, 321, DateTimeKind.Local).AddTicks(3464),
+                            FechaIngreso = new DateTime(2020, 7, 5, 8, 11, 43, 693, DateTimeKind.Local).AddTicks(9657),
                             Nivel = "Administrador",
                             NombreUsuario = "Rguez12",
                             Nombres = "Elian Garcia",

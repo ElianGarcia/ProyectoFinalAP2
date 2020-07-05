@@ -15,7 +15,6 @@ namespace ProyectoFinalAp2.Pages.Login
     public class LoginModel : PageModel
     {
         public string ReturnUrl { get; set; }
-        public static bool success;
 
         private string getNivel(string paramUsername)
         {
@@ -50,8 +49,7 @@ namespace ProyectoFinalAp2.Pages.Login
                 };
             } catch(Exception e)
             {
-                success = false;
-                Console.WriteLine("Usuario / Contraseña invalidos");
+
             }
             
             if (paramUsername == null || paramPassword == null)
@@ -89,7 +87,7 @@ namespace ProyectoFinalAp2.Pages.Login
             {
                 string error = ex.Message;
             }
-            success = true;
+
             return LocalRedirect(ReturnUrl);
         }
     }

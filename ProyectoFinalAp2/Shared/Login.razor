@@ -22,9 +22,13 @@
 
     <style>
 
-    html, body { background-image: url('https://c4.wallpaperflare.com/wallpaper/311/864/40/minimalism-blue-green-gradient-wallpaper-preview.jpg'); 
-                 background-size: cover; 
-                 background-repeat: no-repeat; height: 100%; font-family: 'Lucida Console', sans-serif; }
+        html, body {
+            background-image: url('https://c4.wallpaperflare.com/wallpaper/311/864/40/minimalism-blue-green-gradient-wallpaper-preview.jpg');
+            background-size: cover;
+            background-repeat: no-repeat;
+            height: 100%;
+            font-family: 'Lucida Console', sans-serif;
+        }
 
         .container {
             height: 100%;
@@ -78,12 +82,6 @@
 
 <body>
     <AuthorizeView>
-        <Authorized>
-            <b>Hola, @context.User.Identity.Name!</b>
-            <a class="ml-md-auto btn btn-primary"
-               href="/logout?returnUrl=/"
-               target="_top">Logout</a>
-        </Authorized>
         <NotAuthorized>
             <div class="container">
                 <div class="d-flex justify-content-center h-100">
@@ -106,9 +104,9 @@
                                     </div>
                                     <input type="password" class="form-control" placeholder="Contraseña" @bind="@Password">
                                 </div>
-                                <div class="form-group">
-                                    <input type="submit" value="Login" class="btn btn-outline-light form-control" href="/login?paramUsername=@encode(@Username)&paramPassword=@encode(@Password)">
-                                </div>
+
+                                    <a class="btn btn-outline-light form-control" type="submit" href="/login?paramUsername=@encode(@Username)&paramPassword=@encode(@Password)"> Login </a>
+
                             </form>
                         </div>
                         <div class="card-footer">
@@ -134,4 +132,5 @@
     {
         return HttpUtility.UrlEncode(param);
     }
+
 }

@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace ProyectoFinalAp2.Migrations
 {
-    public partial class third_Migration : Migration
+    public partial class New_Migration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -163,7 +163,7 @@ namespace ProyectoFinalAp2.Migrations
             migrationBuilder.InsertData(
                 table: "Usuarios",
                 columns: new[] { "UsuarioId", "FechaIngreso", "Nivel", "NombreUsuario", "Nombres", "PassWord" },
-                values: new object[] { 1, new DateTime(2020, 7, 4, 11, 2, 33, 321, DateTimeKind.Local).AddTicks(3464), "Administrador", "Rguez12", "Elian Garcia", "uMbRelLa1772" });
+                values: new object[] { 1, new DateTime(2020, 7, 5, 8, 11, 43, 693, DateTimeKind.Local).AddTicks(9657), "Administrador", "Rguez12", "Elian Garcia", "uMbRelLa1772" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_DetalleEntradaProductos_EntradaProductosEntradaProductoId",

@@ -243,7 +243,7 @@ namespace ProyectoFinalAp2.Migrations
                         new
                         {
                             UsuarioId = 1,
-                            FechaIngreso = new DateTime(2020, 7, 4, 11, 2, 33, 321, DateTimeKind.Local).AddTicks(3464),
+                            FechaIngreso = new DateTime(2020, 7, 5, 8, 11, 43, 693, DateTimeKind.Local).AddTicks(9657),
                             Nivel = "Administrador",
                             NombreUsuario = "Rguez12",
                             Nombres = "Elian Garcia",
