@@ -9,7 +9,13 @@
     <DataAnnotationsValidator />
     <div class="card">
         <div class="card-header  alert-info">
-            <h3>Consulta de Productos</h3>
+            <div class="text-center">
+                <img src="Resources/favicon.ico" height="90" />
+            </div>
+
+            <div class="text-center">
+                <h3 class="text-center text-black-50">Consulta de Productos</h3>
+            </div>
         </div>
 
         <div class="card-body">
@@ -20,15 +26,18 @@
                     <label for="DesdeFecha">Filtrar por fecha</label>
                 </div>
 
-                <div class="form-group col">
-                    <label for="DesdeFecha">Desde: </label>
-                    <input id="DesdeFecha" type="date" @bind-value="DesdeFecha" class="form-control" input />
-                </div>
+                @if (BuscarFecha)
+                {
+                    <div class="form-group col">
+                        <label for="DesdeFecha">Desde: </label>
+                        <input id="DesdeFecha" type="date" @bind-value="DesdeFecha" class="form-control" input />
+                    </div>
 
-                <div class="form-group col">
-                    <label for="HastaFechaInput" class="mr-3">Hasta: </label>
-                    <input type="date" Id="HastaFechaInput" @bind-value="HastaFecha" class="form-control" />
-                </div>
+                    <div class="form-group col">
+                        <label for="HastaFechaInput" class="mr-3">Hasta: </label>
+                        <input type="date" Id="HastaFechaInput" @bind-value="HastaFecha" class="form-control" />
+                    </div>
+                }
 
                 <div class="form-group col">
                     <label for="filtro">Filtro: </label>

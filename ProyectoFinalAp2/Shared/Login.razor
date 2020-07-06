@@ -23,7 +23,7 @@
     <style>
 
         html, body {
-            background-image: url('https://c4.wallpaperflare.com/wallpaper/311/864/40/minimalism-blue-green-gradient-wallpaper-preview.jpg');
+            background-image: url('Resources/Background.jpg');
             background-size: cover;
             background-repeat: no-repeat;
             height: 100%;
@@ -47,6 +47,17 @@
             color: white;
         }
 
+        .social_icon span {
+            font-size: 60px;
+            margin-left: 10px;
+            color: #03968d;
+        }
+
+            .social_icon span:hover {
+                color: white;
+                cursor: pointer;
+            }
+
         .login_btn {
             color: black;
             background-color: #2874A6;
@@ -54,12 +65,12 @@
 
             .login_btn:hover {
                 color: black;
-                background-color: white;
+                background-color: #03968d;
             }
 
         .input-group-prepend span {
             width: 50px;
-            background-color: #FFC312;
+            background-color: #03968d;
             color: black;
             border: 0 !important;
         }
@@ -90,6 +101,10 @@
                 <div class="d-flex justify-content-center h-100">
                     <div class="card">
                         <div class="card-header">
+                            <div class="d-flex justify-content-end social_icon">
+                                <img src="Resources/Logo.jpg" height="70" />
+                            </div>
+
                             <h3>Login</h3>
                         </div>
                         <div class="card-body">

@@ -7,6 +7,8 @@
 
   <ItemGroup>
     <None Include="wwwroot\favicon.ico" />
+    <None Include="wwwroot\Resources\Background.jpg" />
+    <None Include="wwwroot\Resources\Logo.jpg" />
   </ItemGroup>
 
   <ItemGroup>
@@ -27,18 +29,6 @@
 
   <ItemGroup>
     <Folder Include="Data\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="syncfusion.htmltopdfconverter.qtwebkit.net.core\18.1.0.52\lib\QtBinariesWindows\platforms\qminimal.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="syncfusion.htmltopdfconverter.qtwebkit.net.core\18.1.0.52\lib\QtBinariesWindows\platforms\qoffscreen.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="syncfusion.htmltopdfconverter.qtwebkit.net.core\18.1.0.52\lib\QtBinariesWindows\platforms\qwindows.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
 
 </Project>

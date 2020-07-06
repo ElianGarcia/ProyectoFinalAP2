@@ -1,4 +1,5 @@
 ﻿@page "/Productos"
+@page "/Productos/{ProductoId:int}"
 @using ProyectoFinalAp2.Models
 @using ProyectoFinalAp2.Controllers
 @using ProyectoFinalAp2.Data
@@ -7,7 +8,7 @@
 
 <EditForm Model="productos" OnValidSubmit="Guardar">
     <DataAnnotationsValidator />
-    <div class="card"> 
+    <div class="card">
         <div class="card-header  alert-info">
             <h3>Registro de Productos</h3>
         </div>
@@ -42,31 +43,37 @@
             </div>
 
             <div class="form-group">
-                <label for="DESCRIPCION">DESCRIPCION</label>
+                <label for="DESCRIPCION">Descripcion</label>
                 <InputText @bind-Value="productos.Descripcion" class="form-control"></InputText>
                 <ValidationMessage For="(() => productos.Descripcion)"></ValidationMessage>
             </div>
 
             <div class="form-group">
-                <label for="CANTIDAD">CANTIDAD</label>
+                <label for="CANTIDAD">Cantidad</label>
                 <InputNumber @bind-Value="productos.Cantidad" class="form-control"></InputNumber>
                 <ValidationMessage For="(() => productos.Cantidad)"></ValidationMessage>
             </div>
 
             <div class="form-group">
-                <label for="COSTO">COSTO</label>
+                <label for="REORDEN">Reorden</label>
+                <InputNumber @bind-Value="productos.Reorden" class="form-control"></InputNumber>
+                <ValidationMessage For="(() => productos.Reorden)"></ValidationMessage>
+            </div>
+
+            <div class="form-group">
+                <label for="COSTO">Costo</label>
                 <InputNumber @bind-Value="productos.Costo" class="form-control" step="00.2" @onfocusout="@CalcularGanancia"></InputNumber>
                 <ValidationMessage For="(() => productos.Costo)"></ValidationMessage>
             </div>
 
             <div class="form-group">
-                <label for="PRECIO">PRECIO</label>
+                <label for="PRECIO">Precio</label>
                 <InputNumber @bind-Value="productos.Precio" class="form-control" step="00.2" @onfocusout="@CalcularGanancia"></InputNumber>
                 <ValidationMessage For="(() => productos.Precio)"></ValidationMessage>
             </div>
 
             <div class="form-group">
-                <label for="GANANCIA">GANANCIA</label>
+                <label for="GANANCIA">Ganancia</label>
                 <InputNumber @bind-Value="productos.Ganancia" class="form-control" step="00.2" readonly="true"></InputNumber>
                 <ValidationMessage For="(() => productos.Ganancia)"></ValidationMessage>
             </div>
@@ -82,6 +89,8 @@
 
 
 @code {
+    [Parameter]
+    public int ProductoId { get; set; }
 
     Productos productos = new Productos();
     Categorias Categoria = new Categorias();
@@ -116,9 +125,9 @@
 
     private void CalcularGanancia()
     {
-        if(productos.Precio > 0 & productos.Costo > 0)
+        if (productos.Precio > 0 & productos.Costo > 0)
         {
-           productos.Ganancia = productos.Precio - productos.Costo;
+            productos.Ganancia = productos.Precio - productos.Costo;
         }
     }
 

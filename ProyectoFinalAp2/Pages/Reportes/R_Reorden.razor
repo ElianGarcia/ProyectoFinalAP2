@@ -1,0 +1,88 @@
+﻿@page "/Reportes/Reorden"
+@using ProyectoFinalAp2.Models;
+@using ProyectoFinalAp2.Controllers;
+
+    <div class="card">
+        <div class="card-header alert-info">
+            <div class="text-center">
+                <img src="Resources/favicon.ico" height="90" />
+            </div>
+
+            <div class="text-center">
+                <h3 class="text-center text-black-50">ButterSoft</h3>
+                <h3 class="text-center text-black-50">Reporte de Reorden</h3>
+            </div>
+
+            <div class="float-right mb-4">
+                <label for="FECHA">Fecha de impresion: @Fecha </label>
+            </div>
+        </div>
+
+        <div class="card-body">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th> ID de Producto </th>
+                        <th> Descripcion </th>
+                        <th> Reorden </th>
+                        <th> Cantidad Actual </th>
+                    </tr>
+                </thead>
+                <tbody class="table-striped">
+                    @foreach (var producto in auxLista)
+                    {
+                        <tr>
+                            <td>@producto.ProductoId</td>
+                            <td>@producto.Descripcion</td>
+                            <td>@producto.Reorden</td>
+                            <td>@producto.Cantidad</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <div class="card-footer">
+            <label for="GANANCIA">Cantidad Total</label>
+            <input @bind="@Total" class="form-control" step="00.2" readonly />
+        </div>
+    </div>
+
+
+@code {
+    List<Productos> Lista = new List<Productos>();
+    List<Productos> auxLista = new List<Productos>();
+    String Fecha;
+    decimal Total = 0;
+
+    protected override void OnInitialized()
+    {
+        Fecha = DateTime.Now.ToShortDateString();
+        Reorden();
+        CalcularTotal();
+    }
+
+    private void Reorden()
+    {
+        Lista = ProductosBLL.GetList(e => true);
+
+        foreach (var producto in Lista)
+        {
+            if(producto.Cantidad <= producto.Reorden)
+            {
+                auxLista.Add(producto);
+            }
+        }
+    }
+
+    private decimal CalcularTotal()
+    {
+        Total = 0;
+
+        foreach (var producto in Lista)
+        {
+            Total += producto.Cantidad;
+        }
+        return Total;
+    }
+}

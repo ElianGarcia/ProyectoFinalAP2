@@ -64,16 +64,16 @@
                     </tr>
                 </thead>
                 <tbody class="table-striped">
-                    @foreach (var producto in entradaProductos.DetalleEntrada)
+                    @foreach (var item in entradaProductos.DetalleEntrada)
                     {
                     <tr>
-                        <td>@producto.Productos.ProductoId</td>
-                        <td>@CategoriasBLL.Buscar(@producto.Productos.CategoriaiD).Descripcion</td>
-                        <td>@producto.Productos.Descripcion</td>
-                        <td>@producto.Productos.Cantidad</td>
-                        <td>@producto.Productos.Precio</td>
-                        <td><button class="btn btn-primary">Editar</button></td>
-                        <td><button class="btn btn-danger">Eliminar</button></td>
+                        <td>@item.Productos.ProductoId</td>
+                        <td>@CategoriasBLL.Buscar(item.Productos.CategoriaiD).Descripcion</td>
+                        <td>@item.Productos.Descripcion</td>
+                        <td>@item.Productos.Cantidad</td>
+                        <td>@item.Productos.Precio</td>
+                        <td><button type="button" class="btn btn-primary" @onclick="@Editar" >Editar</button></td>
+                        <td><button type="button" class="btn btn-danger" @onclick="(()=> EliminarProducto(item))">Eliminar</button></td>
                     </tr>
                     }
                 </tbody>
@@ -200,5 +200,15 @@
                 this.entradaProductos = Encontrado;
             }
         }
+    }
+
+    private void EliminarProducto(Entidades.DetalleEntradaProductos detalle)
+    {
+        entradaProductos.DetalleEntrada.Remove(detalle);
+    }
+
+    private void Editar()
+    {
+
     }
 }

@@ -39,6 +39,7 @@ namespace ProyectoFinalAp2.Data
                 ProductoId = 1,
                 CategoriaiD = 1,
                 Descripcion = "Zapato",
+                Reorden = 50,
                 Costo = Convert.ToDecimal(100.00),
                 Precio = Convert.ToDecimal(150.00),
                 Ganancia = Convert.ToDecimal(50.00),

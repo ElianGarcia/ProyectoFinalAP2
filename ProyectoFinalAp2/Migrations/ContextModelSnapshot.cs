@@ -201,6 +201,9 @@ namespace ProyectoFinalAp2.Migrations
                     b.Property<decimal>("Precio")
                         .HasColumnType("TEXT");
 
+                    b.Property<int>("Reorden")
+                        .HasColumnType("INTEGER");
+
                     b.HasKey("ProductoId");
 
                     b.ToTable("Productos");
@@ -214,9 +217,10 @@ namespace ProyectoFinalAp2.Migrations
                             Costo = 100m,
                             Descripcion = "Zapato",
                             Donativo = false,
-                            Fecha = new DateTime(2020, 7, 6, 11, 9, 7, 747, DateTimeKind.Local).AddTicks(2907),
+                            Fecha = new DateTime(2020, 7, 6, 15, 19, 36, 342, DateTimeKind.Local).AddTicks(9548),
                             Ganancia = 50m,
-                            Precio = 150m
+                            Precio = 150m,
+                            Reorden = 50
                         });
                 });
 
@@ -256,7 +260,7 @@ namespace ProyectoFinalAp2.Migrations
                         new
                         {
                             UsuarioId = 1,
-                            FechaIngreso = new DateTime(2020, 7, 6, 11, 9, 7, 746, DateTimeKind.Local).AddTicks(267),
+                            FechaIngreso = new DateTime(2020, 7, 6, 15, 19, 36, 341, DateTimeKind.Local).AddTicks(2146),
                             Nivel = "Administrador",
                             NombreUsuario = "Rguez12",
                             Nombres = "Elian Garcia",
