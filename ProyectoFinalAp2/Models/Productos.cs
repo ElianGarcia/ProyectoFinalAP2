@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -14,7 +15,8 @@ namespace ProyectoFinalAp2.Models
         public int ProductoId { get; set; }
 
         [Required(ErrorMessage = "Tienes que elegir una categoría.")]
-        public string Categoria { get; set; }
+        [ForeignKey("CategoriaId")]
+        public int CategoriaiD { get; set; }
 
         [Required(ErrorMessage = "La descripción no puede estar vacía.")]
         [MinLength(3, ErrorMessage = "La descripción es muy corta.")]
@@ -44,7 +46,7 @@ namespace ProyectoFinalAp2.Models
         public Productos()
         {
             ProductoId = 0;
-            Categoria = string.Empty;
+            CategoriaiD = 0;
             Descripcion = string.Empty;
             Costo = 0;
             Precio = 0;

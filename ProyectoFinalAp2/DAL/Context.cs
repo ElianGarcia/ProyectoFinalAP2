@@ -33,6 +33,18 @@ namespace ProyectoFinalAp2.Data
                 FechaIngreso = DateTime.Now,
                 Nivel = "Administrador"
             });
+
+            model.Entity<Productos>().HasData(new Productos
+            {
+                ProductoId = 1,
+                CategoriaiD = 1,
+                Descripcion = "Zapato",
+                Costo = Convert.ToDecimal(100.00),
+                Precio = Convert.ToDecimal(150.00),
+                Ganancia = Convert.ToDecimal(50.00),
+                Fecha = DateTime.Now,
+                Cantidad = 25
+            });
         }
 
         public DbSet<Facturas> Facturas { get; set; }

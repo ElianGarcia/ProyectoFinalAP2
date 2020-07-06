@@ -8,7 +8,7 @@
 <EditForm Model="usuarios" OnValidSubmit="Guardar">
     <DataAnnotationsValidator />
     <div class="card">
-        <div class="card-header">
+        <div class="card-header alert-info">
             <h3>Registro de Usuarios</h3>
         </div>
 
@@ -48,7 +48,7 @@
 
             <div class="form-group">
                 <label for="NIVEL">NIVEL</label>
-                <select id="dropdowntipo" class="form-control">
+                <select id="dropdowntipo" class="form-control" @bind="@Nivel">
                     <option value="Exemplo1">Administrador</option>
                     <option value="Exemplo2">Usuario</option>
                 </select>
@@ -65,8 +65,8 @@
 
 
 @code {
-
     Usuarios usuarios = new Usuarios();
+    string Nivel { get; set; }
 
     protected override void OnInitialized()
     {
@@ -81,6 +81,7 @@
 
     private void Guardar()
     {
+        usuarios.Nivel = Nivel;
         bool guardado = UsuariosBLL.Guardar(usuarios);
 
         if (guardado)

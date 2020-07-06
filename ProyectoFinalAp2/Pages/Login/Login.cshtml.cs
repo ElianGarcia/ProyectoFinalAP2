@@ -47,7 +47,7 @@ namespace ProyectoFinalAp2.Pages.Login
                     new Claim(ClaimTypes.Name, paramUsername),
                     new Claim(ClaimTypes.Role, getNivel(paramUsername))
                 };
-            } catch(Exception e)
+            } catch(Exception)
             {
 
             }

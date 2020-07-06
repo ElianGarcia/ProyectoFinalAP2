@@ -82,6 +82,9 @@
 
 <body>
     <AuthorizeView>
+        <Authorized>
+
+        </Authorized>
         <NotAuthorized>
             <div class="container">
                 <div class="d-flex justify-content-center h-100">
@@ -126,7 +129,6 @@
 @code {
     string Username;
     string Password;
-    string message = "Usuario / contraseña incorrectos";
 
     private string encode(string param)
     {

@@ -31,7 +31,7 @@ namespace ProyectoFinalAp2.Migrations
                     b.Property<int?>("EntradaProductosEntradaProductoId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("ProductoId")
+                    b.Property<int?>("ProductoId")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("DetalleEntradaProductosId");
@@ -134,8 +134,8 @@ namespace ProyectoFinalAp2.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("CantidadTotal")
-                        .HasColumnType("INTEGER");
+                    b.Property<decimal>("CantidadTotal")
+                        .HasColumnType("TEXT");
 
                     b.Property<DateTime>("Fecha")
                         .HasColumnType("TEXT");
@@ -178,9 +178,8 @@ namespace ProyectoFinalAp2.Migrations
                     b.Property<int>("Cantidad")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("Categoria")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
+                    b.Property<int>("CategoriaiD")
+                        .HasColumnType("INTEGER");
 
                     b.Property<decimal>("Costo")
                         .HasColumnType("TEXT");
@@ -205,6 +204,20 @@ namespace ProyectoFinalAp2.Migrations
                     b.HasKey("ProductoId");
 
                     b.ToTable("Productos");
+
+                    b.HasData(
+                        new
+                        {
+                            ProductoId = 1,
+                            Cantidad = 25,
+                            CategoriaiD = 1,
+                            Costo = 100m,
+                            Descripcion = "Zapato",
+                            Donativo = false,
+                            Fecha = new DateTime(2020, 7, 6, 11, 9, 7, 747, DateTimeKind.Local).AddTicks(2907),
+                            Ganancia = 50m,
+                            Precio = 150m
+                        });
                 });
 
             modelBuilder.Entity("ProyectoFinalAp2.Models.Usuarios", b =>
@@ -243,7 +256,7 @@ namespace ProyectoFinalAp2.Migrations
                         new
                         {
                             UsuarioId = 1,
-                            FechaIngreso = new DateTime(2020, 7, 5, 8, 11, 43, 693, DateTimeKind.Local).AddTicks(9657),
+                            FechaIngreso = new DateTime(2020, 7, 6, 11, 9, 7, 746, DateTimeKind.Local).AddTicks(267),
                             Nivel = "Administrador",
                             NombreUsuario = "Rguez12",
                             Nombres = "Elian Garcia",
@@ -259,9 +272,7 @@ namespace ProyectoFinalAp2.Migrations
 
                     b.HasOne("ProyectoFinalAp2.Models.Productos", "Productos")
                         .WithMany()
-                        .HasForeignKey("ProductoId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ProductoId");
                 });
 
             modelBuilder.Entity("ProyectoFinalAp2.Models.DetalleFacturas", b =>

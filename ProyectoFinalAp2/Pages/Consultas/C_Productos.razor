@@ -5,59 +5,84 @@
 @using ProyectoFinalAp2.Models;
 @using ProyectoFinalAp2.Controllers;
 
-<h3>Consulta de Productos</h3>
-
 <EditForm Model="lista" OnValidSubmit="Imprimir">
     <DataAnnotationsValidator />
-    <div class="input-group">
-        <input class="ml-3 mr-3" type="checkbox" @bind-value="BuscarFecha" id="defaultCheck1"> Filtrar por Fecha
-        <label for="DesdeFecha">Desde: </label>
-        <input id="DesdeFecha" type="date" @bind-value="DesdeFecha" class="form-control" input />
+    <div class="card">
+        <div class="card-header  alert-info">
+            <h3>Consulta de Productos</h3>
+        </div>
 
-        <label for="HastaFechaInput"class="mr-3">Hasta: </label>
-        <input type="date" Id="HastaFechaInput" @bind-value="HastaFecha" class="form-control" />
-    </div><br />
+        <div class="card-body">
+            <div class="form-row">
+                <div class="form-group col">
+                    <br />
+                    <input class="align-self-center" type="checkbox" @bind-value="BuscarFecha" id="defaultCheck1">
+                    <label for="DesdeFecha">Filtrar por fecha</label>
+                </div>
 
-    <div class="input-group">
-        <label for="filtro">Filtro: </label>
-        <select class="form-control" @bind="Filtro">
-            <option value="" disabled selected>Seleccione un filtro</option>
-            <option value="Todo">Todo</option>
-            <option value="Id">ID</option>
-            <option value="Descripcion">Descripcion</option>
-        </select>
+                <div class="form-group col">
+                    <label for="DesdeFecha">Desde: </label>
+                    <input id="DesdeFecha" type="date" @bind-value="DesdeFecha" class="form-control" input />
+                </div>
 
-        <label for="criterio">&nbsp;&nbsp; Criterio: </label>
-        <input type="search" class="form-control" @bind-value="Criterio" />
+                <div class="form-group col">
+                    <label for="HastaFechaInput" class="mr-3">Hasta: </label>
+                    <input type="date" Id="HastaFechaInput" @bind-value="HastaFecha" class="form-control" />
+                </div>
 
-        <button type="button" class="btn btn-outline-success" @onclick="Buscar">Buscar</button>
+                <div class="form-group col">
+                    <label for="filtro">Filtro: </label>
+                    <select class="form-control" @bind="Filtro">
+                        <option value="" disabled selected>Seleccione un filtro</option>
+                        <option value="Todo">Todo</option>
+                        <option value="Id">ID</option>
+                        <option value="Id">Categoria</option>
+                        <option value="Descripcion">Descripcion</option>
+                    </select>
+                </div>
+
+                <div class="form-group col">
+                    <label for="criterio"> Criterio: </label>
+                    <input type="search" class="form-control" @bind-value="Criterio" />
+                </div>
+
+                <div class="form-group col mt-1">
+                    <br />
+                    <button type="button" class="btn btn-outline-success" @onclick="Buscar">Buscar</button>
+                </div>
+            </div>
+
+            <table class="table mb-3">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Descripcion</th>
+                        <th>Categoria</th>
+                        <th>Cantidad Existente</th>
+                        <th>Precio</th>
+                        <th>Fecha de Registro</th>
+                    </tr>
+                </thead>
+                <tbody class="table-striped">
+                    @foreach (var item in lista)
+                    {
+                        <tr>
+                            <td>@item.ProductoId</td>
+                            <td>@item.Descripcion</td>
+                            <td>@CategoriasBLL.Buscar(@item.CategoriaiD).Descripcion</td>
+                            <td>@item.Cantidad</td>
+                            <td>@item.Precio</td>
+                            <td>@item.Fecha</td>
+                            <td><a class="btn btn-outline-info" href="Articulos/@item.ProductoId">Ver</a></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="card-footer">
+            <button type="button" class="btn btn-outline-primary form-control" @onclick="Imprimir">Imprimir</button>
+        </div>
     </div>
-    <br />
-
-    <table class="table">
-        <thead class="thead-light">
-            <tr>
-                <th>ID</th>
-                <th>Descripcion</th>
-                <th>Cantidad Existente</th>
-                <th>Precio</th>
-                <th>Fecha de Registro</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in lista)
-            {
-                <tr>
-                    <td>@item.ProductoId</td>
-                    <td>@item.Descripcion</td>
-                    <td>@item.Cantidad</td>
-                    <td>@item.Precio</td>
-                    <td>@item.Fecha</td>
-                    <td><a class="btn btn-outline-info" href="Articulos/@item.ProductoId">Ver</a></td>
-                </tr>
-            }
-        </tbody>
-    </table>
 </EditForm>
 
 @code {
@@ -75,6 +100,7 @@
     protected override void OnInitialized()
     {
         lista = new List<Productos>();
+
         DesdeFecha = DateTime.Now;
         HastaFecha = DateTime.Now;
     }
@@ -94,7 +120,7 @@
             }
             else
             {
-                lista = ProductosBLL.GetList(a => true);
+                lista = ProductosBLL.GetList(e => true);
 
                 if (lista.Count == 0)
                 {
@@ -102,7 +128,6 @@
                 }
                 else
                 {
-                    mensaje = "";
                     switch (Filtro)
                     {
                         case "Todo":
@@ -111,6 +136,9 @@
                         case "ID":
                             lista = ProductosBLL.GetList(e => e.ProductoId == Convert.ToInt32(Criterio));
                             break;
+                        case "Categoria":
+                            lista = ProductosBLL.GetList(e => CategoriasBLL.Buscar(e.CategoriaiD).Descripcion == Criterio);
+                            break;
                         case "Descripcion":
                             lista = ProductosBLL.GetList(e => e.Descripcion == Criterio);
                             break;
@@ -118,6 +146,11 @@
                     if (BuscarFecha == true)
                     {
                         lista = ProductosBLL.GetList(p => p.Fecha >= DesdeFecha.Date && p.Fecha <= HastaFecha.Date);
+                    }
+
+                    if(lista == null)
+                    {
+                        toast.ShowInfo("Vacio", "No se han encontrado productos, revise su criterio de busqueda");
                     }
                 }
             }

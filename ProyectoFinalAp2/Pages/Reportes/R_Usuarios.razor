@@ -1,53 +1,66 @@
 ﻿@page "/Reportes/Usuarios"
 @using ProyectoFinalAp2.Models;
 @using ProyectoFinalAp2.Controllers;
+    <div class="card">
+        <div class="card-header alert-info">
+            <label for="FECHA" class="float-right">FECHA: @Fecha </label>
 
-<div class="card">
-    <div class="card-header">
-        <label for="FECHA" class="align-self-end">FECHA: @Fecha </label>
+            <img class="align-content-center" src="C:\Users\Elian\source\repos\ProyectoFinalAp2-master\ProyectoFinalAp2-master\ProyectoFinalAp2\wwwroot\favicon.ico" />
 
-        <div class="form-group">
-            <img class="align-content-center" src="C:\Users\Elian\source\repos\ProyectoFinalAp2-master\ProyectoFinalAp2-master\ProyectoFinalAp2\Resources\Logo.jpg" />
+            <h3 class="align-content-center text-black-50">ButterSoft</h3>
+            <h3 class="text-center text-black-50">Reporte de Usuarios</h3>
         </div>
 
-        <h3 class="text-center text-black-50">ButterSoft</h3>
-        <h3 class="text-center text-black-50">Reporte de Usuarios</h3>
+        <div class="card-body">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th> ID de Usuario </th>
+                        <th> Nombres </th>
+                        <th> Nombre de Usuario </th>
+                        <th> Fecha de Ingreso </th>
+                    </tr>
+                </thead>
+                <tbody class="table-striped">
+                    @foreach (var usuario in @Lista)
+                    {
+                        <tr>
+                            <td>@usuario.UsuarioId</td>
+                            <td>@usuario.Nombres</td>
+                            <td>@usuario.NombreUsuario</td>
+                            <td>@usuario.FechaIngreso</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="card-footer">
+            <label for="GANANCIA">Cantidad de usuarios registrados</label>
+            <input @bind="@Cantidad" class="form-control" readonly />
+        </div>
     </div>
-
-    <div class="card-body">
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th> ID de Usuario </th>
-                    <th> Nombres </th>
-                    <th> Nombre de Usuario </th>
-                    <th> Fecha de Ingreso </th>
-                </tr>
-            </thead>
-            <tbody class="table-striped">
-                @foreach (var usuario in @Lista)
-                {
-                <tr>
-                    <td>@usuario.UsuarioId</td>
-                    <td>@usuario.Nombres</td>
-                    <td>@usuario.NombreUsuario</td>
-                    <td>@usuario.FechaIngreso</td>
-                </tr>
-                }
-            </tbody>
-        </table>
-    </div>
-
-</div>
 
 
 @code {
     List<Usuarios> Lista = new List<Usuarios>();
     String Fecha;
+    int Cantidad;
 
     protected override void OnInitialized()
     {
         Fecha = DateTime.Now.ToShortDateString();
         Lista = UsuariosBLL.GetList(e => true);
+        CalcularTotal();
+    }
+
+    private int CalcularTotal()
+    {
+        Cantidad = 0;
+
+        foreach (var usuario in Lista)
+        {
+            Cantidad += 1;
+        }
+        return Cantidad;
     }
 }

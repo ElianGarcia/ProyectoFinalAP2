@@ -5,12 +5,10 @@
 
 @inject IToastService toast
 
-
-
 <EditForm Model="productos" OnValidSubmit="Guardar">
     <DataAnnotationsValidator />
     <div class="card"> 
-        <div class="card-header">
+        <div class="card-header  alert-info">
             <h3>Registro de Productos</h3>
         </div>
 
@@ -19,22 +17,28 @@
             <div class="input-group">
                 <InputNumber @bind-Value="productos.ProductoId" class="form-control"></InputNumber>
                 <ValidationMessage For="(() => productos.ProductoId)"></ValidationMessage>
+
+                <div class="input-group-append">
+                    <button type="button" class="btn btn-primary" @onclick="Buscar"><span class="icon-search"></span>Buscar</button>
+                </div>
             </div>
 
-            <div class="input-group-append">
-                <button type="button" class="btn btn-primary" @onclick="Buscar"><span class="icon-search"></span>Buscar</button>
-            </div>
-
-            <label for="CATEGORIAS">CATEGORIAS</label>
             <div class="form-group">
-                <InputSelect @bind-Value="@productos.Categoria" class="form-control" @onchange="CargarCategoria" @onclick="CargarCategoria">
+                <label for="FECHA">FECHA</label>
+                <InputDate @bind-Value="productos.Fecha" class="form-control"></InputDate>
+                <ValidationMessage For="(() => productos.Fecha)"></ValidationMessage>
+            </div>
+
+            <label for="CATEGORIAS">CATEGORIA</label>
+            <div class="form-group">
+                <select class="form-control" @bind="productos.CategoriaiD" @onclick="CargarCategoria">
                     <option value="" disabled selected>Seleccione una Categoria</option>
                     @foreach (var item in CargarCombo())
                     {
                         <option value="@item.CategoriaId">@item.Descripcion</option>
                     }
-                </InputSelect>
-                <ValidationMessage For="(() => productos.Categoria)"></ValidationMessage>
+                </select>
+                <ValidationMessage For="(() => productos.CategoriaiD)"></ValidationMessage>
             </div>
 
             <div class="form-group">
@@ -44,33 +48,27 @@
             </div>
 
             <div class="form-group">
+                <label for="CANTIDAD">CANTIDAD</label>
+                <InputNumber @bind-Value="productos.Cantidad" class="form-control"></InputNumber>
+                <ValidationMessage For="(() => productos.Cantidad)"></ValidationMessage>
+            </div>
+
+            <div class="form-group">
                 <label for="COSTO">COSTO</label>
-                <InputNumber @bind-Value="productos.Costo" class="form-control"></InputNumber>
+                <InputNumber @bind-Value="productos.Costo" class="form-control" step="00.2" @onfocusout="@CalcularGanancia"></InputNumber>
                 <ValidationMessage For="(() => productos.Costo)"></ValidationMessage>
             </div>
 
             <div class="form-group">
                 <label for="PRECIO">PRECIO</label>
-                <InputNumber @bind-Value="productos.Precio" class="form-control"></InputNumber>
+                <InputNumber @bind-Value="productos.Precio" class="form-control" step="00.2" @onfocusout="@CalcularGanancia"></InputNumber>
                 <ValidationMessage For="(() => productos.Precio)"></ValidationMessage>
             </div>
 
             <div class="form-group">
                 <label for="GANANCIA">GANANCIA</label>
-                <InputNumber @bind-Value="productos.Ganancia" class="form-control"></InputNumber>
+                <InputNumber @bind-Value="productos.Ganancia" class="form-control" step="00.2" readonly="true"></InputNumber>
                 <ValidationMessage For="(() => productos.Ganancia)"></ValidationMessage>
-            </div>
-
-            <div class="form-group">
-                <label for="FECHA">FECHA</label>
-                <InputDate @bind-Value="productos.Fecha" class="form-control"></InputDate>
-                <ValidationMessage For="(() => productos.Fecha)"></ValidationMessage>
-            </div>
-
-            <div class="form-group">
-                <label for="CANTIDAD">CANTIDAD</label>
-                <InputNumber @bind-Value="productos.Cantidad" class="form-control"></InputNumber>
-                <ValidationMessage For="(() => productos.Cantidad)"></ValidationMessage>
             </div>
 
             <div class="form-group">
@@ -87,6 +85,7 @@
 
     Productos productos = new Productos();
     Categorias Categoria = new Categorias();
+    private int categoriaiD { get; set; }
 
     protected override void OnInitialized()
     {
@@ -99,7 +98,7 @@
     {
         try
         {
-            Categoria = CategoriasBLL.Buscar(Convert.ToInt32(productos.Categoria));
+            Categoria = CategoriasBLL.Buscar(Convert.ToInt32(productos.CategoriaiD));
         }
         catch (Exception ex)
         {
@@ -113,6 +112,14 @@
         lista = CategoriasBLL.GetList(p => true);
 
         return lista;
+    }
+
+    private void CalcularGanancia()
+    {
+        if(productos.Precio > 0 & productos.Costo > 0)
+        {
+           productos.Ganancia = productos.Precio - productos.Costo;
+        }
     }
 
     private void Nuevo()

@@ -5,59 +5,83 @@
 @using ProyectoFinalAp2.Models;
 @using ProyectoFinalAp2.Controllers;
 
-<h3>Consulta de Productos</h3>
-
 <EditForm Model="lista" OnValidSubmit="Imprimir">
     <DataAnnotationsValidator />
-    <div class="input-group">
-        <input class="ml-3" type="checkbox" @bind-value="BuscarFecha" id="defaultCheck1"> Filtrar por Fecha
-        &emsp;
-        <label for="DesdeFecha">Desde: </label>
-        <input id="DesdeFecha" type="date" @bind-value="DesdeFecha" class="form-control" input />
+    <div class="card">
+        <div class="card-header alert-info">
+            <h3>Consulta de Usuarios</h3>
+        </div>
 
-        <label for="HastaFechaInput">&nbsp;&nbsp;Hasta: </label>
-        <input type="date" Id="HastaFechaInput" @bind-value="HastaFecha" class="form-control" />
-    </div><br />
+        <div class="card-body">
+            <div class="form-row">
+                <div class="form-group col">
+                    <br />
+                    <input class="align-self-center" type="checkbox" @bind-value="BuscarFecha" id="defaultCheck1">
+                    <label for="DesdeFecha">Filtrar por fecha</label>
+                </div>
 
-    <div class="input-group">
-        <label for="filtro">Filtro: </label>
-        <select class="form-control" @bind="Filtro">
-            <option value="" disabled selected>Seleccione un filtro</option>
-            <option value="Todo">Todo</option>
-            <option value="Id">ID</option>
-            <option value="Descripcion">Nombre</option>
-            <option value="Descripcion">Nombre de Usuario</option>
-        </select>
+                @if (BuscarFecha)
+                {
+                    <div class="form-group col">
+                        <label for="DesdeFecha">Desde: </label>
+                        <input id="DesdeFecha" type="date" @bind-value="DesdeFecha" class="form-control" input />
+                    </div>
 
-        <label for="criterio">&nbsp;&nbsp; Criterio: </label>
-        <input type="search" class="form-control" @bind-value="Criterio" />
+                    <div class="form-group col">
+                        <label for="HastaFechaInput" class="mr-3">Hasta: </label>
+                        <input type="date" Id="HastaFechaInput" @bind-value="HastaFecha" class="form-control" />
+                    </div>
+                }
 
-        <button type="button" class="btn btn-outline-success" @onclick="Buscar">Buscar</button>
+                <div class="form-group col">
+                    <label for="filtro">Filtro: </label>
+                    <select class="form-control" @bind="Filtro">
+                        <option value="" disabled selected>Seleccione un filtro</option>
+                        <option value="Todo">Todo</option>
+                        <option value="Id">ID</option>
+                        <option value="Descripcion">Nombre</option>
+                        <option value="Descripcion">Nombre de Usuario</option>
+                    </select>
+                </div>
+
+                <div class="form-group col">
+                    <label for="criterio"> Criterio: </label>
+                    <input type="search" class="form-control" @bind-value="Criterio" />
+                </div>
+
+                <div class="form-group col mt-1">
+                    <br />
+                    <button type="button" class="btn btn-outline-success" @onclick="Buscar">Buscar</button>
+                </div>
+
+                <table class="table">
+                    <thead class="thead-light">
+                        <tr>
+                            <th>ID</th>
+                            <th>Nombre</th>
+                            <th>Nombre de Usuario</th>
+                            <th>Fecha de Ingreso</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in lista)
+                        {
+                            <tr>
+                                <td>@item.UsuarioId</td>
+                                <td>@item.Nombres</td>
+                                <td>@item.NombreUsuario</td>
+                                <td>@item.FechaIngreso</td>
+                                <td><a class="btn btn-outline-info" href="Articulos/@item.UsuarioId">Ver</a></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="card-footer">
+            <button type="button" class="btn btn-outline-primary form-control" @onclick="Imprimir">Imprimir</button>
+        </div>
     </div>
-    <br />
-
-    <table class="table">
-        <thead class="thead-light">
-            <tr>
-                <th>ID</th>
-                <th>Nombre</th>
-                <th>Nombre de Usuario</th>
-                <th>Fecha de Ingreso</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in lista)
-            {
-                <tr>
-                    <td>@item.UsuarioId</td>
-                    <td>@item.Nombres</td>
-                    <td>@item.NombreUsuario</td>
-                    <td>@item.FechaIngreso</td>
-                    <td><a class="btn btn-outline-info" href="Articulos/@item.UsuarioId">Ver</a></td>
-                </tr>
-            }
-        </tbody>
-    </table>
 </EditForm>
 
 @code {
@@ -67,7 +91,7 @@
     private string Filtro { get; set; }
     private string Criterio { get; set; }
     public string mensaje;
-    public bool BuscarFecha { get; set; }
+    public bool BuscarFecha = false;
     public DateTime DesdeFecha { get; set; }
     public DateTime HastaFecha { get; set; }
 

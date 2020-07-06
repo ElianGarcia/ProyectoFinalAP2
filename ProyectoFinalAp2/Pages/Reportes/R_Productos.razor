@@ -3,12 +3,10 @@
 @using ProyectoFinalAp2.Controllers;
 
 <div class="card">
-    <div class="card-header">
-        <label for="FECHA" class="align-self-end">FECHA: @Fecha </label>
+    <div class="card-header alert-info">
+        <label for="FECHA" class="float-right">FECHA: @Fecha </label>
 
-        <div class="form-group">
-            <img class="align-content-center" src="C:\Users\Elian\source\repos\ProyectoFinalAp2-master\ProyectoFinalAp2-master\ProyectoFinalAp2\Resources\Logo.jpg" />
-        </div>
+        <img class="align-content-center" src="/../../Resources/Logo.jpg" />
 
         <h3 class="text-center text-black-50">ButterSoft</h3>
         <h3 class="text-center text-black-50">Reporte de Productos</h3>
@@ -27,27 +25,44 @@
             <tbody class="table-striped">
                 @foreach (var producto in Lista)
                 {
-                <tr>
-                    <td>@producto.ProductoId</td>
-                    <td>@producto.Descripcion</td>
-                    <td>@producto.Cantidad</td>
-                    <td>@producto.Precio</td>
-                </tr>
+                    <tr>
+                        <td>@producto.ProductoId</td>
+                        <td>@producto.Descripcion</td>
+                        <td>@producto.Cantidad</td>
+                        <td>@producto.Precio</td>
+                    </tr>
                 }
             </tbody>
         </table>
     </div>
 
+    <div class="card-footer">
+        <label for="GANANCIA">Cantidad Total</label>
+        <input @bind="@Total" class="form-control" step="00.2" readonly/>
+    </div>
 </div>
 
 
 @code {
     List<Productos> Lista = new List<Productos>();
     String Fecha;
+    decimal Total = 0;
 
     protected override void OnInitialized()
     {
         Fecha = DateTime.Now.ToShortDateString();
         Lista = ProductosBLL.GetList(e => true);
+        CalcularTotal();
+    }
+
+    private decimal CalcularTotal()
+    {
+        Total = 0;
+
+        foreach (var producto in Lista)
+        {
+            Total += producto.Cantidad;
+        }
+        return Total;
     }
 }

@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Nest;
+using ProyectoFinalAp2.Controllers;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -35,6 +37,30 @@ namespace ProyectoFinalAp2.Models
 
         [Required(ErrorMessage = "El nivel de usuario no puede estar vacío.")]
         public string Nivel { get; set; }
+
+        public static string encode(string parametro)
+        {
+            byte[] encrypting = System.Text.Encoding.Unicode.GetBytes(parametro);
+            return Convert.ToBase64String(encrypting);
+        }
+
+        public static string Unencode(string parametro)
+        {
+            byte[] encrypting = Convert.FromBase64String(parametro);
+            return System.Text.Encoding.Unicode.GetString(encrypting);
+        }
+
+        public bool IsAdministrator(int iD)
+        {
+            if (UsuariosBLL.Buscar(iD).Nivel == "Administrador")
+            {
+                return true;
+            } 
+            else
+            {
+                return false;
+            }
+        }
 
         public Usuarios()
         {
