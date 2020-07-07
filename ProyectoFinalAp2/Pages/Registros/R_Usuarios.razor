@@ -23,25 +23,31 @@
             </div>
 
             <div class="form-group">
-                <label for="NOMBRES">NOMBRES</label>
+                <label for="NOMBRES">Nombres</label>
                 <InputText @bind-Value="usuarios.Nombres" class="form-control"></InputText>
                 <ValidationMessage For="(() => usuarios.Nombres)"></ValidationMessage>
             </div>
 
             <div class="form-group">
-                <label for="NOMBREUSUARIO">NOMBRE DE USUARIO</label>
+                <label for="NOMBREUSUARIO">Nombre de usuario</label>
                 <InputText @bind-Value="usuarios.NombreUsuario" class="form-control"></InputText>
                 <ValidationMessage For="(() => usuarios.NombreUsuario)"></ValidationMessage>
             </div>
 
             <div class="form-group">
-                <label for="PASSWORD">CONTRASEÑA</label>
+                <label for="CORREO">Correo</label>
+                <InputText @bind-Value="usuarios.Correo" class="form-control"></InputText>
+                <ValidationMessage For="(() => usuarios.Correo)"></ValidationMessage>
+            </div>
+
+            <div class="form-group">
+                <label for="PASSWORD">Contraseña</label>
                 <InputText @bind-Value="usuarios.PassWord" class="form-control"></InputText>
                 <ValidationMessage For="(() => usuarios.PassWord)"></ValidationMessage>
             </div>
 
             <div class="form-group">
-                <label for="FECHAINGRESO">FECHA DE INGRESO</label>
+                <label for="FECHAINGRESO">Fecha de ingreso</label>
                 <InputDate @bind-Value="usuarios.FechaIngreso" class="form-control"></InputDate>
                 <ValidationMessage For="(() => usuarios.FechaIngreso)"></ValidationMessage>
             </div>

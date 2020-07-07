@@ -97,6 +97,7 @@ namespace ProyectoFinalAp2.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     Nombres = table.Column<string>(maxLength: 30, nullable: false),
                     NombreUsuario = table.Column<string>(maxLength: 30, nullable: false),
+                    Correo = table.Column<string>(maxLength: 40, nullable: false),
                     PassWord = table.Column<string>(maxLength: 60, nullable: false),
                     FechaIngreso = table.Column<DateTime>(nullable: false),
                     Nivel = table.Column<string>(nullable: false)
@@ -164,12 +165,12 @@ namespace ProyectoFinalAp2.Migrations
             migrationBuilder.InsertData(
                 table: "Productos",
                 columns: new[] { "ProductoId", "Cantidad", "CategoriaiD", "Costo", "Descripcion", "Donativo", "Fecha", "Ganancia", "Precio", "Reorden" },
-                values: new object[] { 1, 25, 1, 100m, "Zapato", false, new DateTime(2020, 7, 6, 15, 19, 36, 342, DateTimeKind.Local).AddTicks(9548), 50m, 150m, 50 });
+                values: new object[] { 1, 25, 1, 100m, "Zapato", false, new DateTime(2020, 7, 6, 20, 45, 53, 632, DateTimeKind.Local).AddTicks(728), 50m, 150m, 50 });
 
             migrationBuilder.InsertData(
                 table: "Usuarios",
-                columns: new[] { "UsuarioId", "FechaIngreso", "Nivel", "NombreUsuario", "Nombres", "PassWord" },
-                values: new object[] { 1, new DateTime(2020, 7, 6, 15, 19, 36, 341, DateTimeKind.Local).AddTicks(2146), "Administrador", "Rguez12", "Elian Garcia", "uMbRelLa1772" });
+                columns: new[] { "UsuarioId", "Correo", "FechaIngreso", "Nivel", "NombreUsuario", "Nombres", "PassWord" },
+                values: new object[] { 1, "eliangarciarguez@gmail.com", new DateTime(2020, 7, 6, 20, 45, 53, 631, DateTimeKind.Local).AddTicks(478), "Administrador", "Rguez12", "Elian Garcia", "uMbRelLa1772" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_DetalleEntradaProductos_EntradaProductosEntradaProductoId",

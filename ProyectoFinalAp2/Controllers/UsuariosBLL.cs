@@ -190,6 +190,48 @@ namespace ProyectoFinalAp2.Controllers
             return nivel;
         }
 
+        public static Usuarios Buscar(string NombreUsuario)
+        {
+            Context contexto = new Context();
+            List<Usuarios> Lista = new List<Usuarios>();
+            Usuarios Usuario = new Usuarios();
+
+            try
+            {
+                foreach(var item in Lista)
+                {
+                    if (item.NombreUsuario == NombreUsuario)
+                    {
+                        Usuario = item;
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return Usuario;
+        }
+
+        public static bool VerificarExistenciaDelUsuario(string NombreUsuario)
+        {
+            bool paso = false;
+            Context contexto = new Context();
+
+            try
+            {
+                if (contexto.Usuarios.Any(A => A.NombreUsuario == NombreUsuario))
+                {
+                    paso = true;
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return paso;
+        }
+
         public static bool VerificarExistenciaYClaveDelUsuario(string NombreUsuario, string clave)
         {
             bool paso = false;

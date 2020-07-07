@@ -102,7 +102,7 @@
                     <div class="card">
                         <div class="card-header">
                             <div class="d-flex justify-content-end social_icon">
-                                <img src="Resources/Logo.jpg" height="70" />
+                                <img src="Resources/Logo.jpg" height="100" />
                             </div>
 
                             <h3>Login</h3>
@@ -122,14 +122,12 @@
                                     </div>
                                     <input type="password" class="form-control" placeholder="Contraseña" @bind="@Password">
                                 </div>
-
-                                    <a class="btn btn-outline-light form-control" type="submit" href="/login?paramUsername=@encode(@Username)&paramPassword=@encode(@Password)"> Login </a>
-
+                                    <a type="button" class="btn btn-outline-light form-control" href="/login?paramUsername=@encode(@Username)&paramPassword=@encode(@Password)"> Login </a>
                             </form>
                         </div>
                         <div class="card-footer">
                             <div class="d-flex justify-content-center">
-                                <a href="#">Olvide mi contraseña!</a>
+                                <a href="/Shared/ForgotPassword">Olvide mi contraseña!</a>
                             </div>
                         </div>
                     </div>
@@ -149,5 +147,4 @@
     {
         return HttpUtility.UrlEncode(param);
     }
-
 }

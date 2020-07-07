@@ -31,7 +31,8 @@ namespace ProyectoFinalAp2.Data
                 NombreUsuario = "Rguez12",
                 PassWord = "uMbRelLa1772",
                 FechaIngreso = DateTime.Now,
-                Nivel = "Administrador"
+                Nivel = "Administrador",
+                Correo = "eliangarciarguez@gmail.com"
             });
 
             model.Entity<Productos>().HasData(new Productos

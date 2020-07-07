@@ -25,6 +25,12 @@ namespace ProyectoFinalAp2.Models
         [MaxLength(30, ErrorMessage = "El nombre de usuario es muy largo.")]
         public string NombreUsuario { get; set; }
 
+        [Required(ErrorMessage = "El correo no puede estar vacío.")]
+        [MinLength(5, ErrorMessage = "El correo es muy corto.")]
+        [MaxLength(40, ErrorMessage = "El correo es muy largo.")]
+        [EmailAddress]
+        public string Correo { get; set; }
+
         [Required(ErrorMessage = "El campo clave no puede estar vacío")]
         [MinLength(4, ErrorMessage = "La clave es muy corta.")]
         [MaxLength(60, ErrorMessage = "La clave es muy larga.")]
@@ -70,6 +76,7 @@ namespace ProyectoFinalAp2.Models
             PassWord = string.Empty;
             FechaIngreso = DateTime.Now;
             Nivel = string.Empty;
+            Correo = string.Empty;
         }
     }
 }

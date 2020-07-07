@@ -44,7 +44,7 @@
                 <div class="form-group col">
                     <label for="CANTIDAD" class="ml-3 mr-3">Cantidad</label>
                     <div class="form-group">
-                        <InputNumber @bind-Value="@cantidad" class="form-control"></InputNumber>
+                        <InputNumber @bind-Value="@cantidad" @onfocus="VerificarCantidad" class="form-control"></InputNumber>
                     </div>
                 </div>
 
@@ -98,6 +98,7 @@
 @code {
     Productos productos = new Productos();
     EntradaProductos entradaProductos = new EntradaProductos();
+    bool paso;
 
     //variables del detalle
     public int productoiD { get; set; }
@@ -132,6 +133,8 @@
 
     private void Nuevo()
     {
+        productoiD = 0;
+        cantidad = 0;
         entradaProductos = new EntradaProductos();
     }
 
@@ -152,15 +155,22 @@
 
     private void Agregar()
     {
-        this.entradaProductos.DetalleEntrada.Add(new Entidades.DetalleEntradaProductos
+        if (paso)
         {
-            DetalleEntradaProductosId = 0,
-            EntradaProductoId = entradaProductos.EntradaProductoId,
-            Cantidad = cantidad,
-            Productos = ProductosBLL.Buscar(productoiD)
-        });
+            this.entradaProductos.DetalleEntrada.Add(new Entidades.DetalleEntradaProductos
+            {
+                DetalleEntradaProductosId = 0,
+                EntradaProductoId = entradaProductos.EntradaProductoId,
+                Cantidad = cantidad,
+                Productos = ProductosBLL.Buscar(productoiD)
+            });
 
-        CalcularTotal();
+            CalcularTotal();
+        }
+        else
+        {
+            toast.ShowError("Error", "La cantidad requerida supera a la cantidad existente del producto");
+        }
     }
 
     private void CalcularTotal()
@@ -210,5 +220,13 @@
     private void Editar()
     {
 
+    }
+
+    private void VerificarCantidad()
+    {
+        if(ProductosBLL.Buscar(productoiD).Cantidad < cantidad)
+        {
+            paso = false;
+        }
     }
 }

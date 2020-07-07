@@ -9,7 +9,7 @@ using ProyectoFinalAp2.Data;
 namespace ProyectoFinalAp2.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20200706191936_New_Migration")]
+    [Migration("20200707004554_New_Migration")]
     partial class New_Migration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -219,7 +219,7 @@ namespace ProyectoFinalAp2.Migrations
                             Costo = 100m,
                             Descripcion = "Zapato",
                             Donativo = false,
-                            Fecha = new DateTime(2020, 7, 6, 15, 19, 36, 342, DateTimeKind.Local).AddTicks(9548),
+                            Fecha = new DateTime(2020, 7, 6, 20, 45, 53, 632, DateTimeKind.Local).AddTicks(728),
                             Ganancia = 50m,
                             Precio = 150m,
                             Reorden = 50
@@ -231,6 +231,11 @@ namespace ProyectoFinalAp2.Migrations
                     b.Property<int>("UsuarioId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
+
+                    b.Property<string>("Correo")
+                        .IsRequired()
+                        .HasColumnType("TEXT")
+                        .HasMaxLength(40);
 
                     b.Property<DateTime>("FechaIngreso")
                         .HasColumnType("TEXT");
@@ -262,7 +267,8 @@ namespace ProyectoFinalAp2.Migrations
                         new
                         {
                             UsuarioId = 1,
-                            FechaIngreso = new DateTime(2020, 7, 6, 15, 19, 36, 341, DateTimeKind.Local).AddTicks(2146),
+                            Correo = "eliangarciarguez@gmail.com",
+                            FechaIngreso = new DateTime(2020, 7, 6, 20, 45, 53, 631, DateTimeKind.Local).AddTicks(478),
                             Nivel = "Administrador",
                             NombreUsuario = "Rguez12",
                             Nombres = "Elian Garcia",
