@@ -122,7 +122,10 @@
                                     </div>
                                     <input type="password" class="form-control" placeholder="Contraseña" @bind="@Password">
                                 </div>
-                                    <a type="button" class="btn btn-outline-light form-control" href="/login?paramUsername=@encode(@Username)&paramPassword=@encode(@Password)"> Login </a>
+                                <a class="ml-md-auto btn btn-primary btn-outline-light form-control"
+                                   href="/login?paramUsername=@encode(@Username)&paramPassword=@encode(@Password)"
+                                   target="_top">Login</a>
+
                             </form>
                         </div>
                         <div class="card-footer">

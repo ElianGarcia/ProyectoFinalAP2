@@ -136,7 +136,7 @@ namespace ProyectoFinalAp2.Migrations
                     DetalleEntradaProductosId = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     EntradaProductoId = table.Column<int>(nullable: false),
-                    ProductoId = table.Column<int>(nullable: true),
+                    ProductoId = table.Column<int>(nullable: false),
                     Cantidad = table.Column<int>(nullable: false),
                     EntradaProductosEntradaProductoId = table.Column<int>(nullable: true)
                 },
@@ -154,7 +154,7 @@ namespace ProyectoFinalAp2.Migrations
                         column: x => x.ProductoId,
                         principalTable: "Productos",
                         principalColumn: "ProductoId",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.InsertData(
@@ -165,12 +165,12 @@ namespace ProyectoFinalAp2.Migrations
             migrationBuilder.InsertData(
                 table: "Productos",
                 columns: new[] { "ProductoId", "Cantidad", "CategoriaiD", "Costo", "Descripcion", "Donativo", "Fecha", "Ganancia", "Precio", "Reorden" },
-                values: new object[] { 1, 25, 1, 100m, "Zapato", false, new DateTime(2020, 7, 6, 20, 45, 53, 632, DateTimeKind.Local).AddTicks(728), 50m, 150m, 50 });
+                values: new object[] { 1, 25, 1, 100m, "Zapato", false, new DateTime(2020, 7, 8, 8, 54, 35, 382, DateTimeKind.Local).AddTicks(7206), 50m, 150m, 50 });
 
             migrationBuilder.InsertData(
                 table: "Usuarios",
                 columns: new[] { "UsuarioId", "Correo", "FechaIngreso", "Nivel", "NombreUsuario", "Nombres", "PassWord" },
-                values: new object[] { 1, "eliangarciarguez@gmail.com", new DateTime(2020, 7, 6, 20, 45, 53, 631, DateTimeKind.Local).AddTicks(478), "Administrador", "Rguez12", "Elian Garcia", "uMbRelLa1772" });
+                values: new object[] { 1, "eliangarciarguez@gmail.com", new DateTime(2020, 7, 8, 8, 54, 35, 378, DateTimeKind.Local).AddTicks(7680), "Administrador", "Rguez12", "Elian Garcia", "uMbRelLa1772" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_DetalleEntradaProductos_EntradaProductosEntradaProductoId",

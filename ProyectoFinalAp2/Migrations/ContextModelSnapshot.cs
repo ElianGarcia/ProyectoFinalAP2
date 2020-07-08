@@ -31,7 +31,7 @@ namespace ProyectoFinalAp2.Migrations
                     b.Property<int?>("EntradaProductosEntradaProductoId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int?>("ProductoId")
+                    b.Property<int>("ProductoId")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("DetalleEntradaProductosId");
@@ -217,7 +217,7 @@ namespace ProyectoFinalAp2.Migrations
                             Costo = 100m,
                             Descripcion = "Zapato",
                             Donativo = false,
-                            Fecha = new DateTime(2020, 7, 6, 20, 45, 53, 632, DateTimeKind.Local).AddTicks(728),
+                            Fecha = new DateTime(2020, 7, 8, 8, 54, 35, 382, DateTimeKind.Local).AddTicks(7206),
                             Ganancia = 50m,
                             Precio = 150m,
                             Reorden = 50
@@ -266,7 +266,7 @@ namespace ProyectoFinalAp2.Migrations
                         {
                             UsuarioId = 1,
                             Correo = "eliangarciarguez@gmail.com",
-                            FechaIngreso = new DateTime(2020, 7, 6, 20, 45, 53, 631, DateTimeKind.Local).AddTicks(478),
+                            FechaIngreso = new DateTime(2020, 7, 8, 8, 54, 35, 378, DateTimeKind.Local).AddTicks(7680),
                             Nivel = "Administrador",
                             NombreUsuario = "Rguez12",
                             Nombres = "Elian Garcia",
@@ -282,7 +282,9 @@ namespace ProyectoFinalAp2.Migrations
 
                     b.HasOne("ProyectoFinalAp2.Models.Productos", "Productos")
                         .WithMany()
-                        .HasForeignKey("ProductoId");
+                        .HasForeignKey("ProductoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("ProyectoFinalAp2.Models.DetalleFacturas", b =>

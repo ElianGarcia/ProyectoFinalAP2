@@ -44,7 +44,7 @@
                 <div class="form-group col">
                     <label for="CANTIDAD" class="ml-3 mr-3">Cantidad</label>
                     <div class="form-group">
-                        <InputNumber @bind-Value="@cantidad" @onfocus="VerificarCantidad" class="form-control"></InputNumber>
+                        <InputNumber @bind-Value="cantidad" @onfocusout="VerificarCantidad" class="form-control"></InputNumber>
                     </div>
                 </div>
 
@@ -67,12 +67,13 @@
                     @foreach (var item in entradaProductos.DetalleEntrada)
                     {
                     <tr>
-                        <td>@item.Productos.ProductoId</td>
-                        <td>@CategoriasBLL.Buscar(item.Productos.CategoriaiD).Descripcion</td>
-                        <td>@item.Productos.Descripcion</td>
-                        <td>@item.Productos.Cantidad</td>
-                        <td>@item.Productos.Precio</td>
-                        <td><button type="button" class="btn btn-primary" @onclick="@Editar" >Editar</button></td>
+                        <td>@item.ProductoId</td>
+                        <td>@CategoriasBLL.Buscar(ProductosBLL.Buscar(item.ProductoId).CategoriaiD).Descripcion</td>
+                        <td>@ProductosBLL.Buscar(item.ProductoId).Descripcion</td>
+                        <td>@item.Cantidad</td>
+                        <td>@ProductosBLL.Buscar(item.ProductoId).Precio</td>
+                        <td>@item.Cantidad * @ProductosBLL.Buscar(item.ProductoId).Precio</td>
+                        <td><button type="button" class="btn btn-primary" @onclick="@Editar">Editar</button></td>
                         <td><button type="button" class="btn btn-danger" @onclick="(()=> EliminarProducto(item))">Eliminar</button></td>
                     </tr>
                     }
@@ -98,10 +99,10 @@
 @code {
     Productos productos = new Productos();
     EntradaProductos entradaProductos = new EntradaProductos();
-    bool paso;
+    bool paso = false;
 
     //variables del detalle
-    public int productoiD { get; set; }
+    public static int productoiD { get; set; }
     public int cantidad { get; set; }
 
     protected override void OnInitialized()
@@ -133,14 +134,13 @@
 
     private void Nuevo()
     {
-        productoiD = 0;
-        cantidad = 0;
         entradaProductos = new EntradaProductos();
     }
 
     private void Guardar()
     {
         bool guardado = EntradaProductoBLL.Guardar(entradaProductos);
+
 
         if (guardado)
         {
@@ -162,7 +162,7 @@
                 DetalleEntradaProductosId = 0,
                 EntradaProductoId = entradaProductos.EntradaProductoId,
                 Cantidad = cantidad,
-                Productos = ProductosBLL.Buscar(productoiD)
+                ProductoId = productoiD
             });
 
             CalcularTotal();
@@ -196,7 +196,6 @@
         {
             toast.ShowError("No se pudo eliminar");
         }
-
     }
 
     private void Buscar()
@@ -208,6 +207,10 @@
             if (Encontrado != null)
             {
                 this.entradaProductos = Encontrado;
+            }
+            else
+            {
+                toast.ShowError("Error", "No Encontrado");
             }
         }
     }
@@ -224,9 +227,12 @@
 
     private void VerificarCantidad()
     {
-        if(ProductosBLL.Buscar(productoiD).Cantidad < cantidad)
+        if(productoiD > 0)
         {
-            paso = false;
+            if (cantidad <= ProductosBLL.Buscar(productoiD).Cantidad)
+            {
+                paso = true;
+            }
         }
     }
 }
