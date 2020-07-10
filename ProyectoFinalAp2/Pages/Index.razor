@@ -1,2 +1,95 @@
 ﻿@page "/"
 
+<header class="bg-image-full">
+    <img src="Resources/Background(Logo).png" alt="Logo" height="295">
+</header>
+
+<div class="row text-center">
+    <div class="card-group">
+        <a href="Clientes">
+            <div class="card-body" style="background-color: #45B39D">
+                <span class="icon-person_add  text-center text-white"></span>
+                <p class="text-center text-white">Registro de clientes</p>
+            </div>
+        </a>
+
+        <a href="Productos">
+            <div class="card-body" style="background-color: #2980B9">
+                <span class="icon-shop  text-center text-white"></span>
+                <p class="text-center text-white">Registro de productos</p>
+            </div>
+        </a>
+
+        <a href="EntradaProductos">
+            <div class="card-body" style="background-color: #F4D03F">
+                <span class="icon-shopping_basket text-center text-white"></span>
+                <p class="text-center text-white">Entrada de productos</p>
+            </div>
+        </a>
+
+        <a href="Facturacion">
+            <div class="card-body" style="background-color: #CA6F1E">
+                <span class="icon-show_chart  text-center text-white"></span>
+                <p class="text-center text-white">Facturacion</p>
+            </div>
+        </a>
+
+        <a href="Consultas/Clientes">
+            <div class="card-body" style="background-color: #2e5381">
+                <span class="icon-people_outline  text-center text-white"></span>
+                <p class="text-center text-white">Consulta de clientes</p>
+            </div>
+        </a>
+
+        <a href="Consultas/Productos">
+            <div class="card-body" style="background-color: #E74C3C">
+                <span class="icon-shop_two text-center text-white"></span>
+                <p class="text-center text-white">Consulta de productos</p>
+            </div>
+        </a>
+</div>
+</div>
+
+<!-- Content section -->
+<section class="py-5">
+    <div class="container">
+        <h1>Introduccion</h1>
+        <p class="lead">ButterSoft</p>
+        <p>Buttersoft es un sistema ideado y desarrollado por un equipo de programadores como requerimiento de la asignatura <strong>Programacion Aplicada II</strong></p>
+    </div>
+</section>
+
+<!-- Image element - set the background image for the header in the line below -->
+<div class="py-5 bg-image-full" style="background-image: url('Resources/Background.jpg');">
+    <!-- Put anything you want here! There is just a spacer below for demo purposes! -->
+    <div style="height: 200px;"></div>
+</div>
+
+<!-- Content section -->
+<section class="py-5">
+    <div class="container">
+        <h1>Contenido</h1>
+        <p class="lead">ButterSoft Por Dentro</p>
+        <p>
+            ButterSoft incluye varios modulos y los integra en un sistema bastante facil de usar. Los modulos a los que podra
+            acceder son:
+        </p>
+
+        <ul class="list-group-item-primary">Modulo de Clientes</ul>
+        <ul class="list-group-item-primary">Modulo de Productos</ul>
+        <ul class="list-group-item-primary">Modulo de Facturacion</ul>
+        <ul class="list-group-item-primary">Modulo de Entrada de Productos</ul>
+
+    </div>
+</section>
+
+<!-- Footer -->
+<footer class="py-5 bg-image-full mb-0" style="background-color:#2e5381">
+    <div class="container">
+        <p class="m-0 text-center text-white">Copyright Buttersoft 2020</p>
+    </div>
+</footer>
+
+@code {
+
+}

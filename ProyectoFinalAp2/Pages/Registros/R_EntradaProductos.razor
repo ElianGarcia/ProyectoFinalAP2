@@ -61,6 +61,7 @@
                         <th> DESCRIPCION </th>
                         <th> CANTIDAD </th>
                         <th> PRECIO </th>
+                        <th> IMPORTE </th>
                     </tr>
                 </thead>
                 <tbody class="table-striped">
@@ -72,8 +73,7 @@
                         <td>@ProductosBLL.Buscar(item.ProductoId).Descripcion</td>
                         <td>@item.Cantidad</td>
                         <td>@ProductosBLL.Buscar(item.ProductoId).Precio</td>
-                        <td>@item.Cantidad * @ProductosBLL.Buscar(item.ProductoId).Precio</td>
-                        <td><button type="button" class="btn btn-primary" @onclick="@Editar">Editar</button></td>
+                        <td>@(item.Cantidad * ProductosBLL.Buscar(item.ProductoId).Precio)</td>
                         <td><button type="button" class="btn btn-danger" @onclick="(()=> EliminarProducto(item))">Eliminar</button></td>
                     </tr>
                     }
@@ -149,7 +149,7 @@
         }
         else
         {
-            toast.ShowError("No se pudo guardar");
+            toast.ShowError("No se pudo guardar", "Error");
         }
     }
 
@@ -169,7 +169,7 @@
         }
         else
         {
-            toast.ShowError("Error", "La cantidad requerida supera a la cantidad existente del producto");
+            toast.ShowError("La cantidad requerida supera a la cantidad existente del producto", "Error");
         }
     }
 
@@ -190,11 +190,11 @@
         if (eliminado)
         {
             Nuevo();
-            toast.ShowSuccess("Eliminado correctamente");
+            toast.ShowSuccess("Eliminado correctamente", "Exito");
         }
         else
         {
-            toast.ShowError("No se pudo eliminar");
+            toast.ShowError("No se pudo eliminar", "Error");
         }
     }
 
@@ -210,7 +210,7 @@
             }
             else
             {
-                toast.ShowError("Error", "No Encontrado");
+                toast.ShowError("No Encontrado", "Error");
             }
         }
     }
@@ -218,11 +218,6 @@
     private void EliminarProducto(Entidades.DetalleEntradaProductos detalle)
     {
         entradaProductos.DetalleEntrada.Remove(detalle);
-    }
-
-    private void Editar()
-    {
-
     }
 
     private void VerificarCantidad()

@@ -55,6 +55,7 @@
             <div class="form-group">
                 <label for="NIVEL">NIVEL</label>
                 <select id="dropdowntipo" class="form-control" @bind="@Nivel">
+                    <option value="" disabled selected>Seleccione un nivel</option>
                     <option value="Exemplo1">Administrador</option>
                     <option value="Exemplo2">Usuario</option>
                 </select>
@@ -125,6 +126,10 @@
             if (Encontrado != null)
             {
                 this.usuarios = Encontrado;
+            }
+            else
+            {
+                toast.ShowError("No Encontrado");
             }
         }
     }

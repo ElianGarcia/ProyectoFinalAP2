@@ -96,6 +96,12 @@
     Categorias Categoria = new Categorias();
     private int categoriaiD { get; set; }
 
+    protected override void OnParametersSet()
+    {
+        var id = ProductoId;
+        Buscar(id);
+    }
+
     protected override void OnInitialized()
     {
         Nuevo();
@@ -177,6 +183,27 @@
             if (Encontrado != null)
             {
                 this.productos = Encontrado;
+            }
+            else
+            {
+                toast.ShowError("No Encontrado" + ProductoId + ".");
+            }
+        }
+    }
+
+    private void Buscar(int ProductoId)
+    {
+        if (ProductoId > 0)
+        {
+            var Encontrado = ProductosBLL.Buscar(ProductoId);
+
+            if (Encontrado != null)
+            {
+                this.productos = Encontrado;
+            }
+            else
+            {
+                toast.ShowError("No Encontrado");
             }
         }
     }

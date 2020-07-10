@@ -9,11 +9,11 @@
         </div>
 
         <div class="main">
-            <div class="top-row px-4" >
-                <b>Hola, @context.User.Identity.Name!</b>
-                <a class="ml-md-auto btn btn-primary"
+            <div class="top-row px-4" style="background-color: #2980B9">
+                <b class="text-white">Bienvenido, @context.User.Identity.Name!</b>
+                <a class="ml-md-auto btn btn-light"
                    href="/logout?returnUrl=/"
-                   target="_top">Logout</a>
+                   target="_top" style="color: #2980B9">Logout</a>
             </div>
             <div class="content px-4">
                 @Body
