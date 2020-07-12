@@ -1,5 +1,6 @@
 ﻿using Entidades;
 using Microsoft.EntityFrameworkCore;
+using ProyectoFinalAp2.Controllers;
 using ProyectoFinalAp2.Models;
 using System;
 using System.Collections.Generic;
@@ -29,7 +30,7 @@ namespace ProyectoFinalAp2.Data
                 UsuarioId = 1,
                 Nombres = "Elian Garcia",
                 NombreUsuario = "Rguez12",
-                PassWord = "uMbRelLa1772",
+                PassWord = UsuariosBLL.encode("uMbRelLa1772"),
                 FechaIngreso = DateTime.Now,
                 Nivel = "Administrador",
                 Correo = "eliangarciarguez@gmail.com"

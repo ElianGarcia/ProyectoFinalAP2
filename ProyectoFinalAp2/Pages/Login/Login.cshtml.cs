@@ -65,9 +65,7 @@ namespace ProyectoFinalAp2.Pages.Login
             if (!paso)
             {
                 return LocalRedirect(ReturnUrl);
-
             }
-
 
             var claimsIdentity = new ClaimsIdentity(
                 claims, CookieAuthenticationDefaults.AuthenticationScheme);

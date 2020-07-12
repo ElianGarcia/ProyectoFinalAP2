@@ -11,6 +11,18 @@ namespace ProyectoFinalAp2.Controllers
 {
     public class UsuariosBLL
     {
+        public static string encode(string parametro)
+        {
+            byte[] encrypting = System.Text.Encoding.Unicode.GetBytes(parametro);
+            return Convert.ToBase64String(encrypting);
+        }
+
+        public static string Unencode(string parametro)
+        {
+            byte[] encrypting = Convert.FromBase64String(parametro);
+            return System.Text.Encoding.Unicode.GetString(encrypting);
+        }
+
         public static bool Guardar(Usuarios usuarios)
         {
             if (!Existe(usuarios.UsuarioId))

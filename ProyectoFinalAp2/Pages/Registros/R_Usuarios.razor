@@ -1,9 +1,12 @@
 ﻿@page "/Usuarios"
+@page "/Usuarios/{UsuarioId:int}"
 @using ProyectoFinalAp2.Models
 @using ProyectoFinalAp2.Controllers
 @using ProyectoFinalAp2.Data
+@using System.Threading.Tasks
 
 @inject IToastService toast
+@inject IJSRuntime JS
 
 <EditForm Model="usuarios" OnValidSubmit="Guardar">
     <DataAnnotationsValidator />
@@ -54,7 +57,7 @@
 
             <div class="form-group">
                 <label for="NIVEL">NIVEL</label>
-                <select id="dropdowntipo" class="form-control" @bind="@Nivel">
+                <select id="dropdowntipo" class="form-control" @bind="@usuarios.Nivel">
                     <option value="" disabled selected>Seleccione un nivel</option>
                     <option value="Exemplo1">Administrador</option>
                     <option value="Exemplo2">Usuario</option>
@@ -72,8 +75,16 @@
 
 
 @code {
+    [Parameter]
+    public int UsuarioId { get; set; }
+
     Usuarios usuarios = new Usuarios();
-    string Nivel { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        var id = UsuarioId;
+        Buscar(id);
+    }
 
     protected override void OnInitialized()
     {
@@ -88,7 +99,7 @@
 
     private void Guardar()
     {
-        usuarios.Nivel = Nivel;
+        usuarios.PassWord = UsuariosBLL.encode(usuarios.PassWord);
         bool guardado = UsuariosBLL.Guardar(usuarios);
 
         if (guardado)
@@ -106,7 +117,7 @@
     {
         bool eliminado = UsuariosBLL.Eliminar(usuarios.UsuarioId);
 
-        if(eliminado)
+        if (eliminado)
         {
             Nuevo();
             toast.ShowSuccess("Eliminado Corectamente", "Exito");
@@ -134,4 +145,20 @@
         }
     }
 
+    private void Buscar(int UsuarioiD)
+    {
+        if (UsuarioiD > 0)
+        {
+            var Encontrado = UsuariosBLL.Buscar(UsuarioiD);
+
+            if (Encontrado != null)
+            {
+                this.usuarios = Encontrado;
+            }
+            else
+            {
+                toast.ShowError("No Encontrado");
+            }
+        }
+    }
 }
