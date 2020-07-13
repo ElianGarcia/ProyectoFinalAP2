@@ -1,0 +1,135 @@
+﻿@page "/ConsultaCategorias"
+
+@inject IToastService toast
+
+@using ProyectoFinalAp2.Models;
+@using ProyectoFinalAp2.Controllers;
+
+    <div class="card">
+        <div class="card-header  alert-info">
+            <div class="text-center">
+                <img src="Resources/favicon.ico" height="90" />
+            </div>
+
+            <div class="text-center">
+                <h3 class="text-center text-black-50">Consulta de Categorias</h3>
+            </div>
+        </div>
+
+        <div class="card-body">
+            <div class="form-row">
+                <div class="col">
+                    <label for="filtro">Filtro: </label>
+                    <select class="form-control" @bind="filtro">
+                        <option value="" disabled selected>Seleccione un filtro</option>
+                        <option value="1">TODO</option>
+                        <option value="2">ID</option>
+                        <option value="3">DESCRIPCION</option>
+                    </select>
+                </div>
+
+                <div class="form-group col">
+                    <label for="criterio"> Criterio: </label>
+                    <input type="text" class="form-control" @bind="criterio" />
+                </div>
+
+                <div class="form-group col mt-1">
+                    <br />
+                    <button type="button" class="btn btn-outline-success" @onclick="Buscar">Buscar</button>
+                </div>
+            </div>
+
+            <table class="table mb-3">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Descripcion</th>
+                    </tr>
+                </thead>
+                <tbody class="table-striped">
+                    @foreach (var item in lista)
+                    {
+                        <tr>
+                            <td>@item.CategoriaId</td>
+                            <td>@item.Descripcion</td>
+                            <td><a class="btn btn-outline-info" href="Categorias/@item.CategoriaId">Ver</a></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+       
+        <div class="card-footer">  
+            <div class="form-group">
+                <label>CANTIDAD DE CATEGORIAS</label>
+                <input type="number" @bind="cantidadDeCategorias" class="form-control" readonly/>
+            </div>  
+        </div>
+    </div>
+
+@code {
+
+    List<Categorias> lista = new List<Categorias>();
+    private int filtro = 0;
+    private string criterio = string.Empty;
+    private int cantidadDeCategorias = 0;
+
+
+    private void Buscar()
+    {
+        try
+        {
+            if (filtro == 0)
+            {
+                toast.ShowWarning("Debe seleccionar un Filtro", "Aviso");
+            }
+            else
+            {
+                switch (filtro)
+                {
+                    case 1: //Todos
+                        this.lista = CategoriasBLL.GetList(c => true);
+                        break;
+                    case 2: //Id
+                        int ID = GetId();
+                        this.lista = CategoriasBLL.GetList(c => c.CategoriaId == ID);
+                        break;
+                    case 3: //descripcion
+                        this.lista = CategoriasBLL.GetList(c => c.Descripcion == criterio);
+                        break;
+                }
+            }
+            CalcularCantidad();
+        }
+        catch (Exception)
+        {
+
+            throw;
+        }
+    }
+
+    private int GetId()
+    {
+        int resultado = 0;
+
+        try
+        {
+            resultado = Convert.ToInt32(criterio);
+            return resultado;
+        }
+        catch (Exception)
+        {
+
+            toast.ShowError("El Id debe ser numerico..");
+        }
+
+        return resultado;
+    }
+
+    private void CalcularCantidad()
+    {
+        cantidadDeCategorias = lista.Count();
+    }
+
+}
