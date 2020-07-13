@@ -14,8 +14,7 @@ namespace ProyectoFinalAp2.Models
         [Range(0, 100000000, ErrorMessage = "El campo Id no puede ser menor que cero ni mayor a 1000000.")]
         public int FacturaId { get; set; }
 
-        [Required(ErrorMessage = "Debe seleccionar un cliente.")]
-        [ForeignKey("ClienteId")]
+        [Range(1, 1000000, ErrorMessage = "Debe elegir un cliente.")]
         public int ClienteId { get; set; }
 
         [DataType(DataType.DateTime)]
@@ -25,8 +24,11 @@ namespace ProyectoFinalAp2.Models
 
         public decimal Total { get; set; }
 
-        [ForeignKey("DetalleFacturaId")]
+        [ForeignKey("FacturaId")]
         public virtual List<DetalleFacturas> Detalles { get; set; }
+
+        [ForeignKey("ClienteId")]
+        public virtual Clientes Clientes { get; set; }
 
 
 

@@ -9,7 +9,7 @@ using ProyectoFinalAp2.Data;
 namespace ProyectoFinalAp2.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20200713150549_CreateFinalDB")]
+    [Migration("20200713175208_CreateFinalDB")]
     partial class CreateFinalDB
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -108,6 +108,7 @@ namespace ProyectoFinalAp2.Migrations
             modelBuilder.Entity("ProyectoFinalAp2.Models.DetalleFacturas", b =>
                 {
                     b.Property<int>("DetalleFacturaId")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("Cantidad")
@@ -123,6 +124,8 @@ namespace ProyectoFinalAp2.Migrations
                         .HasColumnType("INTEGER");
 
                     b.HasKey("DetalleFacturaId");
+
+                    b.HasIndex("FacturaId");
 
                     b.ToTable("DetalleFacturas");
                 });
@@ -153,16 +156,18 @@ namespace ProyectoFinalAp2.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<int>("ClienteId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<DateTime>("Fecha")
                         .HasColumnType("TEXT");
 
                     b.Property<decimal>("Total")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("clienteId")
-                        .HasColumnType("INTEGER");
-
                     b.HasKey("FacturaId");
+
+                    b.HasIndex("ClienteId");
 
                     b.ToTable("Facturas");
                 });
@@ -215,7 +220,7 @@ namespace ProyectoFinalAp2.Migrations
                             Costo = 100m,
                             Descripcion = "Zapato",
                             Donativo = false,
-                            Fecha = new DateTime(2020, 7, 13, 11, 5, 49, 22, DateTimeKind.Local).AddTicks(3251),
+                            Fecha = new DateTime(2020, 7, 13, 13, 52, 6, 933, DateTimeKind.Local).AddTicks(110),
                             Ganancia = 50m,
                             Precio = 150m,
                             Reorden = 50
@@ -264,7 +269,7 @@ namespace ProyectoFinalAp2.Migrations
                         {
                             UsuarioId = 1,
                             Correo = "eliangarciarguez@gmail.com",
-                            FechaIngreso = new DateTime(2020, 7, 13, 11, 5, 49, 20, DateTimeKind.Local).AddTicks(3806),
+                            FechaIngreso = new DateTime(2020, 7, 13, 13, 52, 6, 930, DateTimeKind.Local).AddTicks(2644),
                             Nivel = "Administrador",
                             NombreUsuario = "Rguez12",
                             Nombres = "Elian Garcia",
@@ -274,7 +279,7 @@ namespace ProyectoFinalAp2.Migrations
                         {
                             UsuarioId = 2,
                             Correo = "rehanicordero@gmail.com",
-                            FechaIngreso = new DateTime(2020, 7, 13, 11, 5, 49, 20, DateTimeKind.Local).AddTicks(5795),
+                            FechaIngreso = new DateTime(2020, 7, 13, 13, 52, 6, 930, DateTimeKind.Local).AddTicks(4193),
                             Nivel = "Administrador",
                             NombreUsuario = "rehani97",
                             Nombres = "Rehani Cordero",
@@ -299,7 +304,16 @@ namespace ProyectoFinalAp2.Migrations
                 {
                     b.HasOne("ProyectoFinalAp2.Models.Facturas", null)
                         .WithMany("Detalles")
-                        .HasForeignKey("DetalleFacturaId")
+                        .HasForeignKey("FacturaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("ProyectoFinalAp2.Models.Facturas", b =>
+                {
+                    b.HasOne("ProyectoFinalAp2.Models.Clientes", "Clientes")
+                        .WithMany()
+                        .HasForeignKey("ClienteId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

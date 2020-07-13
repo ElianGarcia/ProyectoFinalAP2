@@ -54,21 +54,6 @@ namespace ProyectoFinalAp2.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Facturas",
-                columns: table => new
-                {
-                    FacturaId = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    clienteId = table.Column<int>(nullable: false),
-                    Fecha = table.Column<DateTime>(nullable: false),
-                    Total = table.Column<decimal>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Facturas", x => x.FacturaId);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Productos",
                 columns: table => new
                 {
@@ -108,23 +93,23 @@ namespace ProyectoFinalAp2.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "DetalleFacturas",
+                name: "Facturas",
                 columns: table => new
                 {
-                    DetalleFacturaId = table.Column<int>(nullable: false),
-                    FacturaId = table.Column<int>(nullable: false),
-                    ProductoId = table.Column<int>(nullable: false),
-                    Cantidad = table.Column<int>(nullable: false),
-                    Precio = table.Column<decimal>(nullable: false)
+                    FacturaId = table.Column<int>(nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    ClienteId = table.Column<int>(nullable: false),
+                    Fecha = table.Column<DateTime>(nullable: false),
+                    Total = table.Column<decimal>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_DetalleFacturas", x => x.DetalleFacturaId);
+                    table.PrimaryKey("PK_Facturas", x => x.FacturaId);
                     table.ForeignKey(
-                        name: "FK_DetalleFacturas_Facturas_DetalleFacturaId",
-                        column: x => x.DetalleFacturaId,
-                        principalTable: "Facturas",
-                        principalColumn: "FacturaId",
+                        name: "FK_Facturas_Clientes_ClienteId",
+                        column: x => x.ClienteId,
+                        principalTable: "Clientes",
+                        principalColumn: "ClienteId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -156,6 +141,28 @@ namespace ProyectoFinalAp2.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "DetalleFacturas",
+                columns: table => new
+                {
+                    DetalleFacturaId = table.Column<int>(nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    FacturaId = table.Column<int>(nullable: false),
+                    ProductoId = table.Column<int>(nullable: false),
+                    Cantidad = table.Column<int>(nullable: false),
+                    Precio = table.Column<decimal>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DetalleFacturas", x => x.DetalleFacturaId);
+                    table.ForeignKey(
+                        name: "FK_DetalleFacturas_Facturas_FacturaId",
+                        column: x => x.FacturaId,
+                        principalTable: "Facturas",
+                        principalColumn: "FacturaId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.InsertData(
                 table: "Categorias",
                 columns: new[] { "CategoriaId", "Descripcion" },
@@ -164,17 +171,17 @@ namespace ProyectoFinalAp2.Migrations
             migrationBuilder.InsertData(
                 table: "Productos",
                 columns: new[] { "ProductoId", "Cantidad", "CategoriaiD", "Costo", "Descripcion", "Donativo", "Fecha", "Ganancia", "Precio", "Reorden" },
-                values: new object[] { 1, 25, 1, 100m, "Zapato", false, new DateTime(2020, 7, 13, 11, 5, 49, 22, DateTimeKind.Local).AddTicks(3251), 50m, 150m, 50 });
+                values: new object[] { 1, 25, 1, 100m, "Zapato", false, new DateTime(2020, 7, 13, 13, 52, 6, 933, DateTimeKind.Local).AddTicks(110), 50m, 150m, 50 });
 
             migrationBuilder.InsertData(
                 table: "Usuarios",
                 columns: new[] { "UsuarioId", "Correo", "FechaIngreso", "Nivel", "NombreUsuario", "Nombres", "PassWord" },
-                values: new object[] { 1, "eliangarciarguez@gmail.com", new DateTime(2020, 7, 13, 11, 5, 49, 20, DateTimeKind.Local).AddTicks(3806), "Administrador", "Rguez12", "Elian Garcia", "dQBNAGIAUgBlAGwATABhADEANwA3ADIA" });
+                values: new object[] { 1, "eliangarciarguez@gmail.com", new DateTime(2020, 7, 13, 13, 52, 6, 930, DateTimeKind.Local).AddTicks(2644), "Administrador", "Rguez12", "Elian Garcia", "dQBNAGIAUgBlAGwATABhADEANwA3ADIA" });
 
             migrationBuilder.InsertData(
                 table: "Usuarios",
                 columns: new[] { "UsuarioId", "Correo", "FechaIngreso", "Nivel", "NombreUsuario", "Nombres", "PassWord" },
-                values: new object[] { 2, "rehanicordero@gmail.com", new DateTime(2020, 7, 13, 11, 5, 49, 20, DateTimeKind.Local).AddTicks(5795), "Administrador", "rehani97", "Rehani Cordero", "MQAyADMANAA=" });
+                values: new object[] { 2, "rehanicordero@gmail.com", new DateTime(2020, 7, 13, 13, 52, 6, 930, DateTimeKind.Local).AddTicks(4193), "Administrador", "rehani97", "Rehani Cordero", "MQAyADMANAA=" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_DetalleEntradaProductos_EntradaProductosEntradaProductoId",
@@ -185,15 +192,22 @@ namespace ProyectoFinalAp2.Migrations
                 name: "IX_DetalleEntradaProductos_ProductoId",
                 table: "DetalleEntradaProductos",
                 column: "ProductoId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DetalleFacturas_FacturaId",
+                table: "DetalleFacturas",
+                column: "FacturaId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Facturas_ClienteId",
+                table: "Facturas",
+                column: "ClienteId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
                 name: "Categorias");
-
-            migrationBuilder.DropTable(
-                name: "Clientes");
 
             migrationBuilder.DropTable(
                 name: "DetalleEntradaProductos");
@@ -212,6 +226,9 @@ namespace ProyectoFinalAp2.Migrations
 
             migrationBuilder.DropTable(
                 name: "Facturas");
+
+            migrationBuilder.DropTable(
+                name: "Clientes");
         }
     }
 }

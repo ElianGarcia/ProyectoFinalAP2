@@ -1,5 +1,315 @@
-﻿<h3>R_Factura</h3>
+﻿@page "/Facturas"
+@page "/Facturas/{facturaId:int}"
+@using ProyectoFinalAp2.Controllers
+@using ProyectoFinalAp2.Models
+
+@inject IToastService toast
+
+<EditForm Model="facturas" OnValidSubmit="Guardar">
+    <DataAnnotationsValidator/>
+
+    <div class="card">
+        <div class="card-header alert-info">
+            <h3>Registro de Facturas</h3>
+        </div>
+
+        <div class="card-body">
+            <label for="Id">ID</label>
+            <div class="input-group">
+                <InputNumber @bind-Value="facturas.FacturaId" class="form-control"></InputNumber>
+                <ValidationMessage For="(() => facturas.FacturaId)"></ValidationMessage>
+                <div class="input-group-append">
+                    <button type="button" class="btn btn-primary" @onclick="Buscar"><span class="icon-search"></span>Buscar</button>
+                </div>
+            </div>
+
+            @*Fecha*@
+            <div class="form-group">
+                <label for="FECHA">FECHA</label>
+                <InputDate @bind-Value="facturas.Fecha" class="form-control"></InputDate>
+                <ValidationMessage For="(() => facturas.Fecha)"></ValidationMessage>
+            </div>
+
+            @*Cliente*@
+            <div class="form-group">
+                <label>CLIENTE</label>
+                <select class="form-control" @bind="facturas.ClienteId">
+                    @foreach (var item in listaClientes)
+                    {
+                        <option value="@item.ClienteId">@item.Nombre</option>
+                    }
+                </select>
+                <ValidationMessage For="@(() => facturas.ClienteId)" />
+            </div>
+
+            <div class="form-group">
+                <div class="form-row">
+                    @*Producto*@
+                    <div class="col">
+                        <label>PRODUCTO:</label>
+                        <select class="form-control" @bind="productoSeleccionado" @onclick="EncontrarPrecio">
+                            @foreach (var item in listaProductos)
+                            {
+                                <option value="@item.ProductoId">@item.Descripcion</option>
+                            }
+                        </select>
+                    </div>
+                    @*Precio*@
+                    <div class="col">
+                        <label>COSTO:</label>
+                        <InputNumber class="form-control" @bind-Value="precioEncontrado" readonly="true" />
+                    </div>
+
+                    @*Cantidad*@
+                    <div class="col">
+                        <label>CANTIDAD:</label>
+                        <InputNumber @bind-Value="cantidadColocada" @onclick="CalcularImporte" @onfocusin="CalcularImporte" @onfocusout="CalcularImporte" class="form-control" />
+                    </div>
+                    @*Importe*@
+                    <div class="col">
+                        <label>IMPORTE</label>
+                        <div class="input-group">
+                            <InputNumber @bind-Value="importe" class="form-control" readonly="true"/>
+                            <div class="input-group-append">
+                                <button type="button" class="btn btn-info" @onclick="Agregar"><span class="icon-add_circle"></span>Agregar</button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            @*Detalle*@
+            <table class="table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>DESCRIPCION</th>
+                            <th>CANTIDAD</th>
+                            <th>PRECIO</th>
+                            <th>IMPORTE</th>
+                        </tr>
+                    </thead>
+                    <tbody class="table-striped">
+                        @foreach (var item in facturas.Detalles)
+                        {
+                            <tr>
+                                <td>@item.ProductoId</td>
+                                <td>@GetDescripcion(item.ProductoId)</td>
+                                <td>@item.Cantidad</td>
+                                <td>@item.Precio</td>
+                                <td>@(item.Precio*item.Cantidad)</td>
+                                <td><button type="button" class="btn btn-outline-danger" @onclick="(() => EliminarOrdenDetalle(item))"><span class="icon-remove"></span>Remover</button></td>
+                            </tr>
+                        }
+
+                    </tbody>
+
+            </table>
+
+            @*Total*@
+            <div class="form-group">
+                <label>TOTAL</label>
+                <InputNumber @bind-Value="facturas.Total" class="form-control" readonly="true" />
+                <ValidationMessage For="@(() => facturas.Total)" />
+            </div>
+        </div>
+
+        @*Botones*@
+        <div class="form-group">
+            <button type="button" class="btn btn-secondary" @onclick="Nuevo"><span class="icon-add"></span> Nuevo </button>
+            <button type="submit" class="btn btn-success"><span class="icon-save"></span> Guardar </button>
+            <button type="button" class="btn btn-danger" @onclick="Eliminar"><span class="icon-delete_forever"></span> Eliminar </button>
+        </div>
+
+    </div>
+
+
+</EditForm>
 
 @code {
+
+    [Parameter]
+    public int facturaId { get; set; }
+
+
+    Facturas facturas = new Facturas();
+    List<Clientes> listaClientes = new List<Clientes>();
+    List<Productos> listaProductos = new List<Productos>();
+    private int productoSeleccionado { get; set; }
+    private int cantidadColocada { get; set; }
+    private decimal precioEncontrado { get; set; }
+    private decimal importe { get; set; }
+
+
+    protected override void OnInitialized()
+    {
+        Nuevo();
+        if (facturaId > 0)
+        {
+            var auxFactura = FacturasBLL.Buscar(facturaId);
+            if (auxFactura != null)
+                this.facturas = auxFactura;
+            else
+                toast.ShowWarning("No encontrado.");
+        }
+
+        listaClientes = ClientesBLL.GetList(p => true);
+        listaProductos = ProductosBLL.GetList(p => true);
+    }
+
+    private string GetDescripcion(int id)
+    {
+        string aux = string.Empty;
+        var auxProducto = ProductosBLL.Buscar(id).Descripcion;
+        if (auxProducto != null)
+        {
+            aux = auxProducto;
+
+        }
+        return aux;
+    }
+
+    private void CalcularImporte()
+    {
+        decimal auxImporte = 0;
+        auxImporte = cantidadColocada * precioEncontrado;
+        importe = auxImporte;
+    }
+
+
+    private void Nuevo()
+    {
+        this.facturas = new Facturas();
+        productoSeleccionado = 0;
+        cantidadColocada = 0;
+        precioEncontrado = 0;
+        importe = 0;
+    }
+
+    private void Buscar()
+    {
+        var encontrado = FacturasBLL.Buscar(facturas.FacturaId);
+        if (encontrado != null)
+        {
+            this.facturas = encontrado;
+        }
+        else
+            toast.ShowWarning("No encontrado");
+    }
+
+    private void Agregar()
+    {
+        if (productoSeleccionado == 0)
+        {
+            toast.ShowWarning("Tiene que seleccionar un producto.");
+            return;
+        }
+
+        if (cantidadColocada <= 0)
+        {
+            toast.ShowWarning("La cantidad debe ser mayor a 0.");
+            return;
+        }
+
+        if (cantidadColocada > ProductosBLL.Buscar(productoSeleccionado).Cantidad)
+        {
+            toast.ShowWarning("La cantidad sobrepasa a la del producto guardado.");
+            return;
+        }
+        else
+        {
+            this.facturas.Detalles.Add(new DetalleFacturas
+            {
+                DetalleFacturaId = 0,
+                FacturaId = facturas.FacturaId,
+                ProductoId = productoSeleccionado,
+                Cantidad = cantidadColocada,
+                Precio = precioEncontrado
+            });
+
+            productoSeleccionado = 0;
+            cantidadColocada = 0;
+            precioEncontrado = 0;
+            importe = 0;
+        }
+        CalcularTotal();
+
+    }
+
+    private void EliminarOrdenDetalle(DetalleFacturas detalle)
+    {
+        try
+        {
+            facturas.Detalles.Remove(detalle);
+            CalcularTotal();
+        }
+        catch (Exception)
+        {
+
+        }
+    }
+
+    private void EncontrarPrecio()
+    {
+        var auxProducto = ProductosBLL.Buscar(productoSeleccionado);
+        if (auxProducto != null)
+        {
+            precioEncontrado = auxProducto.Precio;
+        }
+    }
+
+
+    private void CalcularTotal()
+    {
+        decimal total = 0;
+        foreach (var item in facturas.Detalles)
+        {
+            total += (item.Cantidad * item.Precio);
+        }
+        facturas.Total = total;
+    }
+
+    private void Guardar()
+    {
+        bool paso = false;
+
+        if (facturas.Detalles.Count() == 0)
+        {
+            toast.ShowInfo("Debe agregar un producto al detalle.");
+            return;
+        }
+        else
+        {
+            paso = FacturasBLL.Guardar(facturas);
+
+            if (paso)
+            {
+                Nuevo();
+                toast.ShowSuccess("Guardado correctamente");
+            }
+            else
+            {
+                toast.ShowError("No fue posible guardar");
+            }
+        }
+    }
+
+    private void Eliminar()
+    {
+        bool elimino;
+
+        elimino = FacturasBLL.Eliminar(facturas.FacturaId);
+
+        if (elimino)
+        {
+            Nuevo();
+            toast.ShowSuccess("Eliminado correctamente");
+        }
+        else
+            toast.ShowError("No fue posible eliminar");
+    }
+
+
 
 }
