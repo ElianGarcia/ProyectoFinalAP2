@@ -1,4 +1,4 @@
-﻿@page "/ConsultaFacturas"
+﻿@page "/ConsultaClientes"
 @using ProyectoFinalAp2.Controllers
 @using ProyectoFinalAp2.Models
 
@@ -43,8 +43,11 @@
                     <option value="" disabled selected>Seleccione un filtro</option>
                     <option value="1">TODO</option>
                     <option value="2">ID</option>
-                    <option value="3">CLIENTE ID</option>
-                    <option value="4">TOTAL</option>
+                    <option value="3">NOMBRE</option>
+                    <option value="4">RNC</option>
+                    <option value="5">DIRECCION</option>
+                    <option value="6">TELEFONO</option>
+                    <option value="7">EMAIL</option>
                 </select>
             </div>
 
@@ -63,20 +66,24 @@
             <thead>
                 <tr>
                     <th>ID</th>
-                    <th>CLIENTE ID</th>
-                    <th>FECHA</th>
-                    <th>TOTAL</th>
+                    <th>NOMBRE</th>
+                    <th>RNC</th>
+                    <th>DIRECCION</th>
+                    <th>TELEFONO</th>
+                    <th>EMAIL</th>
                 </tr>
             </thead>
             <tbody class="table-striped">
                 @foreach (var item in lista)
                 {
                     <tr>
-                        <td>@item.FacturaId</td>
                         <td>@item.ClienteId</td>
-                        <td>@item.Fecha</td>
-                        <td>@item.Total</td>
-                        <td><a class="btn btn-outline-info" href="Facturas/@item.FacturaId">Ver</a></td>
+                        <td>@item.Nombre</td>
+                        <td>@item.RNC</td>
+                        <td>@item.Direccion</td>
+                        <td>@item.Telefono</td>
+                        <td>@item.Email</td>
+                        <td><a class="btn btn-outline-info" href="Clientes/@item.ClienteId">Ver</a></td>
                     </tr>
                 }
             </tbody>
@@ -85,22 +92,22 @@
 
 
     <div class="card-footer">
-       <div class="form-group">
-           <label>Suma total</label>
-           <input type="number" @bind="total" class="form-control" readonly/>
-       </div>
+        <div class="form-group">
+            <label>Cantidad de clientes</label>
+            <input type="number" @bind="cantidadCliente" class="form-control" readonly />
+        </div>
     </div>
 </div>
 
 @code {
 
-    List<Facturas> lista = new List<Facturas>();
+    List<Clientes> lista = new List<Clientes>();
     public bool BuscarFecha { get; set; }
     public DateTime DesdeFecha { get; set; }
     public DateTime HastaFecha { get; set; }
     public int filtro;
     public string criterio = string.Empty;
-    public decimal total = 0;
+    private int cantidadCliente = 0;
 
     protected override void OnInitialized()
     {
@@ -121,19 +128,26 @@
                 switch (filtro)
                 {
                     case 1: //Todos
-                        this.lista = FacturasBLL.GetList(f => true);
+                        this.lista = ClientesBLL.GetList(c => true);
                         break;
                     case 2: //Id
                         int ID = GetId();
-                        this.lista = FacturasBLL.GetList(f => f.FacturaId == ID);
+                        this.lista = ClientesBLL.GetList(c =>c.ClienteId == ID);
                         break;
-                    case 3: //cliente id
-                        int clienteID = GetId();
-                        this.lista = FacturasBLL.GetList(f => f.ClienteId == clienteID);
+                    case 3: //nombre
+                        this.lista = ClientesBLL.GetList(f => f.Nombre == criterio);
                         break;
-                    case 4: //Total
-                        decimal total = GetTotal();
-                        this.lista = FacturasBLL.GetList(f => f.Total == total);
+                    case 4: //rnc
+                        this.lista = ClientesBLL.GetList(f => f.RNC == criterio);
+                        break;
+                    case 5: //direccion
+                        this.lista = ClientesBLL.GetList(f => f.Direccion == criterio);
+                        break;
+                    case 6: //telefono
+                        this.lista = ClientesBLL.GetList(f => f.Telefono == criterio);
+                        break;
+                    case 7: //email
+                        this.lista = ClientesBLL.GetList(f => f.Email == criterio);
                         break;
                 }
                 if (BuscarFecha == true)
@@ -145,7 +159,7 @@
                     toast.ShowInfo("Vacio", "No se han encontrado productos, revise su criterio de busqueda");
                 }
 
-                CalcularTotal();
+                CantidadCliente();
             }
         }
         catch (Exception)
@@ -191,16 +205,9 @@
         return total;
     }
 
-    private void CalcularTotal()
+    private void CantidadCliente()
     {
-        decimal auxTotal = 0;
-        foreach (var item in lista)
-        {
-            auxTotal += item.Total;
-        }
-
-        total = auxTotal;
+        cantidadCliente = this.lista.Count();
     }
-
 
 }
