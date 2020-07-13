@@ -16,11 +16,11 @@ namespace ProyectoFinalAp2.Models
         [Required(ErrorMessage = "El campo nombre no puede estar vacío.")]
         [MinLength(3, ErrorMessage = "El nombre debe tener por lo menos 3 caracteres.")]
         [MaxLength(50, ErrorMessage = "El nombre es muy largo.")]
-        [RegularExpression(@"\S(.*)\S", ErrorMessage ="Debe ser un texto.")]
         public string Nombre { get; set; }
 
         [Required(ErrorMessage ="El campo RNC no puede estar vacío.")]
         [MinLength(9, ErrorMessage = "El campo RNC debe contener 9 caracteres.")]
+        [Phone(ErrorMessage ="Debe ser numerico.")]
         public string RNC { get; set; }
 
         [Required(ErrorMessage = "El campo dirección no puede estar vacía.")]

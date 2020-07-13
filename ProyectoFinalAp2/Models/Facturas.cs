@@ -15,7 +15,8 @@ namespace ProyectoFinalAp2.Models
         public int FacturaId { get; set; }
 
         [Required(ErrorMessage = "Debe seleccionar un cliente.")]
-        public string NombreCliente { get; set; }
+        [ForeignKey("ClienteId")]
+        public int ClienteId { get; set; }
 
         [DataType(DataType.DateTime)]
         [DisplayFormat(DataFormatString = "{0:dd,mm, yyyy}")]
@@ -32,7 +33,7 @@ namespace ProyectoFinalAp2.Models
         public Facturas()
         {
             FacturaId = 0;
-            NombreCliente = string.Empty;
+            ClienteId = 0;
             Fecha = DateTime.Now;
             Total = 0;
             Detalles = new List<DetalleFacturas>();

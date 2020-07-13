@@ -114,9 +114,6 @@ namespace ProyectoFinalAp2.Migrations
                     b.Property<int>("FacturaId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("NombreProducto")
-                        .HasColumnType("TEXT");
-
                     b.Property<decimal>("Precio")
                         .HasColumnType("TEXT");
 
@@ -157,12 +154,11 @@ namespace ProyectoFinalAp2.Migrations
                     b.Property<DateTime>("Fecha")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("NombreCliente")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
                     b.Property<decimal>("Total")
                         .HasColumnType("TEXT");
+
+                    b.Property<int>("clienteId")
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("FacturaId");
 
@@ -217,7 +213,7 @@ namespace ProyectoFinalAp2.Migrations
                             Costo = 100m,
                             Descripcion = "Zapato",
                             Donativo = false,
-                            Fecha = new DateTime(2020, 7, 8, 8, 54, 35, 382, DateTimeKind.Local).AddTicks(7206),
+                            Fecha = new DateTime(2020, 7, 13, 11, 5, 49, 22, DateTimeKind.Local).AddTicks(3251),
                             Ganancia = 50m,
                             Precio = 150m,
                             Reorden = 50
@@ -266,11 +262,21 @@ namespace ProyectoFinalAp2.Migrations
                         {
                             UsuarioId = 1,
                             Correo = "eliangarciarguez@gmail.com",
-                            FechaIngreso = new DateTime(2020, 7, 8, 8, 54, 35, 378, DateTimeKind.Local).AddTicks(7680),
+                            FechaIngreso = new DateTime(2020, 7, 13, 11, 5, 49, 20, DateTimeKind.Local).AddTicks(3806),
                             Nivel = "Administrador",
                             NombreUsuario = "Rguez12",
                             Nombres = "Elian Garcia",
-                            PassWord = "uMbRelLa1772"
+                            PassWord = "dQBNAGIAUgBlAGwATABhADEANwA3ADIA"
+                        },
+                        new
+                        {
+                            UsuarioId = 2,
+                            Correo = "rehanicordero@gmail.com",
+                            FechaIngreso = new DateTime(2020, 7, 13, 11, 5, 49, 20, DateTimeKind.Local).AddTicks(5795),
+                            Nivel = "Administrador",
+                            NombreUsuario = "rehani97",
+                            Nombres = "Rehani Cordero",
+                            PassWord = "MQAyADMANAA="
                         });
                 });
 

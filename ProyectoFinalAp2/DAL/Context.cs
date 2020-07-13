@@ -36,6 +36,17 @@ namespace ProyectoFinalAp2.Data
                 Correo = "eliangarciarguez@gmail.com"
             });
 
+            model.Entity<Usuarios>().HasData(new Usuarios
+            {
+                UsuarioId = 2,
+                Nombres = "Rehani Cordero",
+                NombreUsuario = "rehani97",
+                PassWord = UsuariosBLL.encode("1234"),
+                FechaIngreso = DateTime.Now,
+                Nivel = "Administrador",
+                Correo = "rehanicordero@gmail.com"
+            });
+
             model.Entity<Productos>().HasData(new Productos
             {
                 ProductoId = 1,

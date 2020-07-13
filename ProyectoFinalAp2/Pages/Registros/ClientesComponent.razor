@@ -1,151 +1,146 @@
 ﻿@page "/Clientes"
+@page "/Personas/{clienteId:int}"
 @using ProyectoFinalAp2.Models
 @using ProyectoFinalAp2.Controllers
 @using ProyectoFinalAp2.Data
 
-<h3>Registro de Clientes</h3>
+@inject IToastService toast
+
+
 
 <EditForm Model="clientes" OnValidSubmit="Guardar">
     <DataAnnotationsValidator />
 
-    <label for="Id">ID</label>
-    <div class="input-group">
-        <InputNumber @bind-Value="clientes.ClienteId" class="form-control"></InputNumber>
-        <ValidationMessage For="(() => clientes.ClienteId)"></ValidationMessage>
-        <div class="input-group-append">
-            <button type="button" class="btn btn-primary" @onclick="Buscar"><span class="icon-search"></span>Buscar</button>
+    <div class="card">
+
+        <div class="card-header  alert-info">
+            <h3>Registro de Clientes</h3>
         </div>
+
+        <div class="card-body">
+
+            <label for="Id">ID</label>
+            <div class="input-group">
+                <InputNumber @bind-Value="clientes.ClienteId" class="form-control"></InputNumber>
+                <ValidationMessage For="(() => clientes.ClienteId)"></ValidationMessage>
+                <div class="input-group-append">
+                    <button type="button" class="btn btn-primary" @onclick="Buscar"><span class="icon-search"></span>Buscar</button>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="NOMBRE">NOMBRE</label>
+                <InputText @bind-Value="clientes.Nombre" class="form-control"></InputText>
+                <ValidationMessage For="(() => clientes.Nombre)"></ValidationMessage>
+            </div>
+
+            <div class="form-group">
+                <label for="RNC">RNC</label>
+                <InputText @bind-Value="clientes.RNC" class="form-control"></InputText>
+                <ValidationMessage For="(() => clientes.RNC)"></ValidationMessage>
+            </div>
+
+            <div class="form-group">
+                <label for="DIRECCION">DIRECCION</label>
+                <InputText @bind-Value="clientes.Direccion" class="form-control"></InputText>
+                <ValidationMessage For="(() => clientes.Direccion)"></ValidationMessage>
+            </div>
+
+            <div class="form-group">
+                <label for="TELEFONO">TELEFONO</label>
+                <InputText @bind-Value="clientes.Telefono" class="form-control"></InputText>
+                <ValidationMessage For="(() => clientes.Telefono)"></ValidationMessage>
+            </div>
+
+            <div class="form-group">
+                <label for="EMAIL">EMAIL</label>
+                <InputText @bind-Value="clientes.Email" class="form-control"></InputText>
+                <ValidationMessage For="(() => clientes.Email)"></ValidationMessage>
+            </div>
+
+            <div class="form-group">
+                <label for="FECHA">FECHA</label>
+                <InputDate @bind-Value="clientes.Fecha" class="form-control"></InputDate>
+                <ValidationMessage For="(() => clientes.Fecha)"></ValidationMessage>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <button type="button" class="btn btn-secondary" @onclick="Nuevo"><span class="icon-add"></span> Nuevo </button>
+            <button type="submit" class="btn btn-success"><span class="icon-save"></span> Guardar </button>
+            <button type="button" class="btn btn-danger" @onclick="Eliminar"><span class="icon-delete_forever"></span> Eliminar </button>
+        </div>
+
     </div>
 
-    <div class="form-group">
-        <label for="NOMBRE">NOMBRE</label>
-        <InputText @bind-Value="clientes.Nombre" class="form-control"></InputText>
-        <ValidationMessage For="(() => clientes.Nombre)"></ValidationMessage>
-    </div>
-
-    <div class="form-group">
-        <label for="RNC">RNC</label>
-        <InputText @bind-Value="clientes.RNC" class="form-control"></InputText>
-        <ValidationMessage For="(() => clientes.RNC)"></ValidationMessage>
-    </div>
-
-    <div class="form-group">
-        <label for="DIRECCION">DIRECCION</label>
-        <InputText @bind-Value="clientes.Direccion" class="form-control"></InputText>
-        <ValidationMessage For="(() => clientes.Direccion)"></ValidationMessage>
-    </div>
-
-    <div class="form-group">
-        <label for="TELEFONO">TELEFONO</label>
-        <InputText @bind-Value="clientes.Telefono" class="form-control"></InputText>
-        <ValidationMessage For="(() => clientes.Telefono)"></ValidationMessage>
-    </div>
-
-    <div class="form-group">
-        <label for="EMAIL">EMAIL</label>
-        <InputText @bind-Value="clientes.Email" class="form-control"></InputText>
-        <ValidationMessage For="(() => clientes.Email)"></ValidationMessage>
-    </div>
-
-    <div class="form-group">
-        <label for="FECHA">FECHA</label>
-        <InputDate @bind-Value="clientes.Fecha" class="form-control"></InputDate>
-        <ValidationMessage For="(() => clientes.Fecha)"></ValidationMessage>
-    </div>
-
-
-    <div class="form-group">
-        <button type="button" class="btn btn-secondary" @onclick="Nuevo"><span class="icon-add"></span> Nuevo </button>
-        <button type="submit" class="btn btn-success" @onclick="Guardar"><span class="icon-save"></span> Guardar </button>
-        <button type="button" class="btn btn-danger" @onclick="Eliminar"><span class="icon-delete_forever"></span> Eliminar </button>
-    </div>
-
-    <h3>@estado</h3>
+    
 
 </EditForm>
 
 
 @code {
 
+    [Parameter]
+    public int clienteId { get; set; }
+
     Clientes clientes = new Clientes();
-    private string estado;
 
-
-    private bool ExisteEnLaBaseDeDatos()
+    protected override void OnInitialized()
     {
-        ClientesControllers control = new ClientesControllers();
-        Clientes _cliente = control.Buscar(clientes.ClienteId);
-        return (_cliente != null);
+        Nuevo();
+        if (clienteId > 0)
+        {
+            var auxCliente = ClientesBLL.Buscar(clientes.ClienteId);
+            if (auxCliente != null)
+                this.clientes = auxCliente;
+            else
+                toast.ShowWarning("No encontrado.");
+        }
     }
 
     private void Nuevo()
     {
         this.clientes = new Clientes();
-        estado = "";
     }
 
     private void Guardar()
     {
-        ClientesControllers control = new ClientesControllers();
-        bool paso = true;
-        if (clientes.ClienteId == 0)
-        {
-            paso = control.Guardar(clientes);
-
-        }
-        else
-        { 
-                paso = control.Modificar(clientes);
-
-        }
+        bool paso;
+        paso = ClientesBLL.Guardar(clientes);
 
         if (paso)
         {
-            estado = "Guardado Correctamente..";
+            Nuevo();
+            toast.ShowSuccess("Guardado correctamente");
+        }
+        else
+        {
+            toast.ShowError("No fue posible guardar");
         }
 
     }
 
     private void Eliminar()
     {
-        bool paso = true;
-        ClientesControllers control = new ClientesControllers();
+        bool elimino;
 
-    
-        paso = control.Eliminar(clientes.ClienteId);
+        elimino = ClientesBLL.Eliminar(clientes.ClienteId);
 
-
-
-        if (paso)
+        if (elimino)
         {
             Nuevo();
-            estado = "Eliminado Correctamente...";
+            toast.ShowSuccess("Eliminado correctamente");
         }
-
-
+        else
+            toast.ShowError("No fue posible eliminar");
     }
 
     private void Buscar()
     {
-        estado = "";
-        ClientesControllers control = new ClientesControllers();
-        Clientes auxClientes = new Clientes();
-        auxClientes = control.Buscar(clientes.ClienteId);
-
-        if (auxClientes != null)
-        {
-            this.clientes = auxClientes;
-        }
+        var encontrado = ClientesBLL.Buscar(clientes.ClienteId);
+        if (encontrado != null)
+            this.clientes = encontrado;
         else
-        {
-            this.clientes.Nombre = "";
-            this.clientes.Direccion = "";
-            this.clientes.Email = "";
-            this.clientes.RNC = "";
-            this.clientes.Fecha = DateTime.Now;
-            this.clientes.Telefono = "";
-            estado = "No encontrado...";
-        }
-
+            toast.ShowWarning("No encontrado");
     }
 }

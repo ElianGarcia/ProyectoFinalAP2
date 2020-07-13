@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace ProyectoFinalAp2.Migrations
 {
-    public partial class New_Migration : Migration
+    public partial class CreateFinalDB : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -59,7 +59,7 @@ namespace ProyectoFinalAp2.Migrations
                 {
                     FacturaId = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    NombreCliente = table.Column<string>(nullable: false),
+                    clienteId = table.Column<int>(nullable: false),
                     Fecha = table.Column<DateTime>(nullable: false),
                     Total = table.Column<decimal>(nullable: false)
                 },
@@ -114,7 +114,6 @@ namespace ProyectoFinalAp2.Migrations
                     DetalleFacturaId = table.Column<int>(nullable: false),
                     FacturaId = table.Column<int>(nullable: false),
                     ProductoId = table.Column<int>(nullable: false),
-                    NombreProducto = table.Column<string>(nullable: true),
                     Cantidad = table.Column<int>(nullable: false),
                     Precio = table.Column<decimal>(nullable: false)
                 },
@@ -165,12 +164,17 @@ namespace ProyectoFinalAp2.Migrations
             migrationBuilder.InsertData(
                 table: "Productos",
                 columns: new[] { "ProductoId", "Cantidad", "CategoriaiD", "Costo", "Descripcion", "Donativo", "Fecha", "Ganancia", "Precio", "Reorden" },
-                values: new object[] { 1, 25, 1, 100m, "Zapato", false, new DateTime(2020, 7, 8, 8, 54, 35, 382, DateTimeKind.Local).AddTicks(7206), 50m, 150m, 50 });
+                values: new object[] { 1, 25, 1, 100m, "Zapato", false, new DateTime(2020, 7, 13, 11, 5, 49, 22, DateTimeKind.Local).AddTicks(3251), 50m, 150m, 50 });
 
             migrationBuilder.InsertData(
                 table: "Usuarios",
                 columns: new[] { "UsuarioId", "Correo", "FechaIngreso", "Nivel", "NombreUsuario", "Nombres", "PassWord" },
-                values: new object[] { 1, "eliangarciarguez@gmail.com", new DateTime(2020, 7, 8, 8, 54, 35, 378, DateTimeKind.Local).AddTicks(7680), "Administrador", "Rguez12", "Elian Garcia", "uMbRelLa1772" });
+                values: new object[] { 1, "eliangarciarguez@gmail.com", new DateTime(2020, 7, 13, 11, 5, 49, 20, DateTimeKind.Local).AddTicks(3806), "Administrador", "Rguez12", "Elian Garcia", "dQBNAGIAUgBlAGwATABhADEANwA3ADIA" });
+
+            migrationBuilder.InsertData(
+                table: "Usuarios",
+                columns: new[] { "UsuarioId", "Correo", "FechaIngreso", "Nivel", "NombreUsuario", "Nombres", "PassWord" },
+                values: new object[] { 2, "rehanicordero@gmail.com", new DateTime(2020, 7, 13, 11, 5, 49, 20, DateTimeKind.Local).AddTicks(5795), "Administrador", "rehani97", "Rehani Cordero", "MQAyADMANAA=" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_DetalleEntradaProductos_EntradaProductosEntradaProductoId",

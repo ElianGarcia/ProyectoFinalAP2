@@ -92,8 +92,12 @@ namespace ProyectoFinalAp2.Controllers
             try
             {
                 var aux = db.Categorias.Find(ID);
-                db.Categorias.Remove(aux);
-                paso = db.SaveChanges() > 0;
+                if (aux != null)
+                {
+                    db.Categorias.Remove(aux);
+                    paso = db.SaveChanges() > 0;
+                }
+               
             }
             catch (Exception)
             {

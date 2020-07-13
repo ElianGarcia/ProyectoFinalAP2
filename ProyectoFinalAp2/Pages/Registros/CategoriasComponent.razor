@@ -1,131 +1,115 @@
 ﻿@page "/Categorias"
+@page "/Categorias/{categoriaId:int}"
 @using ProyectoFinalAp2.Models
 @using ProyectoFinalAp2.Controllers
 @using ProyectoFinalAp2.Data
 
-@inject AuthenticationStateProvider AuthenticationStateProvider
-
-<h3>Registo de Categorias</h3>
-
-<style>
-    .form-group {
-        color: black;
-    }
-</style>
+@inject IToastService toast
 
 
 <EditForm Model="categorias" OnValidSubmit="Guardar">
     <DataAnnotationsValidator />
-    
-    <label for="Id">ID</label>
-    <div class="input-group">
-        <InputNumber @bind-Value="categorias.CategoriaId" class="form-control"></InputNumber>
-        <ValidationMessage For="(() => categorias.CategoriaId)"></ValidationMessage>
-        <div class="input-group-append">
-            <button type="button" class="btn btn-primary" @onclick="Buscar"><span class="icon-search"></span>Buscar</button>
+
+    <div class="card">
+
+        <div class="card-header alert-info">
+            <h3>Registo de Categorias</h3>
         </div>
+
+        <div class="card-body">
+            <label for="Id">ID</label>
+            <div class="input-group">
+                <InputNumber @bind-Value="categorias.CategoriaId" class="form-control"></InputNumber>
+                <ValidationMessage For="(() => categorias.CategoriaId)"></ValidationMessage>
+                <div class="input-group-append">
+                    <button type="button" class="btn btn-primary" @onclick="Buscar"><span class="icon-search"></span>Buscar</button>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="Descripcion">Descripción</label>
+                <InputText @bind-Value="categorias.Descripcion" class="form-control"></InputText>
+                <ValidationMessage For="(() => categorias.Descripcion)"></ValidationMessage>
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            <button type="button" class="btn btn-secondary" @onclick="Nuevo"><span class="icon-add"></span> Nuevo </button>
+            <button type="submit" class="btn btn-success"><span class="icon-save"></span> Guardar </button>
+            <button type="button" class="btn btn-danger" @onclick="Eliminar"><span class="icon-delete_forever"></span> Eliminar </button>
+        </div>
+
     </div>
-
-    <div class="form-group">
-        <label for="Descripcion">Descripción</label>
-        <InputText @bind-Value="categorias.Descripcion" class="form-control"></InputText>
-        <ValidationMessage For="(() => categorias.Descripcion)"></ValidationMessage>
-    </div>
-
-    <div class="form-group">
-        <button type="button" class="btn btn-secondary" @onclick="Nuevo"><span class="icon-add"></span> Nuevo </button>
-        <button type="submit" class="btn btn-success" @onclick="Guardar"><span class="icon-save"></span> Guardar </button>
-        <button type="button" class="btn btn-danger" @onclick="Eliminar"><span class="icon-delete_forever"></span> Eliminar </button>
-    </div>
-
-    <h3>@estado</h3>
-
 </EditForm>
 
 
 @code {
 
+    [Parameter]
+    public int categoriaId { get; set; }
+
+
     Categorias categorias = new Categorias();
-    private string estado;
 
-
-    public bool ExisteEnLaBaseDeDatos(int id)
+    protected override void OnInitialized()
     {
-        var encontrado = CategoriasBLL.Buscar(id);
-        bool paso = true;
-
-        if (encontrado == null)
+        Nuevo();
+        if (categoriaId > 0)
         {
-            paso = false;
+            var auxCategoria = CategoriasBLL.Buscar(categoriaId);
+            if (auxCategoria != null)
+                this.categorias = auxCategoria;
+            else
+                toast.ShowWarning("No encontrado.");
         }
-
-        return paso;
     }
 
-    public bool ExisteEnLaBaseDeDatos()
-    {
-        Categorias encontrado = CategoriasBLL.Buscar(categorias.CategoriaId);
-
-        return (encontrado != null);
-    }
-
-    void Nuevo()
+    private void Nuevo()
     {
         this.categorias = new Categorias();
-        estado = "";
     }
 
-    void Guardar()
+    private void Buscar()
     {
-        bool paso = true;
-        if (categorias.CategoriaId == 0)
-        {
-            paso = CategoriasBLL.Guardar(categorias);
-
-        }
+        var encontrado = CategoriasBLL.Buscar(categorias.CategoriaId);
+        if (encontrado != null)
+            this.categorias = encontrado;
         else
-        {
-            if(ExisteEnLaBaseDeDatos()) //No esta funcionando esta validacion
-            {
-                paso = CategoriasBLL.Modificar(categorias);
-            }
-        }
-
-        if (paso)
-        {
-            estado = "Guardado Correctamente..";
-        }
-
+            toast.ShowWarning("No encontrado");
     }
 
-    void Eliminar()
+    private void Guardar()
     {
-        bool paso= true;
-        
-        paso = CategoriasBLL.Eliminar(categorias.CategoriaId);
+
+        bool paso;
+        paso = CategoriasBLL.Guardar(categorias);
 
         if (paso)
         {
             Nuevo();
-            estado = "Eliminado Correctamente...";
-        }
-
-
-    }
-
-    void Buscar()
-    {
-        estado = "";
-        Categorias auxCategoria = CategoriasBLL.Buscar(categorias.CategoriaId);
-
-        if (auxCategoria != null)
-        {
-            this.categorias = auxCategoria;
+            toast.ShowSuccess("Guardado correctamente");
         }
         else
         {
-            this.categorias.Descripcion = "";
-            estado = "No encontrado...";
+            toast.ShowError("No fue posible guardar");
         }
     }
+
+    private void Eliminar()
+    {
+        bool elimino;
+
+        elimino = CategoriasBLL.Eliminar(categorias.CategoriaId);
+
+        if (elimino)
+        {
+            Nuevo();
+            toast.ShowSuccess("Eliminado correctamente");
+        }
+        else
+            toast.ShowError("No fue posible eliminar");
+    }
+
+
 }
