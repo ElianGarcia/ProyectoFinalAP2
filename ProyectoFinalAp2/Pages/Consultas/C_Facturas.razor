@@ -1,0 +1,205 @@
+﻿@page "/ConsultaFacturas"
+@using ProyectoFinalAp2.Controllers
+@using ProyectoFinalAp2.Models
+
+@inject IToastService toast
+
+<div class="card">
+
+    <div class="card-header  alert-info">
+        <div class="text-center">
+            <img src="Resources/favicon.ico" height="90" />
+        </div>
+
+        <div class="text-center">
+            <h3 class="text-center text-black-50">Consulta de Facturas</h3>
+        </div>
+    </div>
+
+    <div class="card-body">
+        <div class="form-row">
+            <div class="form-group col">
+                <br />
+                <input class="align-self-center" type="checkbox" @bind="BuscarFecha" id="defaultCheck1">
+                <label for="DesdeFecha">Filtrar por fecha</label>
+            </div>
+
+            @if (BuscarFecha)
+            {
+                <div class="form-group col">
+                    <label for="DesdeFecha">Desde: </label>
+                    <input id="DesdeFecha" type="date" @bind="DesdeFecha" class="form-control" input />
+                </div>
+
+                <div class="form-group col">
+                    <label for="HastaFechaInput" class="mr-3">Hasta:</label>
+                    <input type="date" Id="HastaFechaInput" @bind="HastaFecha" class="form-control" />
+                </div>
+            }
+
+            <div class="form-group col">
+                <label for="filtro">Filtro: </label>
+                <select class="form-control" @bind="filtro">
+                    <option value="" disabled selected>Seleccione un filtro</option>
+                    <option value="1">TODO</option>
+                    <option value="2">ID</option>
+                    <option value="3">CLIENTE ID</option>
+                    <option value="4">TOTAL</option>
+                </select>
+            </div>
+
+            <div class="form-group col">
+                <label for="criterio"> Criterio: </label>
+                <input type="text" class="form-control" @bind="criterio" />
+            </div>
+
+            <div class="form-group col mt-1">
+                <br />
+                <button type="button" class="btn btn-outline-success" @onclick="Buscar">Buscar</button>
+            </div>
+        </div>
+
+        <table class="table mb-3">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>CLIENTE ID</th>
+                    <th>FECHA</th>
+                    <th>TOTAL</th>
+                </tr>
+            </thead>
+            <tbody class="table-striped">
+                @foreach (var item in lista)
+                {
+                    <tr>
+                        <td>@item.FacturaId</td>
+                        <td>@item.ClienteId</td>
+                        <td>@item.Fecha</td>
+                        <td>@item.Total</td>
+                        <td><a class="btn btn-outline-info" href="Facturas/@item.FacturaId">Ver</a></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+
+    <div class="card-footer">
+       <div class="form-group">
+           <input type="number" @bind="total" class="form-control" readonly/>
+       </div>
+    </div>
+</div>
+
+@code {
+
+    List<Facturas> lista = new List<Facturas>();
+    public bool BuscarFecha { get; set; }
+    public DateTime DesdeFecha { get; set; }
+    public DateTime HastaFecha { get; set; }
+    public int filtro;
+    public string criterio = string.Empty;
+    public decimal total = 0;
+
+    protected override void OnInitialized()
+    {
+        DesdeFecha = DateTime.Now;
+        HastaFecha = DateTime.Now;
+    }
+
+    private void Buscar()
+    {
+        try
+        {
+            if (filtro == 0)
+            {
+                toast.ShowWarning("Debe seleccionar un Filtro", "Aviso");
+            }
+            else
+            {
+                switch (filtro)
+                {
+                    case 1: //Todos
+                        this.lista = FacturasBLL.GetList(f => true);
+                        break;
+                    case 2: //Id
+                        int ID = GetId();
+                        this.lista = FacturasBLL.GetList(f => f.FacturaId == ID);
+                        break;
+                    case 3: //cliente id
+                        int clienteID = GetId();
+                        this.lista = FacturasBLL.GetList(f => f.ClienteId == clienteID);
+                        break;
+                    case 4: //Total
+                        decimal total = GetTotal();
+                        this.lista = FacturasBLL.GetList(f => f.Total == total);
+                        break;
+                }
+                if (BuscarFecha == true)
+                {
+                    lista = lista.Where(f => f.Fecha.Date >= DesdeFecha.Date && f.Fecha.Date <= HastaFecha.Date).ToList();
+                }
+                if (lista == null)
+                {
+                    toast.ShowInfo("Vacio", "No se han encontrado productos, revise su criterio de busqueda");
+                }
+
+                CalcularTotal();
+            }
+        }
+        catch (Exception)
+        {
+
+            throw;
+        }
+    }
+
+    private int GetId()
+    {
+        int resultado = 0;
+
+        try
+        {
+            resultado = Convert.ToInt32(criterio);
+            return resultado;
+        }
+        catch (Exception)
+        {
+
+            toast.ShowError("El ID del cliente debe ser numerico..");
+        }
+
+        return resultado;
+    }
+
+    private decimal GetTotal()
+    {
+        decimal total = 0;
+
+        try
+        {
+            total = Convert.ToDecimal(criterio);
+            return total;
+        }
+        catch (Exception)
+        {
+
+            toast.ShowError("El total debe ser numerico..");
+        }
+
+        return total;
+    }
+
+    private void CalcularTotal()
+    {
+        decimal auxTotal = 0;
+        foreach (var item in lista)
+        {
+            auxTotal += item.Total;
+        }
+
+        total = auxTotal;
+    }
+
+
+}
