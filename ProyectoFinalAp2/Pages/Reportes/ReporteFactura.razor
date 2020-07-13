@@ -1,0 +1,78 @@
+﻿@page "/Reportes/Facturas"
+@using ProyectoFinalAp2.Models;
+@using ProyectoFinalAp2.Controllers;
+
+<div class="card">
+    <div class="card-header alert-info">
+        <div class="text-center">
+            <img src="Resources/favicon.ico" height="90" />
+        </div>
+
+        <div class="text-center">
+            <h3 class="text-center text-black-50">ButterSoft</h3>
+            <h3 class="text-center text-black-50">Reporte de Facturas</h3>
+        </div>
+
+        <div class="float-right mb-4">
+            <label for="FECHA">Fecha de impresion: @Fecha </label>
+        </div>
+    </div>
+
+    <div class="card-body">
+        <table class="table mb-3">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>CLIENTE ID</th>
+                    <th>FECHA</th>
+                    <th>TOTAL</th>
+                </tr>
+            </thead>
+            <tbody class="table-striped">
+                @foreach (var item in lista)
+                {
+                    <tr>
+                        <td>@item.FacturaId</td>
+                        <td>@item.ClienteId</td>
+                        <td>@item.Fecha</td>
+                        <td>@item.Total</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div class="card-footer">
+        <div class="form-group">
+            <label>Total de Clientes</label>
+            <input @bind="@total" class="form-control" readonly />
+        </div>
+    </div>
+</div>
+
+
+@code {
+
+    List<Facturas> lista = new List<Facturas>();
+    private String Fecha;
+    private decimal total = 0;
+
+    protected override void OnInitialized()
+    {
+        Fecha = DateTime.Now.ToShortDateString();
+        lista = FacturasBLL.GetList(c => true);
+        CalcularTotal();
+    }
+
+    private void CalcularTotal()
+    {
+        decimal auxTotal = 0;
+        foreach (var item in lista)
+        {
+            auxTotal += item.Total;
+        }
+
+        total = auxTotal;
+    }
+
+}
