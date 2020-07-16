@@ -17,8 +17,6 @@ namespace ProyectoFinalAp2.Pages.Login
     {
         public string ReturnUrl { get; set; }
 
-        //private readonly IJSRuntime JS;
-
         private string getNivel(string paramUsername)
         {
             string nivel = UsuariosBLL.NivelUsuario(paramUsername);
@@ -34,7 +32,6 @@ namespace ProyectoFinalAp2.Pages.Login
             bool paso = false;
             try
             {
-
                 await HttpContext
                     .SignOutAsync(
                     CookieAuthenticationDefaults.AuthenticationScheme);
@@ -67,7 +64,6 @@ namespace ProyectoFinalAp2.Pages.Login
 
             if (!paso)
             {
-                //await JS.Confirmar("top-center", "error", "Error", "Usuario y/o contraseña incorrectos", false, 2000);
                 return LocalRedirect(ReturnUrl);
             } 
 

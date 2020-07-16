@@ -145,6 +145,22 @@
 @code {
     string Username;
     string Password;
+    public static int num = 0;
+
+    protected override void OnInitialized()
+    {
+        num += 1;
+
+        if(num > 1)
+        {
+            var r = Mostrar();
+        }
+    }
+
+    public async Task Mostrar()
+    {
+        await jsRunTime.Confirmar("top-center", "error", "Intentelo de nuevo", "Usuario y/o contraseña incorrectos", false, 2000);
+    }
 
     private string encode(string param)
     {
