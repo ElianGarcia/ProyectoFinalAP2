@@ -47,6 +47,8 @@ namespace ProyectoFinalAp2
             // ******
             services.AddRazorPages();
             services.AddServerSideBlazor();
+            services.AddSingleton<WeatherForecastService>();
+            services.AddSingleton<ExportService>();
             // ******
             // BLAZOR COOKIE Auth Code (begin)
             // From: https://github.com/aspnet/Blazor/issues/1554

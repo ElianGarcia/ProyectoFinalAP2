@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.JSInterop;
 using ProyectoFinalAp2.Controllers;
 
 namespace ProyectoFinalAp2.Pages.Login
@@ -15,6 +16,8 @@ namespace ProyectoFinalAp2.Pages.Login
     public class LoginModel : PageModel
     {
         public string ReturnUrl { get; set; }
+
+        //private readonly IJSRuntime JS;
 
         private string getNivel(string paramUsername)
         {
@@ -58,14 +61,15 @@ namespace ProyectoFinalAp2.Pages.Login
             }
 
             string User = paramUsername;
-            string Pass = paramPassword;
+            string Pass = UsuariosBLL.encode(paramPassword);
 
             paso = UsuariosBLL.VerificarExistenciaYClaveDelUsuario(User, Pass);
 
             if (!paso)
             {
+                //await JS.Confirmar("top-center", "error", "Error", "Usuario y/o contraseña incorrectos", false, 2000);
                 return LocalRedirect(ReturnUrl);
-            }
+            } 
 
             var claimsIdentity = new ClaimsIdentity(
                 claims, CookieAuthenticationDefaults.AuthenticationScheme);

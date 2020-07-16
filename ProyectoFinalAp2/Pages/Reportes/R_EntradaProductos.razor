@@ -1,4 +1,4 @@
-﻿@page "/Reportes/Usuarios"
+﻿@page "/Reportes/EntradaProductos"
 @using ProyectoFinalAp2.Models;
 @using ProyectoFinalAp2.Controllers;
 @using ProyectoFinalAp2.Data;
@@ -14,7 +14,7 @@
 
         <div class="text-center">
             <h3 class="text-center text-black-50">ButterSoft</h3>
-            <h3 class="text-center text-black-50">Reporte de Usuarios</h3>
+            <h3 class="text-center text-black-50">Reporte Entrada de Productos</h3>
         </div>
 
         <div class="float-right mb-4">
@@ -26,28 +26,27 @@
         <table class="table table-striped">
             <thead>
                 <tr>
-                    <th> ID de Usuario </th>
-                    <th> Nombres </th>
-                    <th> Nombre de Usuario </th>
-                    <th> Fecha de Ingreso </th>
+                    <th> ID </th>
+                    <th> Fecha </th>
+                    <th> Cantidad Total </th>
                 </tr>
             </thead>
             <tbody class="table-striped">
-                @foreach (var usuario in @Lista)
+                @foreach (var item in Lista)
                 {
                     <tr>
-                        <td>@usuario.UsuarioId</td>
-                        <td>@usuario.Nombres</td>
-                        <td>@usuario.NombreUsuario</td>
-                        <td>@usuario.FechaIngreso</td>
+                        <td>@item.EntradaProductoId</td>
+                        <td>@item.Fecha</td>
+                        <td>@item.CantidadTotal</td>
                     </tr>
                 }
             </tbody>
         </table>
     </div>
+
     <div class="card-footer">
-        <label for="GANANCIA">Cantidad de usuarios registrados</label>
-        <input @bind="@Cantidad" class="form-control" readonly />
+        <label for="GANANCIA">Cantidad Total</label>
+        <input @bind="@Total" class="form-control" step="00.2" readonly />
     </div>
 
     <button class="btn btn-primary" @onclick="@ExportToPdf">Exportar a PDF</button>
@@ -55,33 +54,33 @@
 
 
 @code {
-    List<Usuarios> Lista = new List<Usuarios>();
+    List<EntradaProductos> Lista = new List<EntradaProductos>();
     String Fecha;
-    int Cantidad;
+    decimal Total = 0;
 
     protected override void OnInitialized()
     {
         Fecha = DateTime.Now.ToShortDateString();
-        Lista = UsuariosBLL.GetList(e => true);
+        Lista = EntradaProductoBLL.GetList(e => true);
         CalcularTotal();
     }
 
-    private int CalcularTotal()
+    private decimal CalcularTotal()
     {
-        Cantidad = 0;
+        Total = 0;
 
-        foreach (var usuario in Lista)
+        foreach (var item in Lista)
         {
-            Cantidad += 1;
+            Total += item.CantidadTotal;
         }
-        return Cantidad;
+        return Total;
     }
 
     protected async Task ExportToPdf()
     {
-        using (MemoryStream excelStream = ExportService.CreatePdfUsuarios(Lista, Fecha))
+        using (MemoryStream excelStream = ExportService.CreatePdfEntradaProductos(Lista, Fecha))
         {
-            await JS.SaveAs("Usuarios.pdf", excelStream.ToArray());
+            await JS.SaveAs("EntradaProductos.pdf", excelStream.ToArray());
         }
     }
 }

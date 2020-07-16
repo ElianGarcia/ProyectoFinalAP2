@@ -45,8 +45,6 @@ namespace ProyectoFinalAp2.Models
         [Range(0, 100000, ErrorMessage = "El reorden de productos no puede ser menor que cero ni mayor a 100000.")]
         public int Reorden { get; set; }
 
-        public bool Donativo { get; set; }
-
         public Productos()
         {
             ProductoId = 0;

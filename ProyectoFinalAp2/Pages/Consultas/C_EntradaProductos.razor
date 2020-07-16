@@ -1,13 +1,12 @@
-﻿@page "/Consultas/Usuarios"
-
-@inject IToastService toast
-
+﻿@page "/Consultas/EntradaProductos"
 @using ProyectoFinalAp2.Models;
 @using ProyectoFinalAp2.Controllers;
 @using ProyectoFinalAp2.Data;
 @using System.IO;
+
 @inject ExportService exportService
 @inject Microsoft.JSInterop.IJSRuntime JS
+@inject IToastService toast
 
 <EditForm Model="lista" OnValidSubmit="ExportToPdf">
     <DataAnnotationsValidator />
@@ -18,7 +17,7 @@
             </div>
 
             <div class="text-center">
-                <h3 class="text-center text-black-50">Consulta de Usuarios</h3>
+                <h3 class="text-center text-black-50">Consulta Entrada de Productos</h3>
             </div>
         </div>
 
@@ -49,8 +48,6 @@
                         <option value="" disabled selected>Seleccione un filtro</option>
                         <option value="Todo">Todo</option>
                         <option value="Id">ID</option>
-                        <option value="Descripcion">Nombre</option>
-                        <option value="Descripcion">Nombre de Usuario</option>
                     </select>
                 </div>
 
@@ -68,20 +65,18 @@
                     <thead class="thead-light">
                         <tr>
                             <th>ID</th>
-                            <th>Nombre</th>
-                            <th>Nombre de Usuario</th>
-                            <th>Fecha de Ingreso</th>
+                            <th>Fecha</th>
+                            <th>Cantidad Total</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach (var item in lista)
                         {
                             <tr>
-                                <td>@item.UsuarioId</td>
-                                <td>@item.Nombres</td>
-                                <td>@item.NombreUsuario</td>
-                                <td>@item.FechaIngreso</td>
-                                <td><a class="btn btn-outline-info" href="Registros/Usuarios/@item.UsuarioId">Ver</a></td>
+                                <td>@item.EntradaProductoId</td>
+                                <td>@item.Fecha</td>
+                                <td>@item.CantidadTotal</td>
+                                <td><a class="btn btn-outline-info" href="Registros/EntradaProductos/@item.EntradaProductoId">Ver</a></td>
                             </tr>
                         }
                     </tbody>
@@ -96,7 +91,7 @@
 
 @code {
 
-    private List<Usuarios> lista { get; set; }
+    private List<EntradaProductos> lista { get; set; }
 
     private string Filtro { get; set; }
     private string Criterio { get; set; }
@@ -107,16 +102,16 @@
 
     protected override void OnInitialized()
     {
-        lista = new List<Usuarios>();
+        lista = new List<EntradaProductos>();
         DesdeFecha = DateTime.Now;
         HastaFecha = DateTime.Now;
     }
 
     protected async Task ExportToPdf()
     {
-        using (MemoryStream excelStream = ExportService.CreatePdfUsuarios(lista, DateTime.Now.ToString()))
+        using (MemoryStream excelStream = ExportService.CreatePdfEntradaProductos(lista, DateTime.Now.ToString()))
         {
-            await JS.SaveAs("Productos.pdf", excelStream.ToArray());
+            await JS.SaveAs("EntradaProductos.pdf", excelStream.ToArray());
         }
     }
 
@@ -130,37 +125,31 @@
             }
             else
             {
-                lista = UsuariosBLL.GetList(a => true);
+                lista = EntradaProductoBLL.GetList(a => true);
 
                 if (lista.Count == 0)
                 {
-                    await JS.Confirmar("top-center", "info", "Aviso", "No hay usuarios registrados", false, 2000);
+                    await JS.Confirmar("top-center", "info", "Aviso", "No hay nada registrado", false, 2000);
                 }
                 else
                 {
                     switch (Filtro)
                     {
                         case "Todo":
-                            lista = UsuariosBLL.GetList(e => true);
+                            lista = EntradaProductoBLL.GetList(e => true);
                             break;
                         case "ID":
-                            lista = UsuariosBLL.GetList(e => e.UsuarioId == Convert.ToInt32(Criterio));
-                            break;
-                        case "Nombre":
-                            lista = UsuariosBLL.GetList(e => e.Nombres == Criterio);
-                            break;
-                        case "Nombre De Usuario":
-                            lista = UsuariosBLL.GetList(e => e.NombreUsuario == Criterio);
+                            lista = EntradaProductoBLL.GetList(e => e.UsuarioId == Convert.ToInt32(Criterio));
                             break;
                     }
                     if (BuscarFecha == true)
                     {
-                        lista = lista.Where(p => p.FechaIngreso >= DesdeFecha.Date && p.FechaIngreso <= HastaFecha.Date).ToList();
+                        lista = lista.Where(p => p.Fecha >= DesdeFecha.Date && p.Fecha <= HastaFecha.Date).ToList();
                     }
 
                     if (lista.Count == 0)
                     {
-                        await JS.Confirmar("top-center", "error", "Error", "No se han encontrado usuarios con este criterio", false, 2000);
+                        await JS.Confirmar("top-center", "error", "Error", "No se ha encontrado nada con este criterio", false, 2000);
                     }
                 }
             }

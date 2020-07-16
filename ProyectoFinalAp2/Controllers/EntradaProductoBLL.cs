@@ -5,6 +5,7 @@ using ProyectoFinalAp2.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace ProyectoFinalAp2.Controllers
@@ -152,5 +153,28 @@ namespace ProyectoFinalAp2.Controllers
             }
             return paso;
         }
+
+        public static List<EntradaProductos> GetList(Expression<Func<EntradaProductos, bool>> expression)
+        {
+            List<EntradaProductos> lista = new List<EntradaProductos>();
+            Context context = new Context();
+
+            try
+            {
+                lista = context.EntradaProductos.Where(expression).ToList();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            finally
+            {
+                context.Dispose();
+            }
+
+            return lista;
+        }
+
     }
 }

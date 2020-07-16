@@ -1,10 +1,11 @@
-﻿@page "/Productos"
-@page "/Productos/{ProductoId:int}"
+﻿@page "/Registros/Productos"
+@page "/Registros/Productos/{ProductoId:int}"
 @using ProyectoFinalAp2.Models
 @using ProyectoFinalAp2.Controllers
 @using ProyectoFinalAp2.Data
 
 @inject IToastService toast
+@inject IJSRuntime JS
 
 <EditForm Model="productos" OnValidSubmit="Guardar">
     <DataAnnotationsValidator />
@@ -25,12 +26,12 @@
             </div>
 
             <div class="form-group">
-                <label for="FECHA">FECHA</label>
+                <label for="FECHA">Fecha</label>
                 <InputDate @bind-Value="productos.Fecha" class="form-control"></InputDate>
                 <ValidationMessage For="(() => productos.Fecha)"></ValidationMessage>
             </div>
 
-            <label for="CATEGORIAS">CATEGORIA</label>
+            <label for="CATEGORIAS">Categoria</label>
             <div class="form-group">
                 <select class="form-control" @bind="productos.CategoriaiD" @onclick="CargarCategoria">
                     <option value="" disabled selected>Seleccione una Categoria</option>
@@ -43,14 +44,14 @@
             </div>
 
             <div class="form-group">
-                <label for="DESCRIPCION">Descripcion</label>
+                <label for="DESCRIPCION">Descripción</label>
                 <InputText @bind-Value="productos.Descripcion" class="form-control"></InputText>
                 <ValidationMessage For="(() => productos.Descripcion)"></ValidationMessage>
             </div>
 
             <div class="form-group">
                 <label for="CANTIDAD">Cantidad</label>
-                <InputNumber @bind-Value="productos.Cantidad" class="form-control"></InputNumber>
+                <InputNumber @bind-Value="productos.Cantidad" class="form-control"  readonly="true"></InputNumber>
                 <ValidationMessage For="(() => productos.Cantidad)"></ValidationMessage>
             </div>
 
@@ -78,9 +79,9 @@
                 <ValidationMessage For="(() => productos.Ganancia)"></ValidationMessage>
             </div>
 
-            <div class="form-group">
+            <div class="form-group text-center">
                 <button type="button" class="btn btn-secondary" @onclick="Nuevo"><span class="icon-add"></span> Nuevo </button>
-                <button type="submit" class="btn btn-success" @onclick="Guardar"><span class="icon-save"></span> Guardar </button>
+                <button type="submit" class="btn btn-success"><span class="icon-save"></span> Guardar </button>
                 <button type="button" class="btn btn-danger" @onclick="Eliminar"><span class="icon-delete_forever"></span> Eliminar </button>
             </div>
         </div>
@@ -99,13 +100,13 @@
     protected override void OnParametersSet()
     {
         var id = ProductoId;
-        Buscar(id);
+        var result = Buscar(id);
     }
 
     protected override void OnInitialized()
     {
         Nuevo();
-        Buscar();
+        var s = Buscar();
         CargarCombo();
     }
 
@@ -142,39 +143,42 @@
         productos = new Productos();
     }
 
-    private void Guardar()
+    private async Task Guardar()
     {
         bool guardado = ProductosBLL.Guardar(productos);
 
         if (guardado)
         {
+            await JS.Confirmar("top-center", "success", "Guardado Exitosamente", "Buen trabajo", false, 2000);
             Nuevo();
-            toast.ShowSuccess("Guardado Corectamente");
         }
         else
         {
-            toast.ShowError("No se pudo guardar");
+            await JS.Confirmar("top-center", "error", "Error", "No se pudo guardar el producto", false, 2000);
         }
     }
 
-    private void Eliminar()
+    private async Task Eliminar()
     {
         bool eliminado;
 
-        eliminado = ProductosBLL.Eliminar(productos.ProductoId);
+        if (await JS.ConfirmDelete("Confirmar", "¿Esta seguro que desea eliminar este producto?", "question"))
+        {
+            eliminado = ProductosBLL.Eliminar(productos.ProductoId);
 
-        if (eliminado)
-        {
-            Nuevo();
-            toast.ShowSuccess("Eliminado correctamente");
-        }
-        else
-        {
-            toast.ShowError("No se pudo eliminar");
+            if (eliminado)
+            {
+                Nuevo();
+                await JS.Confirmar("top-center", "success", "Eliminado", "Eliminado correctamente", false, 2000);
+            }
+            else
+            {
+                await JS.Confirmar("top-center", "error", "Error", "No se pudo eliminar", false, 2000);
+            }
         }
     }
 
-    private void Buscar()
+    private async Task Buscar()
     {
         if (productos.ProductoId > 0)
         {
@@ -186,12 +190,12 @@
             }
             else
             {
-                toast.ShowError("No Encontrado" + ProductoId + ".");
+                await JS.Confirmar("top-center", "error", "Error", "No se encontró el producto", false, 2000);
             }
         }
     }
 
-    private void Buscar(int ProductoId)
+    private async Task Buscar(int ProductoId)
     {
         if (ProductoId > 0)
         {
@@ -203,7 +207,7 @@
             }
             else
             {
-                toast.ShowError("No Encontrado");
+                await JS.Confirmar("top-center", "error", "Error", "No se encontró el producto", false, 2000);
             }
         }
     }
