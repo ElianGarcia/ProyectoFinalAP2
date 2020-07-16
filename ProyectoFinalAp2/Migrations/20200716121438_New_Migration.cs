@@ -170,17 +170,17 @@ namespace ProyectoFinalAp2.Migrations
             migrationBuilder.InsertData(
                 table: "Productos",
                 columns: new[] { "ProductoId", "Cantidad", "CategoriaiD", "Costo", "Descripcion", "Fecha", "Ganancia", "Precio", "Reorden" },
-                values: new object[] { 1, 25, 1, 100m, "Zapato", new DateTime(2020, 7, 15, 17, 34, 43, 59, DateTimeKind.Local).AddTicks(621), 50m, 150m, 50 });
+                values: new object[] { 1, 25, 1, 100m, "Zapato", new DateTime(2020, 7, 16, 8, 14, 37, 560, DateTimeKind.Local).AddTicks(8728), 50m, 150m, 50 });
 
             migrationBuilder.InsertData(
                 table: "Usuarios",
                 columns: new[] { "UsuarioId", "Correo", "FechaIngreso", "Nivel", "NombreUsuario", "Nombres", "PassWord" },
-                values: new object[] { 1, "eliangarciarguez@gmail.com", new DateTime(2020, 7, 15, 17, 34, 43, 57, DateTimeKind.Local).AddTicks(4138), "Administrador", "Rguez12", "Elian Garcia", "dQBNAGIAUgBlAGwATABhADEANwA3ADIA" });
+                values: new object[] { 1, "eliangarciarguez@gmail.com", new DateTime(2020, 7, 16, 8, 14, 37, 559, DateTimeKind.Local).AddTicks(1416), "Administrador", "Rguez12", "Elian Garcia", "dQBNAGIAUgBlAGwATABhADEANwA3ADIA" });
 
             migrationBuilder.InsertData(
                 table: "Usuarios",
                 columns: new[] { "UsuarioId", "Correo", "FechaIngreso", "Nivel", "NombreUsuario", "Nombres", "PassWord" },
-                values: new object[] { 2, "rehanicordero@gmail.com", new DateTime(2020, 7, 15, 17, 34, 43, 57, DateTimeKind.Local).AddTicks(5283), "Administrador", "rehani97", "Rehani Cordero", "MQAyADMANAA=" });
+                values: new object[] { 2, "rehanicordero@gmail.com", new DateTime(2020, 7, 16, 8, 14, 37, 559, DateTimeKind.Local).AddTicks(2459), "Administrador", "rehani97", "Rehani Cordero", "MQAyADMANAA=" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_DetalleEntradaProductos_EntradaProductosEntradaProductoId",

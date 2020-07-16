@@ -45,7 +45,7 @@
                 <div class="form-group col">
                     <label for="CANTIDAD" class="ml-3 mr-3">Cantidad</label>
                     <div class="form-group">
-                        <InputNumber @bind-Value="cantidad" @onfocusout="VerificarCantidad" class="form-control"></InputNumber>
+                        <InputNumber @bind-Value="cantidad" class="form-control"></InputNumber>
                     </div>
                 </div>
 
@@ -68,12 +68,14 @@
                 <tbody class="table-striped">
                     @foreach (var item in entradaProductos.DetalleEntrada)
                     {
+                        var result = BuscarCategoria(item.ProductoId);
+                        var result1 = BuscarProducto(item);
                         <tr>
                             <td>@item.ProductoId</td>
-                            <td>@CategoriasBLL.Buscar(ProductosBLL.Buscar(item.ProductoId).CategoriaiD).Descripcion</td>
-                            <td>@ProductosBLL.Buscar(item.ProductoId).Descripcion</td>
+                            <td>@Categoria</td>
+                            <td>@Producto</td>
                             <td>@item.Cantidad</td>
-                            <td>@ProductosBLL.Buscar(item.ProductoId).Precio</td>
+                            <td>@BuscarPrecio(item)</td>
                             <td>@(item.Cantidad * ProductosBLL.Buscar(item.ProductoId).Precio)</td>
                             <td><button type="button" class="btn btn-outline-danger" @onclick="(()=> EliminarProducto(item))"><span class="icon-remove"> </span> Eliminar</button></td>
                         </tr>
@@ -103,7 +105,9 @@
 
     Productos productos = new Productos();
     EntradaProductos entradaProductos = new EntradaProductos();
-    bool paso = false;
+    private decimal Precio;
+    private string Categoria;
+    private string Producto;
 
     //variables del detalle
     public static int productoiD { get; set; }
@@ -170,20 +174,17 @@
 
     private void Agregar()
     {
-        var result = VerificarCantidad();
-
-        if (paso)
+        this.entradaProductos.DetalleEntrada.Add(new Entidades.DetalleEntradaProductos
         {
-            this.entradaProductos.DetalleEntrada.Add(new Entidades.DetalleEntradaProductos
-            {
-                DetalleEntradaProductosId = 0,
-                EntradaProductoId = entradaProductos.EntradaProductoId,
-                Cantidad = cantidad,
-                ProductoId = productoiD
-            });
+            DetalleEntradaProductosId = 0,
+            EntradaProductoId = entradaProductos.EntradaProductoId,
+            Cantidad = cantidad,
+            ProductoId = productoiD
+        });
 
-            CalcularTotal();
-        }
+        productoiD = 0;
+        cantidad = 0;
+        CalcularTotal();
     }
 
     private void CalcularTotal()
@@ -212,6 +213,51 @@
                 await JS.Confirmar("top-center", "error", "Error", "No se pudo eliminar", false, 2000);
             }
         }
+    }
+
+    private async Task BuscarCategoria(int id)
+    {
+        try
+        {
+            Productos p = ProductosBLL.Buscar(id);
+            int iD = p.CategoriaiD;
+            if(iD > 0)
+            {
+                Categoria = CategoriasBLL.Buscar(iD).Descripcion;
+            }
+        }
+        catch
+        {
+            await JS.Confirmar("top-center", "error", "Error", "Producto eliminado", false, 2000);
+            Categoria = "Producto Eliminado";
+        }
+        Categoria = "Producto Eliminado";
+    }
+
+    private decimal BuscarPrecio(Entidades.DetalleEntradaProductos item)
+    {
+        decimal Precio = ProductosBLL.Buscar(item.ProductoId).Precio;
+        return Precio;
+    }
+
+    private async Task BuscarProducto(Entidades.DetalleEntradaProductos item)
+    {
+        try
+        {
+            if (item.ProductoId > 0)
+            {
+                if(ProductosBLL.Buscar(item.ProductoId).Descripcion != null)
+                {
+                    Producto = ProductosBLL.Buscar(item.ProductoId).Descripcion;
+                }
+            }
+        }
+        catch
+        {
+            await JS.Confirmar("top-center", "error", "Error", "Producto eliminado", false, 2000);
+            Producto = "Producto Eliminado";
+        }
+        Producto = "Producto Eliminado";
     }
 
     private async Task Buscar()
@@ -251,25 +297,5 @@
     private void EliminarProducto(Entidades.DetalleEntradaProductos detalle)
     {
         entradaProductos.DetalleEntrada.Remove(detalle);
-    }
-
-    private async Task VerificarCantidad()
-    {
-        if (productoiD > 0)
-        {
-            if (cantidad <= ProductosBLL.Buscar(productoiD).Cantidad)
-            {
-                paso = true;
-            }
-            else
-            {
-                await JS.Confirmar("top-center", "info", "Información", "La cantidad requerida supera a la cantidad existente del producto", false, 2000);
-                paso = false;
-            }
-        }
-        else
-        {
-            await JS.Confirmar("top-center", "info", "Información", "Debe seleccionar un producto", false, 2000);
-        }
     }
 }

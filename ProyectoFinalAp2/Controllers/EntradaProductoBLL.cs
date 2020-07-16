@@ -104,12 +104,7 @@ namespace ProyectoFinalAp2.Controllers
 
             try
             {
-                entrada = db.EntradaProductos.Find(ID);
-                if (entrada != null)
-                {
-                    entrada.DetalleEntrada.Count();
-                }
-
+                entrada = db.EntradaProductos.Where(e => e.EntradaProductoId == ID).Include(d => d.DetalleEntrada).FirstOrDefault();
             }
             catch (Exception)
             {

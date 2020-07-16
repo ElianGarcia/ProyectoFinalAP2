@@ -214,7 +214,7 @@ namespace ProyectoFinalAp2.Migrations
                             CategoriaiD = 1,
                             Costo = 100m,
                             Descripcion = "Zapato",
-                            Fecha = new DateTime(2020, 7, 15, 17, 34, 43, 59, DateTimeKind.Local).AddTicks(621),
+                            Fecha = new DateTime(2020, 7, 16, 8, 14, 37, 560, DateTimeKind.Local).AddTicks(8728),
                             Ganancia = 50m,
                             Precio = 150m,
                             Reorden = 50
@@ -263,7 +263,7 @@ namespace ProyectoFinalAp2.Migrations
                         {
                             UsuarioId = 1,
                             Correo = "eliangarciarguez@gmail.com",
-                            FechaIngreso = new DateTime(2020, 7, 15, 17, 34, 43, 57, DateTimeKind.Local).AddTicks(4138),
+                            FechaIngreso = new DateTime(2020, 7, 16, 8, 14, 37, 559, DateTimeKind.Local).AddTicks(1416),
                             Nivel = "Administrador",
                             NombreUsuario = "Rguez12",
                             Nombres = "Elian Garcia",
@@ -273,7 +273,7 @@ namespace ProyectoFinalAp2.Migrations
                         {
                             UsuarioId = 2,
                             Correo = "rehanicordero@gmail.com",
-                            FechaIngreso = new DateTime(2020, 7, 15, 17, 34, 43, 57, DateTimeKind.Local).AddTicks(5283),
+                            FechaIngreso = new DateTime(2020, 7, 16, 8, 14, 37, 559, DateTimeKind.Local).AddTicks(2459),
                             Nivel = "Administrador",
                             NombreUsuario = "rehani97",
                             Nombres = "Rehani Cordero",
