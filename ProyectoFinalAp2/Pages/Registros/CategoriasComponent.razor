@@ -5,6 +5,7 @@
 @using ProyectoFinalAp2.Data
 
 @inject IToastService toast
+@inject IJSRuntime JS
 
 
 <EditForm Model="categorias" OnValidSubmit="Guardar">
@@ -57,14 +58,7 @@
     protected override void OnInitialized()
     {
         Nuevo();
-        if (categoriaId > 0)
-        {
-            var auxCategoria = CategoriasBLL.Buscar(categoriaId);
-            if (auxCategoria != null)
-                this.categorias = auxCategoria;
-            else
-                toast.ShowWarning("No encontrado.");
-        }
+        var auxCliente = Buscar(categoriaId);
     }
 
     private void Nuevo()
@@ -72,16 +66,28 @@
         this.categorias = new Categorias();
     }
 
-    private void Buscar()
+    private async Task Buscar()
     {
         var encontrado = CategoriasBLL.Buscar(categorias.CategoriaId);
         if (encontrado != null)
             this.categorias = encontrado;
         else
-            toast.ShowWarning("No encontrado");
+            await JS.Confirmar("top-center", "info", "Aviso", "Categoria no encontrada", false, 2000);
     }
 
-    private void Guardar()
+    private async Task Buscar(int id)
+    {
+        if (id > 0)
+        {
+            var auxCategoria = CategoriasBLL.Buscar(categoriaId);
+            if (auxCategoria != null)
+                this.categorias = auxCategoria;
+            else
+                await JS.Confirmar("top-center", "info", "Aviso", "Categoria no encontrada", false, 2000);
+        }
+    }
+
+    private async Task Guardar()
     {
 
         bool paso;
@@ -90,27 +96,31 @@
         if (paso)
         {
             Nuevo();
-            toast.ShowSuccess("Guardado correctamente");
+            await JS.Confirmar("top-center", "success", "Guardado Exitosamente", "Buen trabajo", false, 2000);
         }
         else
         {
-            toast.ShowError("No fue posible guardar");
+            await JS.Confirmar("top-center", "error", "Error", "No fue posible guardar la categoria", false, 2000);
         }
     }
 
-    private void Eliminar()
+    private async Task Eliminar()
     {
         bool elimino;
 
-        elimino = CategoriasBLL.Eliminar(categorias.CategoriaId);
-
-        if (elimino)
+        if(await JS.ConfirmDelete("Confirmar", "¿Esta seguro que desea eliminar esta categoria?", "question"))
         {
-            Nuevo();
-            toast.ShowSuccess("Eliminado correctamente");
+            elimino = CategoriasBLL.Eliminar(categorias.CategoriaId);
+
+            if (elimino)
+            {
+                Nuevo();
+                await JS.Confirmar("top-center", "success", "Eliminado", "Eliminado correctamente", false, 2000);
+            }
+            else
+                await JS.Confirmar("top-center", "error", "Error", "No fue posible eliminar la categoria", false, 2000);
         }
-        else
-            toast.ShowError("No fue posible eliminar");
+
     }
 
 

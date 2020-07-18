@@ -6,7 +6,7 @@
 
 @inject IToastService toast
 
-
+@inject IJSRuntime JS
 
 <EditForm Model="clientes" OnValidSubmit="Guardar">
     <DataAnnotationsValidator />
@@ -72,7 +72,7 @@
                 <button type="button" class="btn btn-danger" @onclick="Eliminar"><span class="icon-delete_forever"></span> Eliminar </button>
             </div>
         </div>
-    </div>  
+    </div>
 
 </EditForm>
 
@@ -87,14 +87,7 @@
     protected override void OnInitialized()
     {
         Nuevo();
-        if (clienteId > 0)
-        {
-            var auxCliente = ClientesBLL.Buscar(clienteId);
-            if (auxCliente != null)
-                this.clientes = auxCliente;
-            else
-                toast.ShowWarning("No encontrado.");
-        }
+        var aux = Buscar(clienteId);
     }
 
     private void Nuevo()
@@ -102,7 +95,7 @@
         this.clientes = new Clientes();
     }
 
-    private void Guardar()
+    private async Task Guardar()
     {
         bool paso;
         paso = ClientesBLL.Guardar(clientes);
@@ -110,36 +103,52 @@
         if (paso)
         {
             Nuevo();
-            toast.ShowSuccess("Guardado correctamente");
+            await JS.Confirmar("top-center", "success", "Guardado Exitosamente", "Buen trabajo", false, 2000);
         }
         else
         {
-            toast.ShowError("No fue posible guardar");
+            await JS.Confirmar("top-center", "error", "Error", "No fue posible guardar la categoria", false, 2000);
         }
 
     }
 
-    private void Eliminar()
+    private async Task Eliminar()
     {
         bool elimino;
 
-        elimino = ClientesBLL.Eliminar(clientes.ClienteId);
-
-        if (elimino)
+        if (await JS.ConfirmDelete("Confirmar", "¿Esta seguro que desea eliminar este cliente?", "question"))
         {
-            Nuevo();
-            toast.ShowSuccess("Eliminado correctamente");
+            elimino = ClientesBLL.Eliminar(clientes.ClienteId);
+
+            if (elimino)
+            {
+                Nuevo();
+                await JS.Confirmar("top-center", "success", "Eliminado", "Eliminado correctamente", false, 2000);
+            }
+            else
+                await JS.Confirmar("top-center", "error", "Error", "No fue posible eliminar el cliente", false, 2000);
         }
-        else
-            toast.ShowError("No fue posible eliminar");
     }
 
-    private void Buscar()
+    private async Task Buscar()
     {
         var encontrado = ClientesBLL.Buscar(clientes.ClienteId);
         if (encontrado != null)
             this.clientes = encontrado;
         else
-            toast.ShowWarning("No encontrado");
+            await JS.Confirmar("top-center", "info", "Aviso", "Cliente no encontrada", false, 2000);
+    }
+
+
+    private async Task Buscar(int id)
+    {
+        if (id > 0)
+        {
+            var auxCliente = ClientesBLL.Buscar(id);
+            if (auxCliente != null)
+                this.clientes = auxCliente;
+            else
+                await JS.Confirmar("top-center", "info", "Aviso", "Cliente no encontrada", false, 2000);
+        }
     }
 }
