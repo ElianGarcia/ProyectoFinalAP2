@@ -1,6 +1,10 @@
 ﻿@page "/ConsultaClientes"
 @using ProyectoFinalAp2.Controllers
 @using ProyectoFinalAp2.Models
+@using System.IO;
+@using ProyectoFinalAp2.Data;
+@inject Microsoft.JSInterop.IJSRuntime JS
+@inject ExportService exportService
 
 @inject IToastService toast
 
@@ -12,7 +16,7 @@
         </div>
 
         <div class="text-center">
-            <h3 class="text-center text-black-50">Consulta de Facturas</h3>
+            <h3 class="text-center text-black-50">Consulta de Clientes</h3>
         </div>
     </div>
 
@@ -88,13 +92,17 @@
                 }
             </tbody>
         </table>
+
+        <div class="form-group">
+            <label>Cantidad de clientes</label>
+            <input type="number" @bind="cantidadCliente" class="form-control" readonly />
+        </div>
     </div>
 
 
     <div class="card-footer">
         <div class="form-group">
-            <label>Cantidad de clientes</label>
-            <input type="number" @bind="cantidadCliente" class="form-control" readonly />
+            <button type="button" class="btn btn-outline-primary form-control" @onclick="ExportToPdf">Exportar a PDF</button>
         </div>
     </div>
 </div>
@@ -115,13 +123,13 @@
         HastaFecha = DateTime.Now;
     }
 
-    private void Buscar()
+    private async Task Buscar()
     {
         try
         {
             if (filtro == 0)
             {
-                toast.ShowWarning("Debe seleccionar un Filtro", "Aviso");
+                await JS.Confirmar("top-center", "info", "Aviso", "Debe seleccionar un filtro", false, 2000);
             }
             else
             {
@@ -131,8 +139,8 @@
                         this.lista = ClientesBLL.GetList(c => true);
                         break;
                     case 2: //Id
-                        int ID = GetId();
-                        this.lista = ClientesBLL.GetList(c =>c.ClienteId == ID);
+                        int ID = await GetId();
+                        this.lista = ClientesBLL.GetList(c => c.ClienteId == ID);
                         break;
                     case 3: //nombre
                         this.lista = ClientesBLL.GetList(f => f.Nombre == criterio);
@@ -156,7 +164,7 @@
                 }
                 if (lista == null)
                 {
-                    toast.ShowInfo("Vacio", "No se han encontrado productos, revise su criterio de busqueda");
+                    await JS.Confirmar("top-center", "info", "Aviso", "No se ha encontrado clientes.", false, 2000);
                 }
 
                 CantidadCliente();
@@ -169,7 +177,15 @@
         }
     }
 
-    private int GetId()
+    protected async Task ExportToPdf()
+    {
+        using (MemoryStream excelStream = ExportService.CreatePdfClientes(lista, DateTime.Now.ToString()))
+        {
+            await JS.SaveAs("Clientes.pdf", excelStream.ToArray());
+        }
+    }
+
+    private async Task<int> GetId()
     {
         int resultado = 0;
 
@@ -181,29 +197,12 @@
         catch (Exception)
         {
 
-            toast.ShowError("El ID del cliente debe ser numerico..");
+            await JS.Confirmar("top-center", "error", "Error", "El Id debe ser numerico", false, 2000);
         }
 
         return resultado;
     }
 
-    private decimal GetTotal()
-    {
-        decimal total = 0;
-
-        try
-        {
-            total = Convert.ToDecimal(criterio);
-            return total;
-        }
-        catch (Exception)
-        {
-
-            toast.ShowError("El total debe ser numerico..");
-        }
-
-        return total;
-    }
 
     private void CantidadCliente()
     {

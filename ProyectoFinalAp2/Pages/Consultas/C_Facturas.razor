@@ -1,6 +1,10 @@
 ﻿@page "/ConsultaFacturas"
 @using ProyectoFinalAp2.Controllers
 @using ProyectoFinalAp2.Models
+@using System.IO;
+@using ProyectoFinalAp2.Data;
+@inject Microsoft.JSInterop.IJSRuntime JS
+@inject ExportService exportService
 
 @inject IToastService toast
 
@@ -43,7 +47,7 @@
                     <option value="" disabled selected>Seleccione un filtro</option>
                     <option value="1">TODO</option>
                     <option value="2">ID</option>
-                    <option value="3">CLIENTE ID</option>
+                    <option value="3">CLIENTE</option>
                     <option value="4">TOTAL</option>
                 </select>
             </div>
@@ -63,7 +67,7 @@
             <thead>
                 <tr>
                     <th>ID</th>
-                    <th>CLIENTE ID</th>
+                    <th>CLIENTE</th>
                     <th>FECHA</th>
                     <th>TOTAL</th>
                 </tr>
@@ -73,7 +77,7 @@
                 {
                     <tr>
                         <td>@item.FacturaId</td>
-                        <td>@item.ClienteId</td>
+                        <td>@GetNombre(item.ClienteId)</td>
                         <td>@item.Fecha</td>
                         <td>@item.Total</td>
                         <td><a class="btn btn-outline-info" href="Facturas/@item.FacturaId">Ver</a></td>
@@ -81,14 +85,17 @@
                 }
             </tbody>
         </table>
+        <div class="form-group">
+            <label>Suma total</label>
+            <input type="number" @bind="total" class="form-control" readonly />
+        </div>
     </div>
 
 
     <div class="card-footer">
-       <div class="form-group">
-           <label>Suma total</label>
-           <input type="number" @bind="total" class="form-control" readonly/>
-       </div>
+        <div class="form-group">
+            <button type="button" class="btn btn-outline-primary form-control" @onclick="ExportToPdf">Exportar a PDF</button>
+        </div>
     </div>
 </div>
 
@@ -108,13 +115,13 @@
         HastaFecha = DateTime.Now;
     }
 
-    private void Buscar()
+    private async Task Buscar()
     {
         try
         {
             if (filtro == 0)
             {
-                toast.ShowWarning("Debe seleccionar un Filtro", "Aviso");
+                await JS.Confirmar("top-center", "info", "Aviso", "Debe seleccionar un filtro", false, 2000);
             }
             else
             {
@@ -124,15 +131,14 @@
                         this.lista = FacturasBLL.GetList(f => true);
                         break;
                     case 2: //Id
-                        int ID = GetId();
+                        int ID = await GetId();
                         this.lista = FacturasBLL.GetList(f => f.FacturaId == ID);
                         break;
-                    case 3: //cliente id
-                        int clienteID = GetId();
-                        this.lista = FacturasBLL.GetList(f => f.ClienteId == clienteID);
+                    case 3: //cliente 
+                        this.lista = FacturasBLL.GetList(f => f.Clientes.Nombre == criterio);
                         break;
                     case 4: //Total
-                        decimal total = GetTotal();
+                        decimal total = await GetTotal();
                         this.lista = FacturasBLL.GetList(f => f.Total == total);
                         break;
                 }
@@ -142,7 +148,7 @@
                 }
                 if (lista == null)
                 {
-                    toast.ShowInfo("Vacio", "No se han encontrado productos, revise su criterio de busqueda");
+                    await JS.Confirmar("top-center", "info", "Aviso", "No se ha encontrado clientes.", false, 2000);
                 }
 
                 CalcularTotal();
@@ -155,7 +161,28 @@
         }
     }
 
-    private int GetId()
+    protected async Task ExportToPdf()
+    {
+        using (MemoryStream excelStream = ExportService.CreatePdfFacturas(lista, DateTime.Now.ToString()))
+        {
+            await JS.SaveAs("Facturas.pdf", excelStream.ToArray());
+        }
+    }
+
+    private string GetNombre(int id)
+    {
+        var auxCliente = ClientesBLL.Buscar(id);
+        string nombre = string.Empty;
+        if (auxCliente != null)
+            nombre = auxCliente.Nombre;
+        else
+            nombre = "Cliente Eliminado.";
+        return nombre;
+
+    }
+
+
+    private async Task<int> GetId()
     {
         int resultado = 0;
 
@@ -167,13 +194,13 @@
         catch (Exception)
         {
 
-            toast.ShowError("El ID del cliente debe ser numerico..");
+            await JS.Confirmar("top-center", "error", "Error", "El Id debe ser numerico", false, 2000);
         }
 
         return resultado;
     }
 
-    private decimal GetTotal()
+    private async Task<decimal> GetTotal()
     {
         decimal total = 0;
 
@@ -185,7 +212,7 @@
         catch (Exception)
         {
 
-            toast.ShowError("El total debe ser numerico..");
+            await JS.Confirmar("top-center", "error", "Error", "El total debe ser numerico.", false, 2000);
         }
 
         return total;
