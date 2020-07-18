@@ -1,58 +1,63 @@
 ﻿@page "/Reportes/Clientes"
 @using ProyectoFinalAp2.Models;
 @using ProyectoFinalAp2.Controllers;
+@using ProyectoFinalAp2.Data;
+@using System.IO;
+@inject ExportService exportService
+@inject Microsoft.JSInterop.IJSRuntime JS
 
-<div class="card">
-    <div class="card-header alert-info">
-        <div class="text-center">
-            <img src="Resources/favicon.ico" height="90" />
+    <div class="card">
+        <div class="card-header alert-info">
+            <div class="text-center">
+                <img src="Resources/favicon.ico" height="90" />
+            </div>
+
+            <div class="text-center">
+                <h3 class="text-center text-black-50">ButterSoft</h3>
+                <h3 class="text-center text-black-50">Reporte de Clientes</h3>
+            </div>
+
+            <div class="float-right mb-4">
+                <label for="FECHA">Fecha de impresion: @Fecha </label>
+            </div>
         </div>
 
-        <div class="text-center">
-            <h3 class="text-center text-black-50">ButterSoft</h3>
-            <h3 class="text-center text-black-50">Reporte de Clientes</h3>
-        </div>
-
-        <div class="float-right mb-4">
-            <label for="FECHA">Fecha de impresion: @Fecha </label>
-        </div>
-    </div>
-
-    <div class="card-body">
-        <table class="table mb-3">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>NOMBRE</th>
-                    <th>RNC</th>
-                    <th>DIRECCION</th>
-                    <th>TELEFONO</th>
-                    <th>EMAIL</th>
-                </tr>
-            </thead>
-            <tbody class="table-striped">
-                @foreach (var item in lista)
-                {
+        <div class="card-body">
+            <table class="table mb-3">
+                <thead>
                     <tr>
-                        <td>@item.ClienteId</td>
-                        <td>@item.Nombre</td>
-                        <td>@item.RNC</td>
-                        <td>@item.Direccion</td>
-                        <td>@item.Telefono</td>
-                        <td>@item.Email</td>
+                        <th>ID</th>
+                        <th>NOMBRE</th>
+                        <th>RNC</th>
+                        <th>DIRECCION</th>
+                        <th>TELEFONO</th>
+                        <th>EMAIL</th>
                     </tr>
-                }
-            </tbody>
-        </table>
+                </thead>
+                <tbody class="table-striped">
+                    @foreach (var item in lista)
+                    {
+                        <tr>
+                            <td>@item.ClienteId</td>
+                            <td>@item.Nombre</td>
+                            <td>@item.RNC</td>
+                            <td>@item.Direccion</td>
+                            <td>@item.Telefono</td>
+                            <td>@item.Email</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <div class="card-footer">
+            <div class="form-group">
+                <label>Total de Clientes</label>
+                <input @bind="@cantidadCliente" class="form-control" readonly />
+            </div>
+        </div>
+        <button class="btn btn-primary" @onclick="@ExportToPdf">Exportar a PDF</button>
     </div>
-   
-    <div class="card-footer">
-        <div class="form-group">
-            <label>Total de Clientes</label>
-            <input @bind="@cantidadCliente" class="form-control" readonly />
-        </div>    
-    </div>
-</div>
 
 
 @code {
@@ -71,5 +76,13 @@
     private void CantidadCliente()
     {
         cantidadCliente = this.lista.Count();
+    }
+
+    protected async Task ExportToPdf()
+    {
+        using (MemoryStream excelStream = ExportService.CreatePdfClientes(lista, Fecha))
+        {
+            await JS.SaveAs("Clientes.pdf", excelStream.ToArray());
+        }
     }
 }
