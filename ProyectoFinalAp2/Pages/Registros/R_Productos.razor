@@ -160,19 +160,27 @@
     private async Task Eliminar()
     {
         bool eliminado;
+        Context db = new Context();
 
-        if (await JS.ConfirmDelete("Confirmar", "¿Esta seguro que desea eliminar este producto?", "question"))
+        if (productos.Cantidad > 0)
         {
-            eliminado = ProductosBLL.Eliminar(productos.ProductoId);
+            await JS.Confirmar("top-center", "error", "Sorry!", "No puedes eliminar este producto porque aun hay algunos en stock", false, 2000);
+        }
+        else
+        {
+            if (await JS.ConfirmDelete("Confirmar", "¿Esta seguro que desea eliminar este producto?", "question"))
+            {
+                eliminado = ProductosBLL.Eliminar(productos.ProductoId);
 
-            if (eliminado)
-            {
-                Nuevo();
-                await JS.Confirmar("top-center", "success", "Eliminado", "Eliminado correctamente", false, 2000);
-            }
-            else
-            {
-                await JS.Confirmar("top-center", "error", "Error", "No se pudo eliminar", false, 2000);
+                if (eliminado)
+                {
+                    Nuevo();
+                    await JS.Confirmar("top-center", "success", "Eliminado", "Eliminado correctamente", false, 2000);
+                }
+                else
+                {
+                    await JS.Confirmar("top-center", "error", "Error", "No se pudo eliminar", false, 2000);
+                }
             }
         }
     }

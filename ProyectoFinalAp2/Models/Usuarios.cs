@@ -44,17 +44,9 @@ namespace ProyectoFinalAp2.Models
         [Required(ErrorMessage = "El nivel de usuario no puede estar vacío.")]
         public string Nivel { get; set; }
 
-        public bool IsAdministrator(int iD)
-        {
-            if (UsuariosBLL.Buscar(iD).Nivel == "Administrador")
-            {
-                return true;
-            } 
-            else
-            {
-                return false;
-            }
-        }
+        public bool IsAuthenticated { get; set; }
+
+        public bool IsAdministrator { get; set; }
 
         public Usuarios()
         {

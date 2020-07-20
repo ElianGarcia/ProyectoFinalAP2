@@ -14,7 +14,7 @@ namespace ProyectoFinalAp2.Data
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             base.OnConfiguring(optionsBuilder);
-            optionsBuilder.UseSqlite(@"DataSource= Data\ButterSoftDB.db");
+            optionsBuilder.UseSqlServer(@"Server = .\SqlExpress; Database = ButterSoftDB; Trusted_Connection = True; ");
         }
 
         protected override void OnModelCreating(ModelBuilder model)

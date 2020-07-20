@@ -11,9 +11,9 @@ namespace ProyectoFinalAp2.Migrations
                 name: "Categorias",
                 columns: table => new
                 {
-                    CategoriaId = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    Descripcion = table.Column<string>(maxLength: 30, nullable: false)
+                    CategoriaId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Descripcion = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -24,14 +24,14 @@ namespace ProyectoFinalAp2.Migrations
                 name: "Clientes",
                 columns: table => new
                 {
-                    ClienteId = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    Nombre = table.Column<string>(maxLength: 50, nullable: false),
-                    RNC = table.Column<string>(nullable: false),
-                    Direccion = table.Column<string>(maxLength: 40, nullable: false),
-                    Telefono = table.Column<string>(maxLength: 10, nullable: false),
-                    Email = table.Column<string>(nullable: false),
-                    Fecha = table.Column<DateTime>(nullable: false)
+                    ClienteId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Nombre = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    RNC = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Direccion = table.Column<string>(type: "nvarchar(40)", maxLength: 40, nullable: false),
+                    Telefono = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Fecha = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -42,11 +42,11 @@ namespace ProyectoFinalAp2.Migrations
                 name: "EntradaProductos",
                 columns: table => new
                 {
-                    EntradaProductoId = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    UsuarioId = table.Column<int>(nullable: false),
-                    Fecha = table.Column<DateTime>(nullable: false),
-                    CantidadTotal = table.Column<decimal>(nullable: false)
+                    EntradaProductoId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UsuarioId = table.Column<int>(type: "int", nullable: false),
+                    Fecha = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CantidadTotal = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -57,16 +57,16 @@ namespace ProyectoFinalAp2.Migrations
                 name: "Productos",
                 columns: table => new
                 {
-                    ProductoId = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    CategoriaiD = table.Column<int>(nullable: false),
-                    Descripcion = table.Column<string>(maxLength: 50, nullable: false),
-                    Costo = table.Column<decimal>(nullable: false),
-                    Precio = table.Column<decimal>(nullable: false),
-                    Ganancia = table.Column<decimal>(nullable: false),
-                    Fecha = table.Column<DateTime>(nullable: false),
-                    Cantidad = table.Column<int>(nullable: false),
-                    Reorden = table.Column<int>(nullable: false)
+                    ProductoId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CategoriaiD = table.Column<int>(type: "int", nullable: false),
+                    Descripcion = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Costo = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Precio = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Ganancia = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Fecha = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Cantidad = table.Column<int>(type: "int", nullable: false),
+                    Reorden = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -77,14 +77,16 @@ namespace ProyectoFinalAp2.Migrations
                 name: "Usuarios",
                 columns: table => new
                 {
-                    UsuarioId = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    Nombres = table.Column<string>(maxLength: 30, nullable: false),
-                    NombreUsuario = table.Column<string>(maxLength: 30, nullable: false),
-                    Correo = table.Column<string>(maxLength: 40, nullable: false),
-                    PassWord = table.Column<string>(maxLength: 60, nullable: false),
-                    FechaIngreso = table.Column<DateTime>(nullable: false),
-                    Nivel = table.Column<string>(nullable: false)
+                    UsuarioId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Nombres = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
+                    NombreUsuario = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
+                    Correo = table.Column<string>(type: "nvarchar(40)", maxLength: 40, nullable: false),
+                    PassWord = table.Column<string>(type: "nvarchar(60)", maxLength: 60, nullable: false),
+                    FechaIngreso = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Nivel = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    IsAuthenticated = table.Column<bool>(type: "bit", nullable: false),
+                    IsAdministrator = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -95,11 +97,11 @@ namespace ProyectoFinalAp2.Migrations
                 name: "Facturas",
                 columns: table => new
                 {
-                    FacturaId = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    ClienteId = table.Column<int>(nullable: false),
-                    Fecha = table.Column<DateTime>(nullable: false),
-                    Total = table.Column<decimal>(nullable: false)
+                    FacturaId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ClienteId = table.Column<int>(type: "int", nullable: false),
+                    Fecha = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Total = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -116,12 +118,12 @@ namespace ProyectoFinalAp2.Migrations
                 name: "DetalleEntradaProductos",
                 columns: table => new
                 {
-                    DetalleEntradaProductosId = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    EntradaProductoId = table.Column<int>(nullable: false),
-                    ProductoId = table.Column<int>(nullable: false),
-                    Cantidad = table.Column<int>(nullable: false),
-                    EntradaProductosEntradaProductoId = table.Column<int>(nullable: true)
+                    DetalleEntradaProductosId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    EntradaProductoId = table.Column<int>(type: "int", nullable: false),
+                    ProductoId = table.Column<int>(type: "int", nullable: false),
+                    Cantidad = table.Column<int>(type: "int", nullable: false),
+                    EntradaProductosEntradaProductoId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -144,12 +146,12 @@ namespace ProyectoFinalAp2.Migrations
                 name: "DetalleFacturas",
                 columns: table => new
                 {
-                    DetalleFacturaId = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    FacturaId = table.Column<int>(nullable: false),
-                    ProductoId = table.Column<int>(nullable: false),
-                    Cantidad = table.Column<int>(nullable: false),
-                    Precio = table.Column<decimal>(nullable: false)
+                    DetalleFacturaId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    FacturaId = table.Column<int>(type: "int", nullable: false),
+                    ProductoId = table.Column<int>(type: "int", nullable: false),
+                    Cantidad = table.Column<int>(type: "int", nullable: false),
+                    Precio = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -170,17 +172,16 @@ namespace ProyectoFinalAp2.Migrations
             migrationBuilder.InsertData(
                 table: "Productos",
                 columns: new[] { "ProductoId", "Cantidad", "CategoriaiD", "Costo", "Descripcion", "Fecha", "Ganancia", "Precio", "Reorden" },
-                values: new object[] { 1, 25, 1, 100m, "Zapato", new DateTime(2020, 7, 16, 8, 14, 37, 560, DateTimeKind.Local).AddTicks(8728), 50m, 150m, 50 });
+                values: new object[] { 1, 25, 1, 100m, "Zapato", new DateTime(2020, 7, 20, 18, 44, 28, 549, DateTimeKind.Local).AddTicks(1790), 50m, 150m, 50 });
 
             migrationBuilder.InsertData(
                 table: "Usuarios",
-                columns: new[] { "UsuarioId", "Correo", "FechaIngreso", "Nivel", "NombreUsuario", "Nombres", "PassWord" },
-                values: new object[] { 1, "eliangarciarguez@gmail.com", new DateTime(2020, 7, 16, 8, 14, 37, 559, DateTimeKind.Local).AddTicks(1416), "Administrador", "Rguez12", "Elian Garcia", "dQBNAGIAUgBlAGwATABhADEANwA3ADIA" });
-
-            migrationBuilder.InsertData(
-                table: "Usuarios",
-                columns: new[] { "UsuarioId", "Correo", "FechaIngreso", "Nivel", "NombreUsuario", "Nombres", "PassWord" },
-                values: new object[] { 2, "rehanicordero@gmail.com", new DateTime(2020, 7, 16, 8, 14, 37, 559, DateTimeKind.Local).AddTicks(2459), "Administrador", "rehani97", "Rehani Cordero", "MQAyADMANAA=" });
+                columns: new[] { "UsuarioId", "Correo", "FechaIngreso", "IsAdministrator", "IsAuthenticated", "Nivel", "NombreUsuario", "Nombres", "PassWord" },
+                values: new object[,]
+                {
+                    { 1, "eliangarciarguez@gmail.com", new DateTime(2020, 7, 20, 18, 44, 28, 548, DateTimeKind.Local).AddTicks(928), false, false, "Administrador", "Rguez12", "Elian Garcia", "dQBNAGIAUgBlAGwATABhADEANwA3ADIA" },
+                    { 2, "rehanicordero@gmail.com", new DateTime(2020, 7, 20, 18, 44, 28, 548, DateTimeKind.Local).AddTicks(1618), false, false, "Administrador", "rehani97", "Rehani Cordero", "MQAyADMANAA=" }
+                });
 
             migrationBuilder.CreateIndex(
                 name: "IX_DetalleEntradaProductos_EntradaProductosEntradaProductoId",

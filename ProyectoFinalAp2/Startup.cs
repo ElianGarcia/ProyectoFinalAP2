@@ -47,7 +47,6 @@ namespace ProyectoFinalAp2
             // ******
             services.AddRazorPages();
             services.AddServerSideBlazor();
-            services.AddSingleton<WeatherForecastService>();
             services.AddSingleton<ExportService>();
             // ******
             // BLAZOR COOKIE Auth Code (begin)
@@ -62,6 +61,10 @@ namespace ProyectoFinalAp2
             services.AddBlazoredToast();
             services.AddScoped<Categorias>();
             services.AddScoped<Clientes>();
+            services.AddScoped<Productos>();
+            services.AddScoped<EntradaProductos>();
+            services.AddScoped<Usuarios>();
+            services.AddScoped<Facturas>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

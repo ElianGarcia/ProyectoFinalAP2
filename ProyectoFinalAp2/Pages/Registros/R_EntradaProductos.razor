@@ -105,7 +105,6 @@
 
     Productos productos = new Productos();
     EntradaProductos entradaProductos = new EntradaProductos();
-    private decimal Precio;
     private string Categoria;
     private string Producto;
 
@@ -231,7 +230,6 @@
             await JS.Confirmar("top-center", "error", "Error", "Producto eliminado", false, 2000);
             Categoria = "Producto Eliminado";
         }
-        Categoria = "Producto Eliminado";
     }
 
     private decimal BuscarPrecio(Entidades.DetalleEntradaProductos item)
@@ -257,7 +255,6 @@
             await JS.Confirmar("top-center", "error", "Error", "Producto eliminado", false, 2000);
             Producto = "Producto Eliminado";
         }
-        Producto = "Producto Eliminado";
     }
 
     private async Task Buscar()
