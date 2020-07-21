@@ -61,32 +61,6 @@ namespace ProyectoFinalAp2.Controllers
             }
             return paso;
         }
- 
-        public static bool Eliminar(int id)
-        {
-            bool paso = false;
-            Context contexto = new Context();
-            try
-            {
-                var producto = contexto.Productos.Find(id);
-
-                if (producto != null)
-                {
-                    contexto.Productos.Remove(producto);
-                    paso = contexto.SaveChanges() > 0;
-                }
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-            finally
-            {
-                contexto.Dispose();
-            }
-
-            return paso;
-        }
 
         public static Productos Buscar(int id)
         {
@@ -166,6 +140,32 @@ namespace ProyectoFinalAp2.Controllers
                 contexto.Dispose();
             }
             return lista;
+        }
+
+        public static bool Eliminar(int id)
+        {
+            bool paso = false;
+            Context contexto = new Context();
+            try
+            {
+                var producto = contexto.Productos.Find(id);
+
+                if (producto != null)
+                {
+                    contexto.Productos.Remove(producto);
+                    paso = contexto.SaveChanges() > 0;
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                contexto.Dispose();
+            }
+
+            return paso;
         }
     }
 }

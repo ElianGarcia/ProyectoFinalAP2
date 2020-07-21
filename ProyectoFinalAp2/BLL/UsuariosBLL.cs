@@ -73,32 +73,6 @@ namespace ProyectoFinalAp2.Controllers
             }
             return paso;
         }
- 
-        public static bool Eliminar(int id)
-        {
-            bool paso = false;
-            Context contexto = new Context();
-            try
-            {
-                var usuarios = contexto.Usuarios.Find(id);
-
-                if (usuarios != null)
-                {
-                    contexto.Usuarios.Remove(usuarios);
-                    paso = contexto.SaveChanges() > 0;
-                }
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-            finally
-            {
-                contexto.Dispose();
-            }
-
-            return paso;
-        }
 
         public static Usuarios Buscar(int id)
         {
@@ -267,6 +241,32 @@ namespace ProyectoFinalAp2.Controllers
             {
                 throw;
             }
+            return paso;
+        }
+        
+        public static bool Eliminar(int id)
+        {
+            bool paso = false;
+            Context contexto = new Context();
+            try
+            {
+                var usuarios = contexto.Usuarios.Find(id);
+
+                if (usuarios != null)
+                {
+                    contexto.Usuarios.Remove(usuarios);
+                    paso = contexto.SaveChanges() > 0;
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                contexto.Dispose();
+            }
+
             return paso;
         }
     }

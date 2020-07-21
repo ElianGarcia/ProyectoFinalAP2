@@ -3,6 +3,8 @@ using ProyectoFinalAp2.Controllers;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using ProyectoFinalAp2.Models;
+using Entidades;
 
 namespace ProyectoFinalAp2.Controllers.Tests
 {
@@ -12,31 +14,55 @@ namespace ProyectoFinalAp2.Controllers.Tests
         [TestMethod()]
         public void GuardarTest()
         {
-            Assert.Fail();
+            DetalleEntradaProductos m = new DetalleEntradaProductos
+            {
+                DetalleEntradaProductosId = 0,
+                ProductoId = 1,
+                Cantidad = 100
+            };
+
+            List<DetalleEntradaProductos> lista = new List<DetalleEntradaProductos>();
+            lista.Add(m);
+            EntradaProductos entrada = new EntradaProductos(0, 1, DateTime.Now, Convert.ToDecimal(1500.25), lista);
+            Assert.IsTrue(EntradaProductoBLL.Guardar(entrada));
         }
 
         [TestMethod()]
         public void ModificarTest()
         {
-            Assert.Fail();
+            DetalleEntradaProductos m = new DetalleEntradaProductos
+            {
+                DetalleEntradaProductosId = 0,
+                ProductoId = 1,
+                Cantidad = 150
+            };
+
+            List<DetalleEntradaProductos> lista = new List<DetalleEntradaProductos>();
+            lista.Add(m);
+            EntradaProductos entrada = new EntradaProductos(0, 1, DateTime.Now, Convert.ToDecimal(1750.25), lista);
+            Assert.IsTrue(EntradaProductoBLL.Guardar(entrada));
         }
 
         [TestMethod()]
         public void BuscarTest()
         {
-            Assert.Fail();
-        }
-
-        [TestMethod()]
-        public void EliminarTest()
-        {
-            Assert.Fail();
+            var encontrado = EntradaProductoBLL.Buscar(1);
+            Assert.IsNotNull(encontrado);
         }
 
         [TestMethod()]
         public void GetListTest()
         {
-            Assert.Fail();
+            var lista = new List<EntradaProductos>();
+            lista = EntradaProductoBLL.GetList(p => true);
+            Assert.IsNotNull(lista);
+        }
+
+        [TestMethod()]
+        public void EliminarTest()
+        {
+            var eliminado = EntradaProductoBLL.Eliminar(1);
+            Assert.IsTrue(eliminado);
         }
     }
 }

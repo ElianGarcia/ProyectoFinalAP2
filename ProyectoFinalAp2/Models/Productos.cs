@@ -56,5 +56,18 @@ namespace ProyectoFinalAp2.Models
             Fecha = DateTime.Now;
             Cantidad = 0;
         }
+
+        public Productos(int productoId, int categoriaiD, string descripcion, decimal costo, decimal precio, decimal ganancia, DateTime fecha, int cantidad, int reorden)
+        {
+            ProductoId = productoId;
+            CategoriaiD = categoriaiD;
+            Descripcion = descripcion ?? throw new ArgumentNullException(nameof(descripcion));
+            Costo = costo;
+            Precio = precio;
+            Ganancia = ganancia;
+            Fecha = fecha;
+            Cantidad = cantidad;
+            Reorden = reorden;
+        }
     }
 }

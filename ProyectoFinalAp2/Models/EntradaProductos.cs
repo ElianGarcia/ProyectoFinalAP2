@@ -27,5 +27,14 @@ namespace ProyectoFinalAp2.Models
             CantidadTotal = 0;
             DetalleEntrada = new List<DetalleEntradaProductos>();
         }
+
+        public EntradaProductos(int entradaProductoId, int usuarioId, DateTime fecha, decimal cantidadTotal, List<DetalleEntradaProductos> detalleEntrada)
+        {
+            EntradaProductoId = entradaProductoId;
+            UsuarioId = usuarioId;
+            Fecha = fecha;
+            CantidadTotal = cantidadTotal;
+            DetalleEntrada = detalleEntrada ?? throw new ArgumentNullException(nameof(detalleEntrada));
+        }
     }
 }
