@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ProyectoFinalAp2.Controllers;
+using ProyectoFinalAp2.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -10,81 +11,56 @@ namespace ProyectoFinalAp2.Controllers.Tests
     public class UsuariosBLLTests
     {
         [TestMethod()]
-        public void encodeTest()
-        {
-            Assert.Fail();
-        }
-
-        [TestMethod()]
-        public void UnencodeTest()
-        {
-            Assert.Fail();
-        }
-
-        [TestMethod()]
         public void GuardarTest()
         {
-            Assert.Fail();
+            Usuarios usuario = new Usuarios(1, "Alberto Cortez", "Acort34", "acortez34@gmail.com", "Acortezsd34", DateTime.Now, "Administrador");
+            bool guardado = UsuariosBLL.Guardar(usuario);
+            Assert.AreEqual(guardado, true);
         }
 
         [TestMethod()]
         public void ModificarTest()
         {
-            Assert.Fail();
-        }
-
-        [TestMethod()]
-        public void EliminarTest()
-        {
-            Assert.Fail();
+            Usuarios usuario = new Usuarios(1, "Alberto Cortez", "Acort34", "acortez34@gmail.com", "Acortezsd34", DateTime.Now, "Usuario");
+            bool guardado = UsuariosBLL.Modificar(usuario);
+            Assert.AreEqual(guardado, true);
         }
 
         [TestMethod()]
         public void BuscarTest()
         {
-            Assert.Fail();
+            var encontrado = UsuariosBLL.Buscar(1);
+            Assert.IsNotNull(encontrado);
         }
 
         [TestMethod()]
         public void GetListTest()
         {
-            Assert.Fail();
+            List<Usuarios> lista = new List<Usuarios>();
+            lista = UsuariosBLL.GetList(l => true);
+            Assert.IsNotNull(lista);
         }
 
         [TestMethod()]
         public void ExisteTest()
         {
-            Assert.Fail();
+            var existe = UsuariosBLL.Existe(1);
+            Assert.IsNotNull(existe);
         }
 
         [TestMethod()]
         public void GetUsuarioTest()
         {
-            Assert.Fail();
+            List<Usuarios> lista = new List<Usuarios>();
+            lista = UsuariosBLL.GetUsuario();
+            Assert.IsNotNull(lista);
         }
 
         [TestMethod()]
-        public void NivelUsuarioTest()
+        public void EliminarTest()
         {
-            Assert.Fail();
-        }
-
-        [TestMethod()]
-        public void BuscarTest1()
-        {
-            Assert.Fail();
-        }
-
-        [TestMethod()]
-        public void VerificarExistenciaDelUsuarioTest()
-        {
-            Assert.Fail();
-        }
-
-        [TestMethod()]
-        public void VerificarExistenciaYClaveDelUsuarioTest()
-        {
-            Assert.Fail();
+            var eliminado = UsuariosBLL.Eliminar(1);
+            Assert.IsNotNull(eliminado);
         }
     }
 }

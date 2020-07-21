@@ -58,5 +58,16 @@ namespace ProyectoFinalAp2.Models
             Nivel = string.Empty;
             Correo = string.Empty;
         }
+
+        public Usuarios(int usuarioId, string nombres, string nombreUsuario, string correo, string passWord, DateTime fechaIngreso, string nivel)
+        {
+            UsuarioId = usuarioId;
+            Nombres = nombres ?? throw new ArgumentNullException(nameof(nombres));
+            NombreUsuario = nombreUsuario ?? throw new ArgumentNullException(nameof(nombreUsuario));
+            Correo = correo ?? throw new ArgumentNullException(nameof(correo));
+            PassWord = passWord ?? throw new ArgumentNullException(nameof(passWord));
+            FechaIngreso = fechaIngreso;
+            Nivel = nivel ?? throw new ArgumentNullException(nameof(nivel));
+        }
     }
 }
