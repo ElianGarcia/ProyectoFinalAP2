@@ -178,6 +178,10 @@
             decimal total = GetAuxTotal();
             this.lista = FacturasBLL.GetList(p => p.Total == total).Skip(contador * pagina.mostrarCantidad).Take(pagina.mostrarCantidad).ToList();
         }
+        if (BuscarFecha)//Fecha
+        {
+            lista = lista.Where(f => f.Fecha.Date >= DesdeFecha.Date && f.Fecha.Date <= HastaFecha.Date).ToList();
+        }
 
     }
 
@@ -222,6 +226,7 @@
                 if (BuscarFecha == true)
                 {
                     lista = lista.Where(f => f.Fecha.Date >= DesdeFecha.Date && f.Fecha.Date <= HastaFecha.Date).ToList();
+                    Paginar(f => f.Fecha.Date >= DesdeFecha.Date && f.Fecha.Date <= HastaFecha.Date);
                 }
                 if (lista == null)
                 {
