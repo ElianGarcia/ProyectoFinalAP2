@@ -1,8 +1,11 @@
 ﻿@page "/ConsultaFacturas"
+@page "/ConsultaFacturas/{numPagina:int}"
 @using ProyectoFinalAp2.Controllers
 @using ProyectoFinalAp2.Models
+@using ProyectoFinalAp2.Paginacion
 @using System.IO;
 @using ProyectoFinalAp2.Data;
+@using System.Linq.Expressions
 @inject Microsoft.JSInterop.IJSRuntime JS
 @inject ExportService exportService
 
@@ -89,6 +92,17 @@
             <label>Suma total</label>
             <input type="number" @bind="total" class="form-control" readonly />
         </div>
+
+        <div class="form-group">
+            <ul class="pagination pagination-lg">
+                @for (int i = 1; i <= cantidadDePaginas; i++)
+                {
+                    <li class="page-item Azul"><a class="page-link Azul" @onclick="SaltarPagina" href="ConsultaFacturas/@i">@i</a></li>
+                }
+                <li class="page-item text-black-50"><a class="page-link text-black-50" @onclick="Salto"> ► </a></li>
+            </ul>
+        </div>
+
     </div>
 
 
@@ -100,6 +114,14 @@
 </div>
 
 @code {
+
+    [Parameter]
+    public int numPagina { get; set; }
+
+    private double cantidadDePaginas { get; set; } = 0;
+    private double cantidadDeLista { get; set; } = 0;
+    private int contador { get; set; }
+    Paginas pagina = new Paginas();
 
     List<Facturas> lista = new List<Facturas>();
     public bool BuscarFecha { get; set; }
@@ -113,6 +135,57 @@
     {
         DesdeFecha = DateTime.Now;
         HastaFecha = DateTime.Now;
+    }
+
+    private void ContarPaginas(Expression<Func<Facturas, bool>> expression)
+    {
+        cantidadDeLista = FacturasBLL.GetList(expression).Count();
+        cantidadDePaginas = Math.Ceiling(cantidadDeLista / pagina.mostrarCantidad);
+    }
+
+    private void TomarPaginas(Expression<Func<Facturas, bool>> expression)
+    {
+        lista = FacturasBLL.GetList(expression);
+        this.lista = FacturasBLL.GetList(expression).Take(pagina.mostrarCantidad).ToList();
+    }
+
+    private void SaltarPagina()
+    {
+        contador = numPagina - 1;
+        Salto();
+    }
+
+    private void Salto()
+    {
+        contador += pagina.pagina;
+        contador = (contador >= cantidadDePaginas) ? 0 : contador;
+
+        if (filtro == 1) //todo
+        {
+            this.lista = FacturasBLL.GetList(p => true).Skip(contador * pagina.mostrarCantidad).Take(pagina.mostrarCantidad).ToList();
+        }
+        if (filtro == 2) //ID
+        {
+            int id = GetAuxId();
+            this.lista = FacturasBLL.GetList(p => p.FacturaId == id).Skip(contador * pagina.mostrarCantidad).Take(pagina.mostrarCantidad).ToList();
+        }
+        if (filtro == 3) //Cliente
+        {
+            this.lista = FacturasBLL.GetList(p => p.Clientes.Nombre == criterio).Skip(contador * pagina.mostrarCantidad).Take(pagina.mostrarCantidad).ToList();
+        }
+        if (filtro == 4) //Total
+        {
+            decimal total = GetAuxTotal();
+            this.lista = FacturasBLL.GetList(p => p.Total == total).Skip(contador * pagina.mostrarCantidad).Take(pagina.mostrarCantidad).ToList();
+        }
+
+    }
+
+    private void Paginar(Expression<Func<Facturas, bool>> expression)
+    {
+        ContarPaginas(expression);
+        TomarPaginas(expression);
+        SaltarPagina();
     }
 
     private async Task Buscar()
@@ -129,17 +202,21 @@
                 {
                     case 1: //Todos
                         this.lista = FacturasBLL.GetList(f => true);
+                        Paginar(f => true);
                         break;
                     case 2: //Id
                         int ID = await GetId();
                         this.lista = FacturasBLL.GetList(f => f.FacturaId == ID);
+                        Paginar(f => f.FacturaId == ID);
                         break;
-                    case 3: //cliente 
+                    case 3: //cliente
                         this.lista = FacturasBLL.GetList(f => f.Clientes.Nombre == criterio);
+                        Paginar(f => f.Clientes.Nombre == criterio);
                         break;
                     case 4: //Total
                         decimal total = await GetTotal();
                         this.lista = FacturasBLL.GetList(f => f.Total == total);
+                        Paginar(f => f.Total == total);
                         break;
                 }
                 if (BuscarFecha == true)
@@ -200,6 +277,22 @@
         return resultado;
     }
 
+    private int GetAuxId()
+    {
+        int resultado = 0;
+
+        try
+        {
+            resultado = Convert.ToInt32(criterio);
+            return resultado;
+        }
+        catch (Exception)
+        {
+        }
+
+        return resultado;
+    }
+
     private async Task<decimal> GetTotal()
     {
         decimal total = 0;
@@ -217,6 +310,26 @@
 
         return total;
     }
+
+
+    private decimal GetAuxTotal()
+    {
+        decimal total = 0;
+
+        try
+        {
+            total = Convert.ToDecimal(criterio);
+            return total;
+        }
+        catch (Exception)
+        {
+
+        }
+
+        return total;
+    }
+
+
 
     private void CalcularTotal()
     {

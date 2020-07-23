@@ -69,9 +69,7 @@
             <label>CANTIDAD DE CATEGORIAS</label>
             <input type="number" @bind="cantidadDeCategorias" class="form-control" readonly />
         </div>
-    </div>
 
-    <div class="card-footer">
         <div class="form-group">
             <ul class="pagination pagination-lg">
                 @for (int i = 1; i <= cantidadDePaginas; i++)
@@ -82,6 +80,9 @@
             </ul>
         </div>
 
+    </div>
+
+    <div class="card-footer">
         <div class="form-group">
             <button type="button" class="btn btn-outline-primary form-control" @onclick="ExportToPdf">Exportar a PDF</button>
         </div>
@@ -123,7 +124,7 @@
         Salto();
     }
 
-    private async void Salto()
+    private void Salto()
     {
         contador += pagina.pagina;
         contador = (contador >= cantidadDePaginas) ? 0 : contador;
@@ -134,7 +135,7 @@
         }
         if (filtro == 2)
         {
-            int id = await GetId();
+            int id = GetAuxId();
             this.lista = CategoriasBLL.GetList(p => p.CategoriaId == id).Skip(contador * pagina.mostrarCantidad).Take(pagina.mostrarCantidad).ToList();
         }
         if (filtro == 3)
@@ -213,6 +214,22 @@
         {
 
             await JS.Confirmar("top-center", "error", "Error", "El Id debe ser numerico", false, 2000);
+        }
+
+        return resultado;
+    }
+
+    private int GetAuxId()
+    {
+        int resultado = 0;
+
+        try
+        {
+            resultado = Convert.ToInt32(criterio);
+            return resultado;
+        }
+        catch (Exception)
+        {
         }
 
         return resultado;
