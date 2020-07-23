@@ -1,9 +1,12 @@
 ﻿@page "/ConsultaCategorias"
+@page "/ConsultaCategorias/{numPagina:int}"
 
 @inject IToastService toast
 
-@using ProyectoFinalAp2.Models;
-@using ProyectoFinalAp2.Controllers;
+@using ProyectoFinalAp2.Models
+@using ProyectoFinalAp2.Controllers
+@using ProyectoFinalAp2.Paginacion
+@using System.Linq.Expressions
 @using System.IO;
 @using ProyectoFinalAp2.Data;
 @inject Microsoft.JSInterop.IJSRuntime JS
@@ -68,20 +71,85 @@
         </div>
     </div>
 
-    <div class="card-footer">        
+    <div class="card-footer">
+        <div class="form-group">
+            <ul class="pagination pagination-lg">
+                @for (int i = 1; i <= cantidadDePaginas; i++)
+                {
+                    <li class="page-item Azul"><a class="page-link Azul" @onclick="SaltarPagina" href="ConsultaCategorias/@i">@i</a></li>
+                }
+                <li class="page-item text-black-50"><a class="page-link text-black-50" @onclick="Salto"> ► </a></li>
+            </ul>
+        </div>
+
         <div class="form-group">
             <button type="button" class="btn btn-outline-primary form-control" @onclick="ExportToPdf">Exportar a PDF</button>
         </div>
+
     </div>
 </div>
 
 @code {
+
+    [Parameter]
+    public int numPagina { get; set; }
+
+    private double cantidadDePaginas { get; set; } = 0;
+    private double cantidadDeLista { get; set; } = 0;
+    private int contador { get; set; }
+    Paginas pagina = new Paginas();
 
     List<Categorias> lista = new List<Categorias>();
     private int filtro = 0;
     private string criterio = string.Empty;
     private int cantidadDeCategorias = 0;
 
+
+    private void ContarPaginas(Expression<Func<Categorias, bool>> expression)
+    {
+        cantidadDeLista = CategoriasBLL.GetList(expression).Count();
+        cantidadDePaginas = Math.Ceiling(cantidadDeLista / pagina.mostrarCantidad);
+    }
+
+    private void TomarPaginas(Expression<Func<Categorias, bool>> expression)
+    {
+        lista = CategoriasBLL.GetList(expression);
+        this.lista = CategoriasBLL.GetList(expression).Take(pagina.mostrarCantidad).ToList();
+    }
+
+    private void SaltarPagina()
+    {
+        contador = numPagina - 1;
+        Salto();
+    }
+
+    private async void Salto()
+    {
+        contador += pagina.pagina;
+        contador = (contador >= cantidadDePaginas) ? 0 : contador;
+
+        if (filtro == 1)
+        {
+            this.lista = CategoriasBLL.GetList(p => true).Skip(contador * pagina.mostrarCantidad).Take(pagina.mostrarCantidad).ToList();
+        }
+        if (filtro == 2)
+        {
+            int id = await GetId();
+            this.lista = CategoriasBLL.GetList(p => p.CategoriaId == id).Skip(contador * pagina.mostrarCantidad).Take(pagina.mostrarCantidad).ToList();
+        }
+        if (filtro == 3)
+        {
+            this.lista = CategoriasBLL.GetList(p => p.Descripcion==criterio).Skip(contador * pagina.mostrarCantidad).Take(pagina.mostrarCantidad).ToList();
+        }
+
+    }
+
+    private void Paginar(Expression<Func<Categorias, bool>> expression)
+    {
+        ContarPaginas(expression);
+        TomarPaginas(expression);
+        SaltarPagina();
+    }
 
     private async Task Buscar()
     {
@@ -97,13 +165,16 @@
                 {
                     case 1: //Todos
                         this.lista = CategoriasBLL.GetList(c => true);
+                        Paginar(p => true);
                         break;
                     case 2: //Id
                         int ID = await GetId();
                         this.lista = CategoriasBLL.GetList(c => c.CategoriaId == ID);
+                        Paginar(p => p.CategoriaId == ID);
                         break;
                     case 3: //descripcion
                         this.lista = CategoriasBLL.GetList(c => c.Descripcion == criterio);
+                        Paginar(p => p.Descripcion == criterio);
                         break;
                 }
             }
