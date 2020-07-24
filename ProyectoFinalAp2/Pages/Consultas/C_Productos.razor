@@ -1,8 +1,13 @@
 ﻿@page "/Consultas/Productos"
+@page "/Consultas/Productos/{numPagina:int}"
+
 @using ProyectoFinalAp2.Models;
 @using ProyectoFinalAp2.Controllers;
 @using ProyectoFinalAp2.Data;
+@using ProyectoFinalAp2.Paginacion;
 @using System.IO;
+@using System.Linq.Expressions;
+
 @inject IToastService toast
 @inject ExportService exportService
 @inject Microsoft.JSInterop.IJSRuntime JS
@@ -45,10 +50,10 @@
                     <label for="filtro">Filtro: </label>
                     <select class="form-control" @bind="Filtro">
                         <option value="" disabled selected>Seleccione un filtro</option>
-                        <option value="Todo">Todo</option>
-                        <option value="Id">ID</option>
-                        <option value="Id">Categoria</option>
-                        <option value="Descripcion">Descripción</option>
+                        <option value="1">Todo</option>
+                        <option value="2">ID</option>
+                        <option value="3">Categoria</option>
+                        <option value="4">Descripción</option>
                     </select>
                 </div>
 
@@ -90,6 +95,17 @@
                 </tbody>
             </table>
         </div>
+
+        <div class="form-group text-center">
+            <ul class="pagination pagination-lg">
+                @for (int i = 1; i <= cantidadDePaginas; i++)
+                {
+                    <li class="page-item Azul"><a class="page-link Azul" @onclick="SaltarPagina" href="ConsultaCategorias/@i">@i</a></li>
+                }
+                <li class="page-item text-black-50"><a class="page-link text-black-50" @onclick="Salto"> ► </a></li>
+            </ul>
+        </div>
+
         <div class="card-footer">
             <button type="button" class="btn btn-outline-primary form-control" @onclick="ExportToPdf">Exportar a PDF</button>
         </div>
@@ -97,10 +113,17 @@
 </EditForm>
 
 @code {
+    [Parameter]
+    public int numPagina { get; set; }
+
+    private double cantidadDePaginas { get; set; } = 0;
+    private double cantidadDeLista { get; set; } = 0;
+    private int contador { get; set; }
+    Paginas pagina = new Paginas();
 
     private List<Productos> lista { get; set; }
 
-    private string Filtro { get; set; }
+    private int Filtro { get; set; }
     private string Criterio { get; set; }
     public bool BuscarFecha { get; set; }
     public DateTime DesdeFecha { get; set; }
@@ -113,6 +136,68 @@
 
         DesdeFecha = DateTime.Now;
         HastaFecha = DateTime.Now;
+    }
+
+    private void ContarPaginas(Expression<Func<Productos, bool>> expression)
+    {
+        cantidadDeLista = ProductosBLL.GetList(expression).Count();
+        cantidadDePaginas = Math.Ceiling(cantidadDeLista / pagina.mostrarCantidad);
+    }
+
+    private void TomarPaginas(Expression<Func<Productos, bool>> expression)
+    {
+        lista = ProductosBLL.GetList(expression);
+        this.lista = ProductosBLL.GetList(expression).Take(pagina.mostrarCantidad).ToList();
+    }
+
+    private void SaltarPagina()
+    {
+        contador = numPagina - 1;
+        Salto();
+    }
+
+    private int GetAuxId()
+    {
+        int resultado = 0;
+
+        try
+        {
+            resultado = Convert.ToInt32(Criterio);
+            return resultado;
+        }
+        catch (Exception)
+        {
+
+        }
+
+        return resultado;
+    }
+
+    private void Salto()
+    {
+        contador += pagina.pagina;
+        contador = (contador >= cantidadDePaginas) ? 0 : contador;
+
+        if (Filtro == 1)
+        {
+            this.lista = ProductosBLL.GetList(p => true).Skip(contador * pagina.mostrarCantidad).Take(pagina.mostrarCantidad).ToList();
+        }
+        if (Filtro == 2)
+        {
+            int id = GetAuxId();
+            this.lista = ProductosBLL.GetList(p => p.ProductoId == id).Skip(contador * pagina.mostrarCantidad).Take(pagina.mostrarCantidad).ToList();
+        }
+        if (Filtro == 3)
+        {
+            this.lista = ProductosBLL.GetList(p => p.Descripcion == Criterio).Skip(contador * pagina.mostrarCantidad).Take(pagina.mostrarCantidad).ToList();
+        }
+    }
+
+    private void Paginar(Expression<Func<Productos, bool>> expression)
+    {
+        ContarPaginas(expression);
+        TomarPaginas(expression);
+        SaltarPagina();
     }
 
     protected async Task ExportToPdf()
@@ -143,17 +228,21 @@
                 {
                     switch (Filtro)
                     {
-                        case "Todo":
+                        case 1:
                             lista = ProductosBLL.GetList(e => true);
+                            Paginar(p => true);
                             break;
-                        case "ID":
+                        case 2:
                             lista = ProductosBLL.GetList(e => e.ProductoId == Convert.ToInt32(Criterio));
+                            Paginar(e => e.ProductoId == Convert.ToInt32(Criterio));
                             break;
-                        case "Categoria":
+                        case 3:
                             lista = ProductosBLL.GetList(e => CategoriasBLL.Buscar(e.CategoriaiD).Descripcion == Criterio);
+                            Paginar(e => CategoriasBLL.Buscar(e.CategoriaiD).Descripcion == Criterio);
                             break;
-                        case "Descripción":
+                        case 4:
                             lista = ProductosBLL.GetList(e => e.Descripcion == Criterio);
+                            Paginar(e => e.Descripcion == Criterio);
                             break;
                     }
                     if (BuscarFecha == true)

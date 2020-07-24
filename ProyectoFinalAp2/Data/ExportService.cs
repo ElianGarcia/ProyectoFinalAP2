@@ -66,7 +66,6 @@ namespace ProyectoFinalAp2.Data
                     //Closing the PDF document
                     pdfDocument.Close(true);
                     return stream;
-
                 }
             }
         }
