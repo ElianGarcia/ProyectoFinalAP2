@@ -3,7 +3,8 @@
 @using ProyectoFinalAp2.Controllers
 @using ProyectoFinalAp2.Models
 @using ProyectoFinalAp2.Data
-
+@using System.IO;
+@inject ExportService exportService
 
 @inject IToastService toast
 @inject IJSRuntime JS
@@ -123,6 +124,7 @@
                 <button type="button" class="btn btn-secondary" @onclick="Nuevo"><span class="icon-add"></span> Nuevo </button>
                 <button type="submit" class="btn btn-success"><span class="icon-save"></span> Guardar </button>
                 <button type="button" class="btn btn-danger" @onclick="Eliminar"><span class="icon-delete_forever"></span> Eliminar </button>
+                <button type="button" class="btn btn-warning" @onclick="ExportToPdf"><span class="icon-print_disabled"></span>Imprimir</button>
             </div>
         </div>
 
@@ -145,6 +147,7 @@
     private int cantidadColocada { get; set; }
     private decimal precioEncontrado { get; set; }
     private decimal importe { get; set; }
+    private List<AuxFacturaFinal> auxLista;
 
 
     protected override void OnInitialized()
@@ -262,7 +265,7 @@
         try
         {
             var auxProducto = ProductosBLL.Buscar(detalle.ProductoId);
-            if (auxProducto !=null)
+            if (auxProducto != null)
             {
                 facturas.Detalles.Remove(detalle);
             }
@@ -314,8 +317,12 @@
 
             if (paso)
             {
-                Nuevo();
                 await JS.Confirmar("top-center", "success", "Guardado Exitosamente", "Buen trabajo", false, 2000);
+                if (await JS.ConfirmDelete("Confirmar", "¿Esta seguro que desea imprimir esta factura?", "question"))
+                {
+                    var aux = ExportToPdf();
+                }
+                Nuevo();
             }
             else
             {
@@ -328,7 +335,7 @@
     {
         bool elimino;
 
-        if(await JS.ConfirmDelete("Confirmar", "¿Esta seguro que desea eliminar esta factura?", "question"))
+        if (await JS.ConfirmDelete("Confirmar", "¿Esta seguro que desea eliminar esta factura?", "question"))
         {
             elimino = FacturasBLL.Eliminar(facturas.FacturaId);
 
@@ -341,6 +348,41 @@
                 await JS.Confirmar("top-center", "error", "Error", "No fue posible eliminar la factura", false, 2000);
         }
 
+    }
+
+    private void CargarAuxLista()
+    {
+        this.auxLista = new List<AuxFacturaFinal>();
+        if (this.facturas.Detalles.Count() != 0)
+        {
+            foreach (var item in facturas.Detalles)
+            {
+                this.auxLista.Add(new AuxFacturaFinal
+                {
+                    ID = item.ProductoId,
+                    Descripcion = GetDescripcion(item.ProductoId),
+                    Cantidad = item.Cantidad,
+                    Precio = item.Precio,
+                    Importe = item.Cantidad * item.Precio
+                });
+            }
+        }
+    }
+
+    protected async Task ExportToPdf()
+    {
+        CargarAuxLista();
+        if(this.facturas.Detalles.Count() == 0)
+        {
+            await JS.Confirmar("top-center", "info", "Aviso", "No hay nada para imprimir", false, 2000);
+        }
+        else
+        {
+            using (MemoryStream excelStream = ExportService.CreatePdfFacturaFinal(auxLista, DateTime.Now.ToString()))
+            {
+                await JS.SaveAs("FacturaConsumidorFinal.pdf", excelStream.ToArray());
+            }
+        }
     }
 
 }
