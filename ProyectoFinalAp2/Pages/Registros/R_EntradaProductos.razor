@@ -68,15 +68,13 @@
                 <tbody class="table-striped">
                     @foreach (var item in entradaProductos.DetalleEntrada)
                     {
-                        var result = BuscarCategoria(item.ProductoId);
-                        var result1 = BuscarProducto(item);
                         <tr>
                             <td>@item.ProductoId</td>
-                            <td>@Categoria</td>
-                            <td>@Producto</td>
+                            <td>@GetCategoria(item.ProductoId)</td>
+                            <td>@GetProducto(item.ProductoId)</td>
                             <td>@item.Cantidad</td>
-                            <td>@BuscarPrecio(item)</td>
-                            <td>@(item.Cantidad * ProductosBLL.Buscar(item.ProductoId).Precio)</td>
+                            <td>@GetPrecio(item)</td>
+                            <td>@(item.Cantidad * GetPrecio(item))</td>
                             <td><button type="button" class="btn btn-outline-danger" @onclick="(()=> EliminarProducto(item))"><span class="icon-remove"> </span> Eliminar</button></td>
                         </tr>
                     }
@@ -105,11 +103,9 @@
 
     Productos productos = new Productos();
     EntradaProductos entradaProductos = new EntradaProductos();
-    private string Categoria;
-    private string Producto;
 
     //variables del detalle
-    public static int productoiD { get; set; }
+    public int productoiD { get; set; }
     public int cantidad { get; set; }
 
     protected override void OnParametersSet()
@@ -147,6 +143,8 @@
 
     private void Nuevo()
     {
+        productoiD = 0;
+        productos = new Productos();
         entradaProductos = new EntradaProductos();
     }
 
@@ -214,8 +212,9 @@
         }
     }
 
-    private async Task BuscarCategoria(int id)
+    private string GetCategoria(int id)
     {
+        string Categoria = "";
         try
         {
             Productos p = ProductosBLL.Buscar(id);
@@ -227,34 +226,41 @@
         }
         catch
         {
-            await JS.Confirmar("top-center", "error", "Error", "Producto eliminado", false, 2000);
             Categoria = "Producto Eliminado";
         }
+
+        return Categoria;
     }
 
-    private decimal BuscarPrecio(Entidades.DetalleEntradaProductos item)
+    private decimal GetPrecio(Entidades.DetalleEntradaProductos item)
     {
-        decimal Precio = ProductosBLL.Buscar(item.ProductoId).Precio;
-        return Precio;
-    }
-
-    private async Task BuscarProducto(Entidades.DetalleEntradaProductos item)
-    {
+        decimal Precio = 0;
         try
         {
-            if (item.ProductoId > 0)
-            {
-                if(ProductosBLL.Buscar(item.ProductoId).Descripcion != null)
-                {
-                    Producto = ProductosBLL.Buscar(item.ProductoId).Descripcion;
-                }
-            }
+            Productos p = ProductosBLL.Buscar(item.ProductoId);
+            Precio = p.Precio;
         }
         catch
         {
-            await JS.Confirmar("top-center", "error", "Error", "Producto eliminado", false, 2000);
+
+        }
+
+        return Precio;
+    }
+
+    private string GetProducto(int id)
+    {
+        string Producto = "";
+
+        try
+        {
+            Producto = ProductosBLL.Buscar(id).Descripcion;
+        }
+        catch
+        {
             Producto = "Producto Eliminado";
         }
+        return Producto;
     }
 
     private async Task Buscar()

@@ -134,12 +134,6 @@ namespace ProyectoFinalAp2.Migrations
                         principalTable: "EntradaProductos",
                         principalColumn: "EntradaProductoId",
                         onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_DetalleEntradaProductos_Productos_ProductoId",
-                        column: x => x.ProductoId,
-                        principalTable: "Productos",
-                        principalColumn: "ProductoId",
-                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -172,26 +166,21 @@ namespace ProyectoFinalAp2.Migrations
             migrationBuilder.InsertData(
                 table: "Productos",
                 columns: new[] { "ProductoId", "Cantidad", "CategoriaiD", "Costo", "Descripcion", "Fecha", "Ganancia", "Precio", "Reorden" },
-                values: new object[] { 1, 25, 1, 100m, "Zapato", new DateTime(2020, 7, 20, 18, 44, 28, 549, DateTimeKind.Local).AddTicks(1790), 50m, 150m, 50 });
+                values: new object[] { 1, 25, 1, 100m, "Zapato", new DateTime(2020, 7, 25, 10, 21, 37, 601, DateTimeKind.Local).AddTicks(2783), 50m, 150m, 50 });
 
             migrationBuilder.InsertData(
                 table: "Usuarios",
                 columns: new[] { "UsuarioId", "Correo", "FechaIngreso", "IsAdministrator", "IsAuthenticated", "Nivel", "NombreUsuario", "Nombres", "PassWord" },
                 values: new object[,]
                 {
-                    { 1, "eliangarciarguez@gmail.com", new DateTime(2020, 7, 20, 18, 44, 28, 548, DateTimeKind.Local).AddTicks(928), false, false, "Administrador", "Rguez12", "Elian Garcia", "dQBNAGIAUgBlAGwATABhADEANwA3ADIA" },
-                    { 2, "rehanicordero@gmail.com", new DateTime(2020, 7, 20, 18, 44, 28, 548, DateTimeKind.Local).AddTicks(1618), false, false, "Administrador", "rehani97", "Rehani Cordero", "MQAyADMANAA=" }
+                    { 1, "eliangarciarguez@gmail.com", new DateTime(2020, 7, 25, 10, 21, 37, 599, DateTimeKind.Local).AddTicks(7355), false, false, "Administrador", "Rguez12", "Elian Garcia", "dQBNAGIAUgBlAGwATABhADEANwA3ADIA" },
+                    { 2, "rehanicordero@gmail.com", new DateTime(2020, 7, 25, 10, 21, 37, 599, DateTimeKind.Local).AddTicks(8902), false, false, "Administrador", "rehani97", "Rehani Cordero", "MQAyADMANAA=" }
                 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_DetalleEntradaProductos_EntradaProductosEntradaProductoId",
                 table: "DetalleEntradaProductos",
                 column: "EntradaProductosEntradaProductoId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_DetalleEntradaProductos_ProductoId",
-                table: "DetalleEntradaProductos",
-                column: "ProductoId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_DetalleFacturas_FacturaId",
@@ -216,13 +205,13 @@ namespace ProyectoFinalAp2.Migrations
                 name: "DetalleFacturas");
 
             migrationBuilder.DropTable(
+                name: "Productos");
+
+            migrationBuilder.DropTable(
                 name: "Usuarios");
 
             migrationBuilder.DropTable(
                 name: "EntradaProductos");
-
-            migrationBuilder.DropTable(
-                name: "Productos");
 
             migrationBuilder.DropTable(
                 name: "Facturas");

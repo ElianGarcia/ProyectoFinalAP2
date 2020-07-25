@@ -42,8 +42,6 @@ namespace ProyectoFinalAp2.Migrations
 
                     b.HasIndex("EntradaProductosEntradaProductoId");
 
-                    b.HasIndex("ProductoId");
-
                     b.ToTable("DetalleEntradaProductos");
                 });
 
@@ -224,7 +222,7 @@ namespace ProyectoFinalAp2.Migrations
                             CategoriaiD = 1,
                             Costo = 100m,
                             Descripcion = "Zapato",
-                            Fecha = new DateTime(2020, 7, 20, 18, 44, 28, 549, DateTimeKind.Local).AddTicks(1790),
+                            Fecha = new DateTime(2020, 7, 25, 10, 21, 37, 601, DateTimeKind.Local).AddTicks(2783),
                             Ganancia = 50m,
                             Precio = 150m,
                             Reorden = 50
@@ -280,7 +278,7 @@ namespace ProyectoFinalAp2.Migrations
                         {
                             UsuarioId = 1,
                             Correo = "eliangarciarguez@gmail.com",
-                            FechaIngreso = new DateTime(2020, 7, 20, 18, 44, 28, 548, DateTimeKind.Local).AddTicks(928),
+                            FechaIngreso = new DateTime(2020, 7, 25, 10, 21, 37, 599, DateTimeKind.Local).AddTicks(7355),
                             IsAdministrator = false,
                             IsAuthenticated = false,
                             Nivel = "Administrador",
@@ -292,7 +290,7 @@ namespace ProyectoFinalAp2.Migrations
                         {
                             UsuarioId = 2,
                             Correo = "rehanicordero@gmail.com",
-                            FechaIngreso = new DateTime(2020, 7, 20, 18, 44, 28, 548, DateTimeKind.Local).AddTicks(1618),
+                            FechaIngreso = new DateTime(2020, 7, 25, 10, 21, 37, 599, DateTimeKind.Local).AddTicks(8902),
                             IsAdministrator = false,
                             IsAuthenticated = false,
                             Nivel = "Administrador",
@@ -307,12 +305,6 @@ namespace ProyectoFinalAp2.Migrations
                     b.HasOne("ProyectoFinalAp2.Models.EntradaProductos", null)
                         .WithMany("DetalleEntrada")
                         .HasForeignKey("EntradaProductosEntradaProductoId");
-
-                    b.HasOne("ProyectoFinalAp2.Models.Productos", "Productos")
-                        .WithMany()
-                        .HasForeignKey("ProductoId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("ProyectoFinalAp2.Models.DetalleFacturas", b =>
