@@ -186,7 +186,7 @@ namespace ProyectoFinalAp2.Data
             }
         }
 
-        public static MemoryStream CreatePdfCategorias(List<Categorias> forecasts, string Fecha)
+        public static MemoryStream CreatePdfCategorias(List<Categorias> forecasts, string Fecha, string cantidadCategorias)
         {
             if (forecasts == null)
             {
@@ -209,7 +209,7 @@ namespace ProyectoFinalAp2.Data
                 PdfLayoutResult result = title.Draw(page, new PointF(0, 0));
 
                 PdfStandardFont contentFont = new PdfStandardFont(PdfFontFamily.TimesRoman, 12);
-                PdfTextElement content = new PdfTextElement("Fecha de impresión " + Fecha, contentFont, PdfBrushes.Black);
+                PdfTextElement content = new PdfTextElement("Fecha de impresión:" + Fecha, contentFont, PdfBrushes.Black);
                 PdfLayoutFormat format = new PdfLayoutFormat();
                 format.Layout = PdfLayoutType.Paginate;
 
