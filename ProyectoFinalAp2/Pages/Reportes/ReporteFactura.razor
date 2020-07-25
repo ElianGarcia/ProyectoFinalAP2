@@ -62,12 +62,15 @@
     List<Facturas> lista = new List<Facturas>();
     private String Fecha;
     private decimal total = 0;
+    List<AuxFactura> auxLista;
+    AuxFactura aux = new AuxFactura();
 
     protected override void OnInitialized()
     {
         Fecha = DateTime.Now.ToShortDateString();
         lista = FacturasBLL.GetList(c => true);
         CalcularTotal();
+        CargarListaAux();
     }
 
     private void CalcularTotal()
@@ -83,10 +86,37 @@
 
     protected async Task ExportToPdf()
     {
-        using (MemoryStream excelStream = ExportService.CreatePdfFacturas(lista, Fecha))
+        using (MemoryStream excelStream = ExportService.CreatePdfFacturas(auxLista, DateTime.Now.ToString()))
         {
             await JS.SaveAs("Facturas.pdf", excelStream.ToArray());
         }
+    }
+
+    private void CargarListaAux()
+    {
+        try
+        {
+            this.auxLista = new List<AuxFactura>();
+            if (lista != null)
+            {
+                foreach (var item in lista)
+                {
+                    this.auxLista.Add(new AuxFactura
+                    {
+                        ID = item.FacturaId,
+                        Cliente = GetNombre(item.ClienteId),
+                        Fecha = item.Fecha,
+                        Total = item.Total
+                    });
+                }
+            }
+        }
+        catch (Exception)
+        {
+
+            throw;
+        }
+
     }
 
     private string GetNombre(int id)

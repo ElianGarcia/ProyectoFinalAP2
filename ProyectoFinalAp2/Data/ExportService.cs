@@ -301,7 +301,7 @@ namespace ProyectoFinalAp2.Data
             }
         }
 
-        public static MemoryStream CreatePdfFacturas(List<Facturas> forecasts, string Fecha)
+        public static MemoryStream CreatePdfFacturas(List<AuxFactura> forecasts, string Fecha)
         {
             if (forecasts == null)
             {
