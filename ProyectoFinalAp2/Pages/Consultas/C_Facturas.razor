@@ -130,6 +130,7 @@
     public int filtro;
     public string criterio = string.Empty;
     public decimal total = 0;
+    private int cantidad = 0;
     public List<AuxFactura> auxLista;
 
     protected override void OnInitialized()
@@ -247,7 +248,7 @@
     protected async Task ExportToPdf()
     {
         CargarListaAux();
-        using (MemoryStream excelStream = ExportService.CreatePdfFacturas(auxLista, DateTime.Now.ToString()))
+        using (MemoryStream excelStream = ExportService.CreatePdfFacturas(auxLista, DateTime.Now.ToString(), total.ToString(),cantidad.ToString()))
         {
             await JS.SaveAs("Facturas.pdf", excelStream.ToArray());
         }
@@ -368,12 +369,15 @@
     private void CalcularTotal()
     {
         decimal auxTotal = 0;
+        int auxCantidad = 0;
         foreach (var item in lista)
         {
             auxTotal += item.Total;
+            auxCantidad++;
         }
 
         total = auxTotal;
+        cantidad = auxCantidad;
     }
 
 

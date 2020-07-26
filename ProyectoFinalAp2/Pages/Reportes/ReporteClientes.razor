@@ -80,7 +80,7 @@
 
     protected async Task ExportToPdf()
     {
-        using (MemoryStream excelStream = ExportService.CreatePdfClientes(lista, Fecha))
+        using (MemoryStream excelStream = ExportService.CreatePdfClientes(lista, Fecha, cantidadCliente.ToString()))
         {
             await JS.SaveAs("Clientes.pdf", excelStream.ToArray());
         }

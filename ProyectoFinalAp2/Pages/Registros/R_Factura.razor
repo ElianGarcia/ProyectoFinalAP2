@@ -139,7 +139,6 @@
     [Parameter]
     public int facturaId { get; set; }
 
-
     Facturas facturas = new Facturas();
     List<Clientes> listaClientes = new List<Clientes>();
     List<Productos> listaProductos = new List<Productos>();
@@ -158,6 +157,7 @@
         listaClientes = ClientesBLL.GetList(p => true);
         listaProductos = ProductosBLL.GetList(p => true);
     }
+
 
     private string GetDescripcion(int id)
     {
@@ -369,6 +369,20 @@
         }
     }
 
+    private string GetCliente(int id)
+    {
+        var aux = ClientesBLL.Buscar(id);
+        string nombre = string.Empty;
+        if (aux != null)
+        {
+            nombre = aux.Nombre;
+        }
+        else
+            nombre = "Cliente Eliminado.";
+
+        return nombre;
+    }
+
     protected async Task ExportToPdf()
     {
         CargarAuxLista();
@@ -378,7 +392,7 @@
         }
         else
         {
-            using (MemoryStream excelStream = ExportService.CreatePdfFacturaFinal(auxLista, DateTime.Now.ToString()))
+            using (MemoryStream excelStream = ExportService.CreatePdfFacturaFinal(auxLista, DateTime.Now.ToString(), GetCliente(facturas.ClienteId), facturas.Total.ToString()))
             {
                 await JS.SaveAs("FacturaConsumidorFinal.pdf", excelStream.ToArray());
             }

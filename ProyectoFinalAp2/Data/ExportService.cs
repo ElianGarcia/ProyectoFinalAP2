@@ -299,6 +299,10 @@ namespace ProyectoFinalAp2.Data
                 //Draw PDF grid into the PDF page
                 pdfGrid.Draw(page, new PointF(0, result.Bounds.Bottom + paragraphAfterSpacing));
 
+                //Agregando cantidad de categorias
+                PdfTextElement text = new PdfTextElement("Cantidad:"+cantidadCategorias, font, PdfBrushes.Black);
+                PdfLayoutResult result1 = text.Draw(page, new PointF(395, result.Bounds.Bottom * 5 + paragraphAfterSpacing));
+
                 using (MemoryStream stream = new MemoryStream())
                 {
                     //Saving the PDF document into the stream
@@ -310,7 +314,7 @@ namespace ProyectoFinalAp2.Data
                 }
             }
         }
-        public static MemoryStream CreatePdfClientes(List<Clientes> forecasts, string Fecha)
+        public static MemoryStream CreatePdfClientes(List<Clientes> forecasts, string Fecha, string cantidadClientes)
         {
             if (forecasts == null)
             {
@@ -356,6 +360,10 @@ namespace ProyectoFinalAp2.Data
                 //Draw PDF grid into the PDF page
                 pdfGrid.Draw(page, new PointF(0, result.Bounds.Bottom + paragraphAfterSpacing));
 
+                //Agregando cantidad de clientes
+                PdfTextElement text = new PdfTextElement("Cantidad:" +cantidadClientes, font, PdfBrushes.Black);
+                PdfLayoutResult result1 = text.Draw(page, new PointF(395, result.Bounds.Bottom * 5 + paragraphAfterSpacing));
+
                 using (MemoryStream stream = new MemoryStream())
                 {
                     //Saving the PDF document into the stream
@@ -368,7 +376,7 @@ namespace ProyectoFinalAp2.Data
             }
         }
 
-        public static MemoryStream CreatePdfFacturas(List<AuxFactura> forecasts, string Fecha)
+        public static MemoryStream CreatePdfFacturas(List<AuxFactura> forecasts, string Fecha, string total, string cantidad)
         {
             if (forecasts == null)
             {
@@ -414,6 +422,12 @@ namespace ProyectoFinalAp2.Data
                 //Draw PDF grid into the PDF page
                 pdfGrid.Draw(page, new PointF(0, result.Bounds.Bottom + paragraphAfterSpacing));
 
+                //Agregando cantidad y total a reporte
+                PdfTextElement text = new PdfTextElement("Total:" + total, font, PdfBrushes.Black);
+                PdfLayoutResult result1 = text.Draw(page, new PointF(395, result.Bounds.Bottom * 5 + paragraphAfterSpacing));
+                PdfTextElement text2 = new PdfTextElement("Cantidad:" +cantidad, font, PdfBrushes.Black);
+                PdfLayoutResult result3 = text2.Draw(page, new PointF(395, result.Bounds.Bottom * 6 + paragraphAfterSpacing));
+
                 using (MemoryStream stream = new MemoryStream())
                 {
                     //Saving the PDF document into the stream
@@ -426,7 +440,7 @@ namespace ProyectoFinalAp2.Data
             }
         }
 
-        public static MemoryStream CreatePdfFacturaFinal(List<AuxFacturaFinal> forecasts, string Fecha)
+        public static MemoryStream CreatePdfFacturaFinal(List<AuxFacturaFinal> forecasts, string Fecha, string cliente, string total)
         {
             if (forecasts == null)
             {
@@ -443,10 +457,14 @@ namespace ProyectoFinalAp2.Data
 
                 //Create a new font
                 PdfStandardFont font = new PdfStandardFont(PdfFontFamily.TimesRoman, 16);
+                PdfStandardFont clienteFont = new PdfStandardFont(PdfFontFamily.TimesRoman, 12);
 
                 //Create a text element to draw a text in PDF page
                 PdfTextElement title = new PdfTextElement("Factura a Consumidor Final", font, PdfBrushes.Black);
+                //Creando el nombre del cliente
+                PdfTextElement clienteTitle = new PdfTextElement("Cliente:"+cliente, clienteFont, PdfBrushes.Black);
                 PdfLayoutResult result = title.Draw(page, new PointF(0, 0));
+                PdfLayoutResult resultCliente = clienteTitle.Draw(page, new PointF(395, 25));
 
                 PdfStandardFont contentFont = new PdfStandardFont(PdfFontFamily.TimesRoman, 12);
                 PdfTextElement content = new PdfTextElement("Fecha de impresión " + Fecha, contentFont, PdfBrushes.Black);
@@ -471,6 +489,10 @@ namespace ProyectoFinalAp2.Data
 
                 //Draw PDF grid into the PDF page
                 pdfGrid.Draw(page, new PointF(0, result.Bounds.Bottom + paragraphAfterSpacing));
+
+                //Agregando cantidad y total a reporte
+                PdfTextElement text = new PdfTextElement("Total:$" + total, font, PdfBrushes.Black);
+                PdfLayoutResult result1 = text.Draw(page, new PointF(395, result.Bounds.Bottom * 5 + paragraphAfterSpacing));
 
                 using (MemoryStream stream = new MemoryStream())
                 {
