@@ -46,7 +46,7 @@
 
     <div class="card-footer">
         <label for="GANANCIA">Cantidad Total</label>
-        <input @bind="@Total" class="form-control" step="00.2" readonly />
+        <input @bind="@Total" class="form-control" readonly />
     </div>
 
     <button class="btn btn-primary" @onclick="@ExportToPdf">Exportar a PDF</button>
@@ -56,7 +56,7 @@
 @code {
     List<EntradaProductos> Lista = new List<EntradaProductos>();
     String Fecha;
-    decimal Total = 0;
+    int Total = 0;
 
     protected override void OnInitialized()
     {
@@ -78,7 +78,7 @@
 
     protected async Task ExportToPdf()
     {
-        using (MemoryStream excelStream = ExportService.CreatePdfEntradaProductos(Lista, Fecha))
+        using (MemoryStream excelStream = ExportService.CreatePdfEntradaProductos(Lista, Fecha, Total))
         {
             await JS.SaveAs("EntradaProductos.pdf", excelStream.ToArray());
         }

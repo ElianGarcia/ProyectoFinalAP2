@@ -1,6 +1,7 @@
 ﻿using ProyectoFinalAp2.Models;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
@@ -10,6 +11,7 @@ namespace Entidades
 {
     public class DetalleEntradaProductos
     {
+        [Key]
         public int DetalleEntradaProductosId { get; set; }
         public int EntradaProductoId { get; set; }
         public int ProductoId { get; set; }

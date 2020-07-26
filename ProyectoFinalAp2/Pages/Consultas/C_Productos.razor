@@ -96,6 +96,11 @@
             </table>
         </div>
 
+        <div class="form-group">
+            <label for="GANANCIA">Total</label>
+            <input @bind="@Total" class="form-control" step="00.2" readonly />
+        </div>
+
         <div class="form-group text-center">
             <ul class="pagination pagination-lg">
                 @for (int i = 1; i <= cantidadDePaginas; i++)
@@ -120,6 +125,7 @@
     private double cantidadDeLista { get; set; } = 0;
     private int contador { get; set; }
     Paginas pagina = new Paginas();
+    decimal Total = 0;
 
     private List<Productos> lista { get; set; }
 
@@ -136,6 +142,17 @@
 
         DesdeFecha = DateTime.Now;
         HastaFecha = DateTime.Now;
+    }
+
+    private decimal CalcularTotal()
+    {
+        Total = 0;
+
+        foreach (var producto in lista)
+        {
+            Total += producto.Cantidad;
+        }
+        return Total;
     }
 
     private void ContarPaginas(Expression<Func<Productos, bool>> expression)
@@ -202,7 +219,7 @@
 
     protected async Task ExportToPdf()
     {
-        using (MemoryStream excelStream = ExportService.CreatePdfProductos(lista, DateTime.Now.ToString()))
+        using (MemoryStream excelStream = ExportService.CreatePdfProductos(lista, DateTime.Now.ToString(), Total))
         {
             await JS.SaveAs("Productos.pdf", excelStream.ToArray());
         }
@@ -261,5 +278,7 @@
         {
             throw;
         }
+
+        CalcularTotal();
     }
 }

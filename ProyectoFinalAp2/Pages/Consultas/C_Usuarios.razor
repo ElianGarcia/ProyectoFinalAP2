@@ -91,6 +91,12 @@
                     </tbody>
                 </table>
             </div>
+
+            <div class="card-footer">
+                <label for="GANANCIA">Cantidad de usuarios registrados</label>
+                <input @bind="@Cantidad" class="form-control" readonly />
+            </div>
+
             <div class="form-group text-center">
                 <ul class="pagination pagination-lg">
                     @for (int i = 1; i <= cantidadDePaginas; i++)
@@ -123,6 +129,7 @@
     public bool BuscarFecha = false;
     public DateTime DesdeFecha { get; set; }
     public DateTime HastaFecha { get; set; }
+    int Cantidad;
 
 
     protected override void OnInitialized()
@@ -130,6 +137,17 @@
         lista = new List<Usuarios>();
         DesdeFecha = DateTime.Now;
         HastaFecha = DateTime.Now;
+    }
+
+    private decimal CalcularTotal()
+    {
+        Cantidad = 0;
+
+        foreach (var usuario in lista)
+        {
+            Cantidad += 1;
+        }
+        return Cantidad;
     }
 
     private void ContarPaginas(Expression<Func<Usuarios, bool>> expression)
@@ -200,7 +218,7 @@
 
     protected async Task ExportToPdf()
     {
-        using (MemoryStream excelStream = ExportService.CreatePdfUsuarios(lista, DateTime.Now.ToString()))
+        using (MemoryStream excelStream = ExportService.CreatePdfUsuarios(lista, DateTime.Now.ToString(), Cantidad))
         {
             await JS.SaveAs("Productos.pdf", excelStream.ToArray());
         }
@@ -255,5 +273,6 @@
         {
             throw;
         }
+        CalcularTotal();
     }
 }
