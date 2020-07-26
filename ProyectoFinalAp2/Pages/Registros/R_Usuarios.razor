@@ -2,8 +2,9 @@
 @page "/Registros/Usuarios/{UsuarioId:int}"
 @using ProyectoFinalAp2.Models
 @using ProyectoFinalAp2.Controllers
-@using ProyectoFinalAp2.Data
 @using System.Threading.Tasks
+@using System.Net.Mail
+@using System.Net
 
 @inject IToastService toast
 @inject IJSRuntime JS
@@ -68,6 +69,7 @@
                 <button type="button" class="btn btn-secondary" @onclick="Nuevo"><span class="icon-add"></span> Nuevo </button>
                 <button type="submit" class="btn btn-success"><span class="icon-save"></span> Guardar </button>
                 <button type="button" class="btn btn-danger" @onclick="Eliminar"><span class="icon-delete_forever"></span> Eliminar </button>
+                <button type="button" class="btn btn-dark" @onclick="EnviarMail"><span class="icon-restore_page"></span> Restablecer contraseña </button>
             </div>
         </div>
     </div>
@@ -162,6 +164,66 @@
             {
                 await JS.Confirmar("top-center", "error", "Error", "No se encontró el usuario", false, 2000);
             }
+        }
+    }
+
+    private bool CambiarPassword()
+    {
+        Usuarios Usuario = UsuariosBLL.Buscar(usuarios.UsuarioId);
+        bool paso = false;
+
+        if (Usuario == null)
+        {
+            paso = false;
+        }
+        else
+        {
+            Usuario.PassWord = UsuariosBLL.encode("Cl@ve123");
+            if(UsuariosBLL.Guardar(Usuario))
+                paso = true;
+        }
+        return paso;
+    }
+
+    private async Task EnviarMail()
+    {
+        if (CambiarPassword())
+        {
+            if (UsuariosBLL.VerificarExistenciaDelUsuario(usuarios.NombreUsuario))
+            {
+                if (await JS.ConfirmDelete("Confirmar", "¿Esta seguro que desea restablecer esta contraseña?", "question"))
+                {
+                    //instancia de MailMessage con sus parametros configurados
+                    MailMessage email = new MailMessage();
+                    email.To.Add(new MailAddress(usuarios.Correo));
+                    email.From = new MailAddress("eliangarciarguez@gmail.com");
+                    email.Subject = "Contraseña Restaurada ( " + DateTime.Now.ToString("dd / MMM / yyy hh:mm:ss") + " ) ";
+                    email.Body = "<p>Estimado <strong>" + usuarios.Nombres + "</strong>, le informamos que su contraseña ha sido reestablecida. Su nueva contraseña es: <strong>Cl@ve123</strong> " +
+                        "favor cambiar esta contraseña autogenerada en cuanto le sea posible. Gracias.</p>";
+                    email.IsBodyHtml = true;
+                    email.Priority = MailPriority.High;
+
+                    //instancia de SMTP con sus parametros configurados
+                    SmtpClient smtp = new SmtpClient("smtp.gmail.com", 587);
+                    smtp.EnableSsl = true;
+                    smtp.Credentials = new NetworkCredential("eliangarciarguez@gmail.com", "Garcia5...");
+
+                    try
+                    {
+                        smtp.Send(email);
+                        email.Dispose();
+                        await JS.Confirmar("top-center", "success", "Enviado", "El correo se envio correctamente", false, 2000);
+                    }
+                    catch (Exception ex)
+                    {
+                        await JS.Confirmar("top-center", "error", "Error", "No se pudo enviar el correo", false, 2000);
+                    }
+                }
+            }
+        }
+        else
+        {
+            await JS.Confirmar("top-center", "error", "Error", "No se pencontro el usuario", false, 2000);
         }
     }
 }
