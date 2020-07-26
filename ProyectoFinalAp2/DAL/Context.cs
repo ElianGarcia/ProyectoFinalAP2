@@ -47,6 +47,17 @@ namespace ProyectoFinalAp2.Data
                 Correo = "rehanicordero@gmail.com"
             });
 
+            model.Entity<Usuarios>().HasData(new Usuarios
+            {
+                UsuarioId = 3,
+                Nombres = "Usuario Invitado",
+                NombreUsuario = "Invitado",
+                PassWord = UsuariosBLL.encode("Buttersoft"),
+                FechaIngreso = DateTime.Now,
+                Nivel = "Usuario",
+                Correo = "invitado@gmail.com"
+            });
+
             model.Entity<Productos>().HasData(new Productos
             {
                 ProductoId = 1,

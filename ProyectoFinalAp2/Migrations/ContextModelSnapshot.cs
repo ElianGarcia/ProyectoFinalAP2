@@ -219,7 +219,7 @@ namespace ProyectoFinalAp2.Migrations
                             CategoriaiD = 1,
                             Costo = 100m,
                             Descripcion = "Zapato",
-                            Fecha = new DateTime(2020, 7, 26, 7, 0, 49, 183, DateTimeKind.Local).AddTicks(8787),
+                            Fecha = new DateTime(2020, 7, 26, 7, 39, 26, 749, DateTimeKind.Local).AddTicks(7161),
                             Ganancia = 50m,
                             Precio = 150m,
                             Reorden = 50
@@ -275,7 +275,7 @@ namespace ProyectoFinalAp2.Migrations
                         {
                             UsuarioId = 1,
                             Correo = "eliangarciarguez@gmail.com",
-                            FechaIngreso = new DateTime(2020, 7, 26, 7, 0, 49, 181, DateTimeKind.Local).AddTicks(8357),
+                            FechaIngreso = new DateTime(2020, 7, 26, 7, 39, 26, 747, DateTimeKind.Local).AddTicks(6158),
                             IsAdministrator = false,
                             IsAuthenticated = false,
                             Nivel = "Administrador",
@@ -287,13 +287,25 @@ namespace ProyectoFinalAp2.Migrations
                         {
                             UsuarioId = 2,
                             Correo = "rehanicordero@gmail.com",
-                            FechaIngreso = new DateTime(2020, 7, 26, 7, 0, 49, 181, DateTimeKind.Local).AddTicks(9339),
+                            FechaIngreso = new DateTime(2020, 7, 26, 7, 39, 26, 747, DateTimeKind.Local).AddTicks(7158),
                             IsAdministrator = false,
                             IsAuthenticated = false,
                             Nivel = "Administrador",
                             NombreUsuario = "rehani97",
                             Nombres = "Rehani Cordero",
                             PassWord = "MQAyADMANAA="
+                        },
+                        new
+                        {
+                            UsuarioId = 3,
+                            Correo = "invitado@gmail.com",
+                            FechaIngreso = new DateTime(2020, 7, 26, 7, 39, 26, 747, DateTimeKind.Local).AddTicks(7250),
+                            IsAdministrator = false,
+                            IsAuthenticated = false,
+                            Nivel = "Usuario",
+                            NombreUsuario = "Invitado",
+                            Nombres = "Usuario Invitado",
+                            PassWord = "QgB1AHQAdABlAHIAcwBvAGYAdAA="
                         });
                 });
 

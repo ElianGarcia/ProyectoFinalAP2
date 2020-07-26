@@ -165,15 +165,16 @@ namespace ProyectoFinalAp2.Migrations
             migrationBuilder.InsertData(
                 table: "Productos",
                 columns: new[] { "ProductoId", "Cantidad", "CategoriaiD", "Costo", "Descripcion", "Fecha", "Ganancia", "Precio", "Reorden" },
-                values: new object[] { 1, 25, 1, 100m, "Zapato", new DateTime(2020, 7, 26, 7, 0, 49, 183, DateTimeKind.Local).AddTicks(8787), 50m, 150m, 50 });
+                values: new object[] { 1, 25, 1, 100m, "Zapato", new DateTime(2020, 7, 26, 7, 39, 26, 749, DateTimeKind.Local).AddTicks(7161), 50m, 150m, 50 });
 
             migrationBuilder.InsertData(
                 table: "Usuarios",
                 columns: new[] { "UsuarioId", "Correo", "FechaIngreso", "IsAdministrator", "IsAuthenticated", "Nivel", "NombreUsuario", "Nombres", "PassWord" },
                 values: new object[,]
                 {
-                    { 1, "eliangarciarguez@gmail.com", new DateTime(2020, 7, 26, 7, 0, 49, 181, DateTimeKind.Local).AddTicks(8357), false, false, "Administrador", "Rguez12", "Elian Garcia", "dQBNAGIAUgBlAGwATABhADEANwA3ADIA" },
-                    { 2, "rehanicordero@gmail.com", new DateTime(2020, 7, 26, 7, 0, 49, 181, DateTimeKind.Local).AddTicks(9339), false, false, "Administrador", "rehani97", "Rehani Cordero", "MQAyADMANAA=" }
+                    { 1, "eliangarciarguez@gmail.com", new DateTime(2020, 7, 26, 7, 39, 26, 747, DateTimeKind.Local).AddTicks(6158), false, false, "Administrador", "Rguez12", "Elian Garcia", "dQBNAGIAUgBlAGwATABhADEANwA3ADIA" },
+                    { 2, "rehanicordero@gmail.com", new DateTime(2020, 7, 26, 7, 39, 26, 747, DateTimeKind.Local).AddTicks(7158), false, false, "Administrador", "rehani97", "Rehani Cordero", "MQAyADMANAA=" },
+                    { 3, "invitado@gmail.com", new DateTime(2020, 7, 26, 7, 39, 26, 747, DateTimeKind.Local).AddTicks(7250), false, false, "Usuario", "Invitado", "Usuario Invitado", "QgB1AHQAdABlAHIAcwBvAGYAdAA=" }
                 });
 
             migrationBuilder.CreateIndex(
