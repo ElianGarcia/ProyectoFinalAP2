@@ -12,7 +12,36 @@ namespace ProyectoFinalAp2.Controllers
 {
     public class EntradaProductoBLL
     {
+        public static bool Existe(int id)
+        {
+            Context contexto = new Context();
+            bool encontrado = false;
+
+            try
+            {
+                encontrado = contexto.EntradaProductos.Any(e => e.EntradaProductoId == id);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                contexto.Dispose();
+            }
+
+            return encontrado;
+        }
+
         public static bool Guardar(EntradaProductos entity)
+        {
+            if (!Existe(entity.EntradaProductoId))
+                return Insertar(entity);
+            else
+                return Modificar(entity);
+        } 
+
+        public static bool Insertar(EntradaProductos entity)
         {
             bool paso = false;
             Context db = new Context();

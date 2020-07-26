@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace ProyectoFinalAp2.Migrations
 {
-    public partial class CreateDB : Migration
+    public partial class New_Migration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -165,15 +165,15 @@ namespace ProyectoFinalAp2.Migrations
             migrationBuilder.InsertData(
                 table: "Productos",
                 columns: new[] { "ProductoId", "Cantidad", "CategoriaiD", "Costo", "Descripcion", "Fecha", "Ganancia", "Precio", "Reorden" },
-                values: new object[] { 1, 25, 1, 100m, "Zapato", new DateTime(2020, 7, 25, 21, 1, 47, 760, DateTimeKind.Local).AddTicks(8134), 50m, 150m, 50 });
+                values: new object[] { 1, 25, 1, 100m, "Zapato", new DateTime(2020, 7, 26, 7, 0, 49, 183, DateTimeKind.Local).AddTicks(8787), 50m, 150m, 50 });
 
             migrationBuilder.InsertData(
                 table: "Usuarios",
                 columns: new[] { "UsuarioId", "Correo", "FechaIngreso", "IsAdministrator", "IsAuthenticated", "Nivel", "NombreUsuario", "Nombres", "PassWord" },
                 values: new object[,]
                 {
-                    { 1, "eliangarciarguez@gmail.com", new DateTime(2020, 7, 25, 21, 1, 47, 758, DateTimeKind.Local).AddTicks(8650), false, false, "Administrador", "Rguez12", "Elian Garcia", "dQBNAGIAUgBlAGwATABhADEANwA3ADIA" },
-                    { 2, "rehanicordero@gmail.com", new DateTime(2020, 7, 25, 21, 1, 47, 758, DateTimeKind.Local).AddTicks(9804), false, false, "Administrador", "rehani97", "Rehani Cordero", "MQAyADMANAA=" }
+                    { 1, "eliangarciarguez@gmail.com", new DateTime(2020, 7, 26, 7, 0, 49, 181, DateTimeKind.Local).AddTicks(8357), false, false, "Administrador", "Rguez12", "Elian Garcia", "dQBNAGIAUgBlAGwATABhADEANwA3ADIA" },
+                    { 2, "rehanicordero@gmail.com", new DateTime(2020, 7, 26, 7, 0, 49, 181, DateTimeKind.Local).AddTicks(9339), false, false, "Administrador", "rehani97", "Rehani Cordero", "MQAyADMANAA=" }
                 });
 
             migrationBuilder.CreateIndex(
