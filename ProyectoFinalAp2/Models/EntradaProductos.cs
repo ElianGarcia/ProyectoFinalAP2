@@ -15,10 +15,9 @@ namespace ProyectoFinalAp2.Models
         public int UsuarioId { get; set; }
         public DateTime Fecha { get; set; }
         public int CantidadTotal { get; set; }
+        [ForeignKey("EntradaProductoId")]
         public virtual List<DetalleEntradaProductos> DetalleEntrada { get; set; }
-        //[ForeignKey("UsuarioId")]
-        //public virtual Usuarios Usuarios { get; set; }
-
+       
         public EntradaProductos()
         {
             EntradaProductoId = 0;
@@ -28,7 +27,7 @@ namespace ProyectoFinalAp2.Models
             DetalleEntrada = new List<DetalleEntradaProductos>();
         }
 
-        public EntradaProductos(int entradaProductoId, int usuarioId, DateTime fecha, decimal cantidadTotal, List<DetalleEntradaProductos> detalleEntrada)
+        public EntradaProductos(int entradaProductoId, int usuarioId, DateTime fecha, int cantidadTotal, List<DetalleEntradaProductos> detalleEntrada)
         {
             EntradaProductoId = entradaProductoId;
             UsuarioId = usuarioId;

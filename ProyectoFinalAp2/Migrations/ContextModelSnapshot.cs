@@ -32,15 +32,12 @@ namespace ProyectoFinalAp2.Migrations
                     b.Property<int>("EntradaProductoId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("EntradaProductosEntradaProductoId")
-                        .HasColumnType("int");
-
                     b.Property<int>("ProductoId")
                         .HasColumnType("int");
 
                     b.HasKey("DetalleEntradaProductosId");
 
-                    b.HasIndex("EntradaProductosEntradaProductoId");
+                    b.HasIndex("EntradaProductoId");
 
                     b.ToTable("DetalleEntradaProductos");
                 });
@@ -140,8 +137,8 @@ namespace ProyectoFinalAp2.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<decimal>("CantidadTotal")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<int>("CantidadTotal")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("Fecha")
                         .HasColumnType("datetime2");
@@ -222,7 +219,7 @@ namespace ProyectoFinalAp2.Migrations
                             CategoriaiD = 1,
                             Costo = 100m,
                             Descripcion = "Zapato",
-                            Fecha = new DateTime(2020, 7, 25, 10, 21, 37, 601, DateTimeKind.Local).AddTicks(2783),
+                            Fecha = new DateTime(2020, 7, 25, 21, 1, 47, 760, DateTimeKind.Local).AddTicks(8134),
                             Ganancia = 50m,
                             Precio = 150m,
                             Reorden = 50
@@ -278,7 +275,7 @@ namespace ProyectoFinalAp2.Migrations
                         {
                             UsuarioId = 1,
                             Correo = "eliangarciarguez@gmail.com",
-                            FechaIngreso = new DateTime(2020, 7, 25, 10, 21, 37, 599, DateTimeKind.Local).AddTicks(7355),
+                            FechaIngreso = new DateTime(2020, 7, 25, 21, 1, 47, 758, DateTimeKind.Local).AddTicks(8650),
                             IsAdministrator = false,
                             IsAuthenticated = false,
                             Nivel = "Administrador",
@@ -290,7 +287,7 @@ namespace ProyectoFinalAp2.Migrations
                         {
                             UsuarioId = 2,
                             Correo = "rehanicordero@gmail.com",
-                            FechaIngreso = new DateTime(2020, 7, 25, 10, 21, 37, 599, DateTimeKind.Local).AddTicks(8902),
+                            FechaIngreso = new DateTime(2020, 7, 25, 21, 1, 47, 758, DateTimeKind.Local).AddTicks(9804),
                             IsAdministrator = false,
                             IsAuthenticated = false,
                             Nivel = "Administrador",
@@ -304,7 +301,9 @@ namespace ProyectoFinalAp2.Migrations
                 {
                     b.HasOne("ProyectoFinalAp2.Models.EntradaProductos", null)
                         .WithMany("DetalleEntrada")
-                        .HasForeignKey("EntradaProductosEntradaProductoId");
+                        .HasForeignKey("EntradaProductoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("ProyectoFinalAp2.Models.DetalleFacturas", b =>

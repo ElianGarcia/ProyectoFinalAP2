@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace ProyectoFinalAp2.Migrations
 {
-    public partial class New_Migration : Migration
+    public partial class CreateDB : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -46,7 +46,7 @@ namespace ProyectoFinalAp2.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     UsuarioId = table.Column<int>(type: "int", nullable: false),
                     Fecha = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    CantidadTotal = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
+                    CantidadTotal = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -122,18 +122,17 @@ namespace ProyectoFinalAp2.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     EntradaProductoId = table.Column<int>(type: "int", nullable: false),
                     ProductoId = table.Column<int>(type: "int", nullable: false),
-                    Cantidad = table.Column<int>(type: "int", nullable: false),
-                    EntradaProductosEntradaProductoId = table.Column<int>(type: "int", nullable: true)
+                    Cantidad = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_DetalleEntradaProductos", x => x.DetalleEntradaProductosId);
                     table.ForeignKey(
-                        name: "FK_DetalleEntradaProductos_EntradaProductos_EntradaProductosEntradaProductoId",
-                        column: x => x.EntradaProductosEntradaProductoId,
+                        name: "FK_DetalleEntradaProductos_EntradaProductos_EntradaProductoId",
+                        column: x => x.EntradaProductoId,
                         principalTable: "EntradaProductos",
                         principalColumn: "EntradaProductoId",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -166,21 +165,21 @@ namespace ProyectoFinalAp2.Migrations
             migrationBuilder.InsertData(
                 table: "Productos",
                 columns: new[] { "ProductoId", "Cantidad", "CategoriaiD", "Costo", "Descripcion", "Fecha", "Ganancia", "Precio", "Reorden" },
-                values: new object[] { 1, 25, 1, 100m, "Zapato", new DateTime(2020, 7, 25, 10, 21, 37, 601, DateTimeKind.Local).AddTicks(2783), 50m, 150m, 50 });
+                values: new object[] { 1, 25, 1, 100m, "Zapato", new DateTime(2020, 7, 25, 21, 1, 47, 760, DateTimeKind.Local).AddTicks(8134), 50m, 150m, 50 });
 
             migrationBuilder.InsertData(
                 table: "Usuarios",
                 columns: new[] { "UsuarioId", "Correo", "FechaIngreso", "IsAdministrator", "IsAuthenticated", "Nivel", "NombreUsuario", "Nombres", "PassWord" },
                 values: new object[,]
                 {
-                    { 1, "eliangarciarguez@gmail.com", new DateTime(2020, 7, 25, 10, 21, 37, 599, DateTimeKind.Local).AddTicks(7355), false, false, "Administrador", "Rguez12", "Elian Garcia", "dQBNAGIAUgBlAGwATABhADEANwA3ADIA" },
-                    { 2, "rehanicordero@gmail.com", new DateTime(2020, 7, 25, 10, 21, 37, 599, DateTimeKind.Local).AddTicks(8902), false, false, "Administrador", "rehani97", "Rehani Cordero", "MQAyADMANAA=" }
+                    { 1, "eliangarciarguez@gmail.com", new DateTime(2020, 7, 25, 21, 1, 47, 758, DateTimeKind.Local).AddTicks(8650), false, false, "Administrador", "Rguez12", "Elian Garcia", "dQBNAGIAUgBlAGwATABhADEANwA3ADIA" },
+                    { 2, "rehanicordero@gmail.com", new DateTime(2020, 7, 25, 21, 1, 47, 758, DateTimeKind.Local).AddTicks(9804), false, false, "Administrador", "rehani97", "Rehani Cordero", "MQAyADMANAA=" }
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_DetalleEntradaProductos_EntradaProductosEntradaProductoId",
+                name: "IX_DetalleEntradaProductos_EntradaProductoId",
                 table: "DetalleEntradaProductos",
-                column: "EntradaProductosEntradaProductoId");
+                column: "EntradaProductoId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_DetalleFacturas_FacturaId",

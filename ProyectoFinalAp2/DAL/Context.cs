@@ -67,6 +67,6 @@ namespace ProyectoFinalAp2.Data
         public DbSet<Categorias> Categorias { get; set; }
         public DbSet<Usuarios> Usuarios { get; set; }
         public DbSet<Productos> Productos { get; set; }
-        public DbSet<DetalleEntradaProductos> DetalleEntradaProductos { get; set; }
+        //public DbSet<DetalleEntradaProductos> DetalleEntradaProductos { get; set; }
     }
 }

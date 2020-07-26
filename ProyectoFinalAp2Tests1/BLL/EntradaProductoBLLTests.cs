@@ -23,7 +23,7 @@ namespace ProyectoFinalAp2.Controllers.Tests
 
             List<DetalleEntradaProductos> lista = new List<DetalleEntradaProductos>();
             lista.Add(m);
-            EntradaProductos entrada = new EntradaProductos(0, 1, DateTime.Now, Convert.ToDecimal(1500.25), lista);
+            EntradaProductos entrada = new EntradaProductos(0, 1, DateTime.Now, Convert.ToInt32(1500.25), lista);
             Assert.IsTrue(EntradaProductoBLL.Guardar(entrada));
         }
 
@@ -39,7 +39,7 @@ namespace ProyectoFinalAp2.Controllers.Tests
 
             List<DetalleEntradaProductos> lista = new List<DetalleEntradaProductos>();
             lista.Add(m);
-            EntradaProductos entrada = new EntradaProductos(0, 1, DateTime.Now, Convert.ToDecimal(1750.25), lista);
+            EntradaProductos entrada = new EntradaProductos(0, 1, DateTime.Now, Convert.ToInt32(1750.25), lista);
             Assert.IsTrue(EntradaProductoBLL.Guardar(entrada));
         }
 
