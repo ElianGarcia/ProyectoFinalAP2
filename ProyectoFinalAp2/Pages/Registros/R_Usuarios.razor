@@ -99,19 +99,43 @@
         usuarios = new Usuarios();
     }
 
+    private bool Existe()
+    {
+        var lista = UsuariosBLL.GetList(p => true);
+        bool paso = false;
+
+        foreach (var usuario in lista)
+        {
+            if (usuario.NombreUsuario == usuarios.NombreUsuario)
+            {
+                return paso = true;
+            }
+        }
+
+        return paso;
+    }
+
     private async Task Guardar()
     {
         usuarios.PassWord = UsuariosBLL.encode(usuarios.PassWord);
-        bool guardado = UsuariosBLL.Guardar(usuarios);
 
-        if (guardado)
+        if (!Existe())
         {
-            await JS.Confirmar("top-center", "success", "Guardado Exitosamente", "Buen trabajo", false, 2000);
-            Nuevo();
+            bool guardado = UsuariosBLL.Guardar(usuarios);
+
+            if (guardado)
+            {
+                await JS.Confirmar("top-center", "success", "Guardado Exitosamente", "Buen trabajo", false, 2000);
+                Nuevo();
+            }
+            else
+            {
+                await JS.Confirmar("top-center", "error", "Error", "No se pudo guardar el usuario", false, 2000);
+            }
         }
         else
         {
-            await JS.Confirmar("top-center", "error", "Error", "No se pudo guardar el producto", false, 2000);
+            await JS.Confirmar("top-center", "error", "Error", "Ya existe un usuario con este nombre de usuario", false, 2000);
         }
     }
 
@@ -197,7 +221,7 @@
                     MailMessage email = new MailMessage();
                     email.To.Add(new MailAddress(usuarios.Correo));
                     email.From = new MailAddress("eliangarciarguez@gmail.com");
-                    email.Subject = "Contraseña Restaurada ( " + DateTime.Now.ToString("dd / MMM / yyy hh:mm:ss") + " ) ";
+                    email.Subject = "Buttersoft - Contraseña Restaurada (" + DateTime.Now.ToString("dd / MMM / yyy hh:mm:ss") + ") ";
                     email.Body = "<p>Estimado <strong>" + usuarios.Nombres + "</strong>, le informamos que su contraseña ha sido reestablecida. Su nueva contraseña es: <strong>Cl@ve123</strong> " +
                         "favor cambiar esta contraseña autogenerada en cuanto le sea posible. Gracias.</p>";
                     email.IsBodyHtml = true;

@@ -143,18 +143,41 @@
         productos = new Productos();
     }
 
+    private bool Existe()
+    {
+        var lista = ProductosBLL.GetList(p => true);
+        bool paso = false;
+
+        foreach (var producto in lista)
+        {
+            if (producto.Descripcion == productos.Descripcion)
+            {
+                return paso = true;
+            }
+        }
+
+        return paso;
+    }
+
     private async Task Guardar()
     {
-        bool guardado = ProductosBLL.Guardar(productos);
-
-        if (guardado)
+        if (!Existe())
         {
-            await JS.Confirmar("top-center", "success", "Guardado Exitosamente", "Buen trabajo", false, 2000);
-            Nuevo();
+            bool guardado = ProductosBLL.Guardar(productos);
+
+            if (guardado)
+            {
+                await JS.Confirmar("top-center", "success", "Guardado Exitosamente", "Buen trabajo", false, 2000);
+                Nuevo();
+            }
+            else
+            {
+                await JS.Confirmar("top-center", "error", "Error", "No se pudo guardar el producto", false, 2000);
+            }
         }
         else
         {
-            await JS.Confirmar("top-center", "error", "Error", "No se pudo guardar el producto", false, 2000);
+            await JS.Confirmar("top-center", "error", "Error", "Ya existe un usuario con este descripcion", false, 2000);
         }
     }
 
