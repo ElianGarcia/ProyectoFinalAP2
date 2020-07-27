@@ -89,6 +89,14 @@
 
     private async Task Guardar()
     {
+        if(categorias.CategoriaId == 0)
+        {
+            if (CategoriasBLL.YaExite(categorias.Descripcion))
+            {
+                await JS.Confirmar("top-center", "info", "Aviso", "Esta descripción ya existe.", false, 2000);
+                return;
+            }
+        }
 
         bool paso;
         paso = CategoriasBLL.Guardar(categorias);

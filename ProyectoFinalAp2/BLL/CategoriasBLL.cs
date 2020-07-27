@@ -150,5 +150,26 @@ namespace ProyectoFinalAp2.Controllers
             }
             return lista;
         }
+
+        public static bool YaExite(string expresion)
+        {
+            bool paso = false;
+            Context context = new Context();
+
+            try
+            {
+                paso = context.Categorias.Any(p => p.Descripcion == expresion);
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            finally
+            {
+                context.Dispose();
+            }
+            return paso;
+        }
     }
 }
