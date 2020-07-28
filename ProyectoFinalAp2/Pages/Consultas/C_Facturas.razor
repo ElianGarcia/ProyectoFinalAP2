@@ -132,6 +132,7 @@
     public decimal total = 0;
     private int cantidad = 0;
     public List<AuxFactura> auxLista;
+    public List<Facturas> auxfacturaLista = new List<Facturas>();
 
     protected override void OnInitialized()
     {
@@ -182,7 +183,16 @@
         }
         if (BuscarFecha)//Fecha
         {
-            lista = lista.Where(f => f.Fecha.Date >= DesdeFecha.Date && f.Fecha.Date <= HastaFecha.Date).ToList();
+            if(filtro == 1)
+            {
+                this.lista = FacturasBLL.GetList(p => true);
+                lista = lista.Where(f => f.Fecha.Date >= DesdeFecha.Date && f.Fecha.Date <= HastaFecha.Date).ToList();
+            }
+            else
+            {
+                lista = lista.Where(f => f.Fecha.Date >= DesdeFecha.Date && f.Fecha.Date <= HastaFecha.Date).ToList();
+            }
+
         }
 
     }
@@ -192,6 +202,33 @@
         ContarPaginas(expression);
         TomarPaginas(expression);
         SaltarPagina();
+    }
+
+    private void CargarParaExportar()
+    {
+        if (filtro == 1) //todo
+        {
+            this.auxfacturaLista = FacturasBLL.GetList(p => true);
+        }
+        if (filtro == 2) //ID
+        {
+            int id = GetAuxId();
+            this.auxfacturaLista = FacturasBLL.GetList(p => p.FacturaId == id);
+        }
+        if (filtro == 3) //Cliente
+        {
+            this.auxfacturaLista = FacturasBLL.GetList(p => p.Clientes.Nombre == criterio);
+        }
+        if (filtro == 4) //Total
+        {
+            decimal total = GetAuxTotal();
+            this.auxfacturaLista = FacturasBLL.GetList(p => p.Total == total);
+        }
+        if (BuscarFecha == true)//Fecha
+        {
+            this.auxfacturaLista = auxfacturaLista.Where(f => f.Fecha.Date >= DesdeFecha.Date && f.Fecha.Date <= HastaFecha.Date).ToList();
+        }
+
     }
 
     private async Task Buscar()
@@ -209,30 +246,35 @@
                     case 1: //Todos
                         this.lista = FacturasBLL.GetList(f => true);
                         Paginar(f => true);
+                        CargarParaExportar();
                         break;
                     case 2: //Id
                         int ID = await GetId();
                         this.lista = FacturasBLL.GetList(f => f.FacturaId == ID);
                         Paginar(f => f.FacturaId == ID);
+                        CargarParaExportar();
                         break;
                     case 3: //cliente
                         this.lista = FacturasBLL.GetList(f => f.Clientes.Nombre == criterio);
                         Paginar(f => f.Clientes.Nombre == criterio);
+                        CargarParaExportar();
                         break;
                     case 4: //Total
                         decimal total = await GetTotal();
                         this.lista = FacturasBLL.GetList(f => f.Total == total);
                         Paginar(f => f.Total == total);
+                        CargarParaExportar();
                         break;
                 }
                 if (BuscarFecha == true)
                 {
                     lista = lista.Where(f => f.Fecha.Date >= DesdeFecha.Date && f.Fecha.Date <= HastaFecha.Date).ToList();
                     Paginar(f => f.Fecha.Date >= DesdeFecha.Date && f.Fecha.Date <= HastaFecha.Date);
+                    CargarParaExportar();
                 }
-                if (lista == null)
+                if (lista.Count()==0)
                 {
-                    await JS.Confirmar("top-center", "info", "Aviso", "No se ha encontrado clientes.", false, 2000);
+                    await JS.Confirmar("top-center", "info", "Aviso", "No se ha encontrado nada.", false, 2000);
                 }
 
                 CalcularTotal();
@@ -261,7 +303,7 @@
             this.auxLista = new List<AuxFactura>();
             if (lista != null)
             {
-                foreach (var item in lista)
+                foreach (var item in auxfacturaLista)
                 {
                     this.auxLista.Add(new AuxFactura
                     {
@@ -370,7 +412,8 @@
     {
         decimal auxTotal = 0;
         int auxCantidad = 0;
-        foreach (var item in lista)
+
+        foreach (var item in auxfacturaLista)
         {
             auxTotal += item.Total;
             auxCantidad++;
