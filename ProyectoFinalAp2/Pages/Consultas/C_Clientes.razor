@@ -133,6 +133,7 @@
     Paginas pagina = new Paginas();
 
     List<Clientes> lista = new List<Clientes>();
+    List<Clientes> auxClienteLista = new List<Clientes>();
     public bool BuscarFecha { get; set; }
     public DateTime DesdeFecha { get; set; }
     public DateTime HastaFecha { get; set; }
@@ -200,7 +201,13 @@
         }
         if(BuscarFecha)
         {
-            lista = lista.Where(f => f.Fecha.Date >= DesdeFecha.Date && f.Fecha.Date <= HastaFecha.Date).ToList();
+            if (filtro == 1)
+            {
+                this.lista = ClientesBLL.GetList(p => true);
+                lista = lista.Where(f => f.Fecha.Date >= DesdeFecha.Date && f.Fecha.Date <= HastaFecha.Date).ToList();
+            }
+            else
+                lista = lista.Where(f => f.Fecha.Date >= DesdeFecha.Date && f.Fecha.Date <= HastaFecha.Date).ToList();
         }
     }
 
@@ -226,39 +233,47 @@
                     case 1: //Todos
                         this.lista = ClientesBLL.GetList(c => true);
                         Paginar(c => true);
+                        CargarParaExportar();
                         break;
                     case 2: //Id
                         int ID = await GetId();
                         this.lista = ClientesBLL.GetList(c => c.ClienteId == ID);
                         Paginar(c => c.ClienteId == ID);
+                        CargarParaExportar();
                         break;
                     case 3: //nombre
                         this.lista = ClientesBLL.GetList(f => f.Nombre == criterio);
                         Paginar(f => f.Nombre == criterio);
+                        CargarParaExportar();
                         break;
                     case 4: //rnc
                         this.lista = ClientesBLL.GetList(f => f.RNC == criterio);
                         Paginar(f => f.RNC == criterio);
+                        CargarParaExportar();
                         break;
                     case 5: //direccion
                         this.lista = ClientesBLL.GetList(f => f.Direccion == criterio);
                         Paginar(f => f.Direccion == criterio);
+                        CargarParaExportar();
                         break;
                     case 6: //telefono
                         this.lista = ClientesBLL.GetList(f => f.Telefono == criterio);
                         Paginar(f => f.Telefono == criterio);
+                        CargarParaExportar();
                         break;
                     case 7: //email
                         this.lista = ClientesBLL.GetList(f => f.Email == criterio);
                         Paginar(f => f.Email == criterio);
+                        CargarParaExportar();
                         break;
                 }
                 if (BuscarFecha == true)
                 {
                     lista = lista.Where(f => f.Fecha.Date >= DesdeFecha.Date && f.Fecha.Date <= HastaFecha.Date).ToList();
                     Paginar(f => f.Fecha.Date >= DesdeFecha.Date && f.Fecha.Date <= HastaFecha.Date);
+                    CargarParaExportar();
                 }
-                if (lista == null)
+                if (lista.Count() == 0)
                 {
                     await JS.Confirmar("top-center", "info", "Aviso", "No se ha encontrado clientes.", false, 2000);
                 }
@@ -273,9 +288,46 @@
         }
     }
 
+    private void CargarParaExportar()
+    {
+        if (filtro == 1)
+        {
+            this.auxClienteLista = ClientesBLL.GetList(p => true);
+        }
+        if (filtro == 2)
+        {
+            int id = GetAuxId();
+            this.auxClienteLista = ClientesBLL.GetList(p => p.ClienteId == id);
+        }
+        if (filtro == 3)
+        {
+            this.auxClienteLista = ClientesBLL.GetList(p => p.Nombre == criterio);
+        }
+        if (filtro == 4)
+        {
+            this.auxClienteLista = ClientesBLL.GetList(p => p.RNC == criterio);
+        }
+        if (filtro == 5)
+        {
+            this.auxClienteLista = ClientesBLL.GetList(p => p.Direccion == criterio);
+        }
+        if (filtro == 6)
+        {
+            this.auxClienteLista = ClientesBLL.GetList(p => p.Telefono == criterio);
+        }
+        if (filtro == 7)
+        {
+            this.auxClienteLista = ClientesBLL.GetList(p => p.Email == criterio);
+        }
+        if (BuscarFecha)
+        {
+            auxClienteLista = auxClienteLista.Where(f => f.Fecha.Date >= DesdeFecha.Date && f.Fecha.Date <= HastaFecha.Date).ToList();
+        }
+    }
+
     protected async Task ExportToPdf()
     {
-        using (MemoryStream excelStream = ExportService.CreatePdfClientes(lista, DateTime.Now.ToString(), cantidadCliente.ToString()))
+        using (MemoryStream excelStream = ExportService.CreatePdfClientes(auxClienteLista, DateTime.Now.ToString(), cantidadCliente.ToString()))
         {
             await JS.SaveAs("Clientes.pdf", excelStream.ToArray());
         }
@@ -318,7 +370,7 @@
 
     private void CantidadCliente()
     {
-        cantidadCliente = this.lista.Count();
+        cantidadCliente = this.auxClienteLista.Count();
     }
 
 }
