@@ -104,6 +104,7 @@
     private int filtro = 0;
     private string criterio = string.Empty;
     private int cantidadDeCategorias = 0;
+    public List<Categorias> auxCategoriaLista = new List<Categorias>();
 
 
     private void ContarPaginas(Expression<Func<Categorias, bool>> expression)
@@ -167,21 +168,24 @@
                     case 1: //Todos
                         this.lista = CategoriasBLL.GetList(c => true);
                         Paginar(p => true);
+                        CargarParaExportar();
                         break;
                     case 2: //Id
                         int ID = await GetId();
                         this.lista = CategoriasBLL.GetList(c => c.CategoriaId == ID);
                         Paginar(p => p.CategoriaId == ID);
+                        CargarParaExportar();
                         break;
                     case 3: //descripcion
                         this.lista = CategoriasBLL.GetList(c => c.Descripcion == criterio);
                         Paginar(p => p.Descripcion == criterio);
+                        CargarParaExportar();
                         break;
                 }
             }
-            if (lista == null)
+            if (lista.Count() == 0)
             {
-                await JS.Confirmar("top-center", "info", "Aviso", "No se ha encontrado clientes.", false, 2000);
+                await JS.Confirmar("top-center", "info", "Aviso", "No se ha encontrado categorias.", false, 2000);
             }
             CalcularCantidad();
         }
@@ -194,7 +198,7 @@
 
     protected async Task ExportToPdf()
     {
-        using (MemoryStream excelStream = ExportService.CreatePdfCategorias(lista, DateTime.Now.ToString(), cantidadDeCategorias.ToString()))
+        using (MemoryStream excelStream = ExportService.CreatePdfCategorias(auxCategoriaLista, DateTime.Now.ToString(), cantidadDeCategorias.ToString()))
         {
             await JS.SaveAs("Categorias.pdf", excelStream.ToArray());
         }
@@ -235,9 +239,26 @@
         return resultado;
     }
 
+    private void CargarParaExportar()
+    {
+        if (filtro == 1)
+        {
+            this.auxCategoriaLista = CategoriasBLL.GetList(p => true);
+        }
+        if (filtro == 2)
+        {
+            int id = GetAuxId();
+            this.auxCategoriaLista = CategoriasBLL.GetList(p => p.CategoriaId == id);
+        }
+        if (filtro == 3)
+        {
+            this.auxCategoriaLista = CategoriasBLL.GetList(p => p.Descripcion == criterio);
+        }
+    }
+
     private void CalcularCantidad()
     {
-        cantidadDeCategorias = lista.Count();
+        cantidadDeCategorias = auxCategoriaLista.Count();
     }
 
 }
