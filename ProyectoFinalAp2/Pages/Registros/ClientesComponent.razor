@@ -84,6 +84,16 @@
 
     Clientes clientes = new Clientes();
 
+    public class AuxClientes
+    {
+        public string nombre { get; set; }
+        public string rnc { get; set; }
+        public string telefono { get; set; }
+        public string email { get; set; }
+    }
+
+    AuxClientes aux;
+
     protected override void OnInitialized()
     {
         Nuevo();
@@ -97,31 +107,14 @@
 
     private async Task Guardar()
     {
-        if(clientes.ClienteId == 0)
-        {
-            if(ClientesBLL.YaExiste(clientes.Nombre, 1)) //Nombre
-            {
-                await JS.Confirmar("top-center", "info", "Aviso", "El nombre de este cliente ya esta registrado.", false, 2000);
-                return;
-            }
-            if(ClientesBLL.YaExiste(clientes.RNC, 2))
-            {
-                await JS.Confirmar("top-center", "info", "Aviso", "Ya existe un cliente con el RNC colocado.", false, 2000);
-                return;
-            }
-            if(ClientesBLL.YaExiste(clientes.Telefono, 3))
-            {
-                await JS.Confirmar("top-center", "info", "Aviso", "Ya existe un cliente con el Telefono colocado.", false, 2000);
-                return;
-            }
-            if(ClientesBLL.YaExiste(clientes.Email, 4))
-            {
-                await JS.Confirmar("top-center", "info", "Aviso", "Ya existe un cliente con el Email colocado.", false, 2000);
-                return;
-            }
-        }
 
         bool paso = false;
+        var aux = await ValidarCamposEnDB();
+
+        if (!aux)
+            return;
+
+
         if(clientes.ClienteId == 0)
             paso = ClientesBLL.Guardar(clientes);
         else
@@ -166,7 +159,10 @@
     {
         var encontrado = ClientesBLL.Buscar(clientes.ClienteId);
         if (encontrado != null)
+        {
             this.clientes = encontrado;
+            IgualarCampos();
+        }
         else
             await JS.Confirmar("top-center", "info", "Aviso", "Cliente no encontrada", false, 2000);
     }
@@ -178,9 +174,92 @@
         {
             var auxCliente = ClientesBLL.Buscar(id);
             if (auxCliente != null)
+            {
                 this.clientes = auxCliente;
+                IgualarCampos();
+            }
             else
                 await JS.Confirmar("top-center", "info", "Aviso", "Cliente no encontrada", false, 2000);
         }
     }
+
+    private void IgualarCampos()
+    {
+        aux = new AuxClientes();
+        aux.nombre = clientes.Nombre;
+        aux.rnc = clientes.RNC;
+        aux.email = clientes.Email;
+        aux.telefono = clientes.Telefono;
+    }
+
+    private async Task<bool> ValidarCamposEnDB()
+    {
+        bool paso = true;
+
+        if (clientes.ClienteId == 0)
+        {
+            if (ClientesBLL.YaExiste(clientes.Nombre, 1)) //Nombre
+            {
+                await JS.Confirmar("top-center", "info", "Aviso", "El nombre de este cliente ya esta registrado.", false, 2000);
+                paso = false;
+            }
+            if (ClientesBLL.YaExiste(clientes.RNC, 2))
+            {
+                await JS.Confirmar("top-center", "info", "Aviso", "Ya existe un cliente con el RNC colocado.", false, 2000);
+                paso = false;
+            }
+            if (ClientesBLL.YaExiste(clientes.Telefono, 3))
+            {
+                await JS.Confirmar("top-center", "info", "Aviso", "Ya existe un cliente con el Telefono colocado.", false, 2000);
+                paso = false;
+            }
+            if (ClientesBLL.YaExiste(clientes.Email, 4))
+            {
+                await JS.Confirmar("top-center", "info", "Aviso", "Ya existe un cliente con el Email colocado.", false, 2000);
+                paso = false;
+            }
+        }
+        else
+        {   //nombre
+            if(aux.nombre!= clientes.Nombre)
+            {
+                if (ClientesBLL.YaExiste(clientes.Nombre, 1)) //Nombre
+                {
+                    await JS.Confirmar("top-center", "info", "Aviso", "El nombre de este cliente ya esta registrado.", false, 2000);
+                    paso = false;
+                }
+            }
+            //rnc
+            if (aux.rnc != clientes.RNC)
+            {
+                if (ClientesBLL.YaExiste(clientes.RNC, 2))
+                {
+                    await JS.Confirmar("top-center", "info", "Aviso", "Ya existe un cliente con el RNC colocado.", false, 2000);
+                    paso = false;
+                }
+            }
+            //telefono
+            if (aux.telefono != clientes.Telefono)
+            {
+                if (ClientesBLL.YaExiste(clientes.Telefono, 3))
+                {
+                    await JS.Confirmar("top-center", "info", "Aviso", "Ya existe un cliente con el Telefono colocado.", false, 2000);
+                    paso = false;
+                }
+            }
+            //email
+            if (aux.email != clientes.Email)
+            {
+                if (ClientesBLL.YaExiste(clientes.Email, 4))
+                {
+                    await JS.Confirmar("top-center", "info", "Aviso", "Ya existe un cliente con el Email colocado.", false, 2000);
+                    paso = false;
+                }
+            }
+        }
+
+        return paso;
+    }
+
+
 }
