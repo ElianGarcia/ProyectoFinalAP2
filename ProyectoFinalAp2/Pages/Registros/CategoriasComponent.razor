@@ -55,6 +55,8 @@
 
     Categorias categorias = new Categorias();
 
+    private string auxDescripcion { get; set; }
+
     protected override void OnInitialized()
     {
         Nuevo();
@@ -70,7 +72,10 @@
     {
         var encontrado = CategoriasBLL.Buscar(categorias.CategoriaId);
         if (encontrado != null)
+        {
             this.categorias = encontrado;
+            IgualarCampos();
+        }
         else
             await JS.Confirmar("top-center", "info", "Aviso", "Categoria no encontrada", false, 2000);
     }
@@ -81,7 +86,10 @@
         {
             var auxCategoria = CategoriasBLL.Buscar(categoriaId);
             if (auxCategoria != null)
+            {
                 this.categorias = auxCategoria;
+                IgualarCampos();
+            }
             else
                 await JS.Confirmar("top-center", "info", "Aviso", "Categoria no encontrada", false, 2000);
         }
@@ -89,26 +97,12 @@
 
     private async Task Guardar()
     {
-        if(categorias.CategoriaId == 0)
-        {
-            if (CategoriasBLL.YaExite(categorias.Descripcion))
-            {
-                await JS.Confirmar("top-center", "info", "Aviso", "Esta descripción ya existe.", false, 2000);
-                return;
-            }
-        }
-
         bool paso = false;
-        if(categorias.CategoriaId == 0)
-            paso = CategoriasBLL.Guardar(categorias);
-        else
-        {
-            if (CategoriasBLL.ExisteParaModificar(categorias.CategoriaId)) //Compruebo si el registro a modificar existe
-            {
-                paso = CategoriasBLL.Guardar(categorias);
-            }
-        }
+        bool aux = await ValidarCamposEnBD();
+        if (!aux)
+            return;
 
+        paso = CategoriasBLL.Guardar(categorias);
 
         if (paso)
         {
@@ -138,6 +132,38 @@
                 await JS.Confirmar("top-center", "error", "Error", "No fue posible eliminar la categoria", false, 2000);
         }
 
+    }
+
+    private void IgualarCampos()
+    {
+        auxDescripcion = categorias.Descripcion;
+    }
+
+    private async Task<bool> ValidarCamposEnBD()
+    {
+        bool paso = true;
+
+        if (categorias.CategoriaId == 0)
+        {
+            if (CategoriasBLL.YaExite(categorias.Descripcion))
+            {
+                await JS.Confirmar("top-center", "info", "Aviso", "Esta descripción ya existe.", false, 2000);
+                paso = false;
+            }
+        }
+        else
+        {
+            if (categorias.Descripcion != auxDescripcion)
+            {
+                if (CategoriasBLL.YaExite(categorias.Descripcion))
+                {
+                    await JS.Confirmar("top-center", "info", "Aviso", "Esta descripción ya existe.", false, 2000);
+                    paso = false;
+                }
+            }
+        }
+
+        return paso;
     }
 
 
