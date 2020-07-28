@@ -155,5 +155,58 @@ namespace ProyectoFinalAp2.Controllers
             }
             return encontrado;
         }
+
+        public static bool YaExiste(string expression, int opcion)
+        {
+            bool paso = false;
+            Context context = new Context();
+            try
+            {
+                if(opcion == 1) //nombre
+                {
+                    paso = context.Clientes.Any(p => p.Nombre == expression);
+                }
+                if(opcion == 2) //rnc
+                {
+                    paso = context.Clientes.Any(p => p.RNC == expression);
+                }
+                if(opcion == 3) //telefono
+                {
+                    paso = context.Clientes.Any(p => p.Telefono == expression);
+                }
+                if (opcion == 4) //email
+                {
+                    paso = context.Clientes.Any(p => p.Email == expression);
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            finally
+            {
+                context.Dispose();
+            }
+            return paso;
+        }
+
+        public static bool ExisteParaModificar(int id)
+        {
+            bool paso = false;
+            Context context = new Context();
+            try
+            {
+                var aux = context.Clientes.Find(id);
+                if (aux != null)
+                    paso = true;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            return paso;
+        }
     }
 }

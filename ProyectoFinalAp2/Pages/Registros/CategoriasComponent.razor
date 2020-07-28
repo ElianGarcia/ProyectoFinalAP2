@@ -98,8 +98,17 @@
             }
         }
 
-        bool paso;
-        paso = CategoriasBLL.Guardar(categorias);
+        bool paso = false;
+        if(categorias.CategoriaId == 0)
+            paso = CategoriasBLL.Guardar(categorias);
+        else
+        {
+            if (CategoriasBLL.ExisteParaModificar(categorias.CategoriaId)) //Compruebo si el registro a modificar existe
+            {
+                paso = CategoriasBLL.Guardar(categorias);
+            }
+        }
+
 
         if (paso)
         {

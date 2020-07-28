@@ -219,5 +219,28 @@ namespace ProyectoFinalAp2.Controllers
             return encontrado;
 
         }
+
+        public static bool ExisteParaModificar(int id)
+        {
+            bool paso = false;
+            Context context = new Context();
+            try
+            {
+                var aux = context.Facturas.Find(id);
+                if (aux != null)
+                    paso = true;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            finally
+            {
+                context.Dispose();
+            }
+
+            return paso;
+        }
     }
 }

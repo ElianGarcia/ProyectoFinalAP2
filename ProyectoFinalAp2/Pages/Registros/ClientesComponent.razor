@@ -97,17 +97,49 @@
 
     private async Task Guardar()
     {
-        bool paso;
-        paso = ClientesBLL.Guardar(clientes);
+        if(clientes.ClienteId == 0)
+        {
+            if(ClientesBLL.YaExiste(clientes.Nombre, 1)) //Nombre
+            {
+                await JS.Confirmar("top-center", "info", "Aviso", "El nombre de este cliente ya esta registrado.", false, 2000);
+                return;
+            }
+            if(ClientesBLL.YaExiste(clientes.RNC, 2))
+            {
+                await JS.Confirmar("top-center", "info", "Aviso", "Ya existe un cliente con el RNC colocado.", false, 2000);
+                return;
+            }
+            if(ClientesBLL.YaExiste(clientes.Telefono, 3))
+            {
+                await JS.Confirmar("top-center", "info", "Aviso", "Ya existe un cliente con el Telefono colocado.", false, 2000);
+                return;
+            }
+            if(ClientesBLL.YaExiste(clientes.Email, 4))
+            {
+                await JS.Confirmar("top-center", "info", "Aviso", "Ya existe un cliente con el Email colocado.", false, 2000);
+                return;
+            }
+        }
+
+        bool paso = false;
+        if(clientes.ClienteId == 0)
+            paso = ClientesBLL.Guardar(clientes);
+        else
+        {
+            if (ClientesBLL.ExisteParaModificar(clientes.ClienteId))
+            {
+                paso = ClientesBLL.Guardar(clientes);
+            }
+        }
 
         if (paso)
         {
             Nuevo();
-            await JS.Confirmar("top-center", "success", "Guardado Exitosamente", "Buen trabajo", false, 2000);
+            await JS.Confirmar("top-center", "success", "Guardado Exitosamente.", "Buen trabajo", false, 2000);
         }
         else
         {
-            await JS.Confirmar("top-center", "error", "Error", "No fue posible guardar la categoria", false, 2000);
+            await JS.Confirmar("top-center", "error", "Error", "No fue posible guardar el cliente.", false, 2000);
         }
 
     }

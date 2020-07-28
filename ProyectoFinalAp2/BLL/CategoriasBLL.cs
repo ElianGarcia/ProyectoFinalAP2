@@ -64,12 +64,40 @@ namespace ProyectoFinalAp2.Controllers
         public static bool Modificar(Categorias categorias)
         {
             bool paso = false;
-            Context db = new Context();
 
+            if (ExisteParaModificar(categorias.CategoriaId))
+            {
+
+                Context db = new Context();
+                try
+                {
+                    db.Entry(categorias).State = EntityState.Modified;
+                    paso = db.SaveChanges() > 0;
+                }
+                catch (Exception)
+                {
+
+                    throw;
+                }
+                finally
+                {
+                    db.Dispose();
+                }
+            }
+          
+            return paso;
+        }
+
+        public static bool ExisteParaModificar(int id)
+        {
+            bool paso = false;
+            Context context = new Context();
             try
             {
-                db.Entry(categorias).State = EntityState.Modified;
-                paso = db.SaveChanges() > 0;
+                var aux = context.Categorias.Find(id);
+                if (aux != null)
+                    paso = true;
+
             }
             catch (Exception)
             {
@@ -78,9 +106,8 @@ namespace ProyectoFinalAp2.Controllers
             }
             finally
             {
-                db.Dispose();
-            }
 
+            }
             return paso;
         }
 
