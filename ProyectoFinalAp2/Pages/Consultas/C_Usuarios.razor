@@ -248,15 +248,19 @@
                     {
                         case 1:
                             lista = UsuariosBLL.GetList(e => true);
+                            Paginar(p => true);
                             break;
                         case 2:
                             lista = UsuariosBLL.GetList(e => e.UsuarioId == Convert.ToInt32(Criterio));
+                            Paginar(e => e.UsuarioId == Convert.ToInt32(Criterio));
                             break;
                         case 3:
                             lista = UsuariosBLL.GetList(e => e.Nombres == Criterio);
+                            Paginar(e => e.Nombres == Criterio);
                             break;
                         case 4:
                             lista = UsuariosBLL.GetList(e => e.NombreUsuario == Criterio);
+                            Paginar(e => e.NombreUsuario == Criterio);
                             break;
                     }
 

@@ -82,6 +82,7 @@
 
     Usuarios usuarios = new Usuarios();
     private string auxNombreUsuario { get; set; }
+    private string auxPassword { get; set; }
 
     protected override void OnParametersSet()
     {
@@ -129,7 +130,6 @@
 
     private async Task Guardar()
     {
-        usuarios.PassWord = UsuariosBLL.encode(usuarios.PassWord);
         var validado = await Validar();
         bool guardado = false;
 
@@ -138,12 +138,16 @@
 
         if (usuarios.UsuarioId == 0)
         {
+            usuarios.PassWord = UsuariosBLL.encode(usuarios.PassWord);
             guardado = UsuariosBLL.Guardar(usuarios);
         }
         else
         {
             if (UsuariosBLL.ExisteParaModificar(usuarios.UsuarioId))
+            {
+                usuarios.PassWord = UsuariosBLL.encode(usuarios.PassWord);
                 guardado = UsuariosBLL.Guardar(usuarios);
+            }
         }
 
         if (guardado)
@@ -178,6 +182,7 @@
     private void IgualarCampos()
     {
         auxNombreUsuario = usuarios.NombreUsuario;
+        auxPassword = UsuariosBLL.Unencode(usuarios.PassWord);
     }
 
     private async Task Buscar()

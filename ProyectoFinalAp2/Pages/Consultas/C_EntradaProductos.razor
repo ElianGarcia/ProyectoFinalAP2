@@ -235,9 +235,11 @@
                     {
                         case 1:
                             lista = EntradaProductoBLL.GetList(e => true);
+                            Paginar(e => true);
                             break;
                         case 2:
                             lista = EntradaProductoBLL.GetList(e => e.UsuarioId == Convert.ToInt32(Criterio));
+                            Paginar(e => e.UsuarioId == Convert.ToInt32(Criterio));
                             break;
                     }
                     if (BuscarFecha == true)

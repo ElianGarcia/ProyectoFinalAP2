@@ -270,7 +270,7 @@
                         lista = lista.Where(p => p.Fecha >= DesdeFecha.Date && p.Fecha <= HastaFecha.Date).ToList();
                     }
 
-                    if (lista == null)
+                    if (lista.Count == 0)
                     {
                         await JS.Confirmar("top-center", "error", "Error", "No se han encontrado productos con este criterio", false, 2000);
                     }
