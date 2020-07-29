@@ -81,6 +81,7 @@
     public int UsuarioId { get; set; }
 
     Usuarios usuarios = new Usuarios();
+    private string auxNombreUsuario { get; set; }
 
     protected override void OnParametersSet()
     {
@@ -99,16 +100,27 @@
         usuarios = new Usuarios();
     }
 
-    private bool Existe()
+    private async Task<bool> Validar()
     {
-        var lista = UsuariosBLL.GetList(p => true);
-        bool paso = false;
+        bool paso = true;
 
-        foreach (var usuario in lista)
+        if (usuarios.UsuarioId == 0)
         {
-            if (usuario.NombreUsuario == usuarios.NombreUsuario)
+            if (UsuariosBLL.VerificarExistenciaDelUsuario(usuarios.NombreUsuario))
             {
-                return paso = true;
+                await JS.Confirmar("top-center", "info", "Aviso", "Este nombre de usuario ya existe.", false, 2000);
+                paso = false;
+            }
+        }
+        else
+        {
+            if(usuarios.NombreUsuario != auxNombreUsuario)
+            {
+                if (UsuariosBLL.VerificarExistenciaDelUsuario(usuarios.NombreUsuario))
+                {
+                    await JS.Confirmar("top-center", "info", "Aviso", "Este nombre de usuario ya existe.", false, 2000);
+                    paso = false;
+                }
             }
         }
 
@@ -118,24 +130,30 @@
     private async Task Guardar()
     {
         usuarios.PassWord = UsuariosBLL.encode(usuarios.PassWord);
+        var validado = await Validar();
+        bool guardado = false;
 
-        if (!Existe())
+        if (!validado)
+            return;
+
+        if (usuarios.UsuarioId == 0)
         {
-            bool guardado = UsuariosBLL.Guardar(usuarios);
-
-            if (guardado)
-            {
-                await JS.Confirmar("top-center", "success", "Guardado Exitosamente", "Buen trabajo", false, 2000);
-                Nuevo();
-            }
-            else
-            {
-                await JS.Confirmar("top-center", "error", "Error", "No se pudo guardar el usuario", false, 2000);
-            }
+            guardado = UsuariosBLL.Guardar(usuarios);
         }
         else
         {
-            await JS.Confirmar("top-center", "error", "Error", "Ya existe un usuario con este nombre de usuario", false, 2000);
+            if (UsuariosBLL.ExisteParaModificar(usuarios.UsuarioId))
+                guardado = UsuariosBLL.Guardar(usuarios);
+        }
+
+        if (guardado)
+        {
+            Nuevo();
+            await JS.Confirmar("top-center", "success", "Guardado Exitosamente", "Buen trabajo", false, 2000);
+        }
+        else
+        {
+            await JS.Confirmar("top-center", "error", "Error", "No se pudo guardar el usuario", false, 2000);
         }
     }
 
@@ -157,6 +175,11 @@
         }
     }
 
+    private void IgualarCampos()
+    {
+        auxNombreUsuario = usuarios.NombreUsuario;
+    }
+
     private async Task Buscar()
     {
         if (usuarios.UsuarioId > 0)
@@ -166,6 +189,7 @@
             if (Encontrado != null)
             {
                 this.usuarios = Encontrado;
+                IgualarCampos();
             }
             else
             {
@@ -183,6 +207,7 @@
             if (Encontrado != null)
             {
                 this.usuarios = Encontrado;
+                IgualarCampos();
             }
             else
             {

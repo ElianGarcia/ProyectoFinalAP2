@@ -120,10 +120,11 @@
     int Total;
 
     private List<EntradaProductos> lista { get; set; }
+    private List<EntradaProductos> auxEntradaLista { get; set; }
 
     private int Filtro { get; set; }
     private string Criterio { get; set; }
-    public bool BuscarFecha = false;
+    public bool BuscarFecha { get; set; }
     public DateTime DesdeFecha { get; set; }
     public DateTime HastaFecha { get; set; }
 
@@ -216,7 +217,7 @@
     {
         try
         {
-            if (Filtro == null)
+            if (Filtro == 0)
             {
                 await JS.Confirmar("top-center", "info", "Aviso", "Debe seleccionar un filtro", false, 2000);
             }
@@ -248,6 +249,8 @@
                     {
                         await JS.Confirmar("top-center", "error", "Error", "No se ha encontrado nada con este criterio", false, 2000);
                     }
+
+                    auxEntradaLista = lista;
                 }
             }
         }

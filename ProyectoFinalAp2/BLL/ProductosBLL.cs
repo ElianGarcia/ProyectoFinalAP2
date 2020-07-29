@@ -123,6 +123,47 @@ namespace ProyectoFinalAp2.Controllers
             return encontrado;
         }
 
+        public static bool ExisteParaModificar(int id)
+        {
+            bool paso = false;
+            Context context = new Context();
+
+            try
+            {
+                var aux = context.Usuarios.Find(id);
+                if (aux != null)
+                    paso = true;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+
+            }
+            return paso;
+        }
+
+        public static bool VerificarExistenciaDelProducto(string descripcion)
+        {
+            bool paso = false;
+            Context contexto = new Context();
+
+            try
+            {
+                if (contexto.Productos.Any(A => A.Descripcion == descripcion))
+                {
+                    paso = true;
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return paso;
+        }
+
         public static List<Productos> GetProducto()
         {
             List<Productos> lista = new List<Productos>();

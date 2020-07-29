@@ -136,6 +136,29 @@ namespace ProyectoFinalAp2.Controllers
             return encontrado;
         }
 
+        public static bool ExisteParaModificar(int id)
+        {
+            bool paso = false;
+            Context context = new Context();
+            try
+            {
+                var aux = context.Usuarios.Find(id);
+                if (aux != null)
+                    paso = true;
+
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            finally
+            {
+
+            }
+            return paso;
+        }
+
         public static List<Usuarios> GetUsuario()
         {
             List<Usuarios> lista = new List<Usuarios>();

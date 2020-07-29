@@ -128,6 +128,7 @@
     decimal Total = 0;
 
     private List<Productos> lista { get; set; }
+    private List<Productos> auxProductoslista { get; set; }
 
     private int Filtro { get; set; }
     private string Criterio { get; set; }
@@ -219,7 +220,7 @@
 
     protected async Task ExportToPdf()
     {
-        using (MemoryStream excelStream = ExportService.CreatePdfProductos(lista, DateTime.Now.ToString(), Total))
+        using (MemoryStream excelStream = ExportService.CreatePdfProductos(auxProductoslista, DateTime.Now.ToString(), Total))
         {
             await JS.SaveAs("Productos.pdf", excelStream.ToArray());
         }
@@ -229,7 +230,7 @@
     {
         try
         {
-            if (Filtro == null)
+            if (Filtro == 0)
             {
                 await JS.Confirmar("top-center", "info", "Aviso", "Debe seleccionar un filtro", false, 2000);
             }
@@ -262,6 +263,8 @@
                             Paginar(e => e.Descripcion == Criterio);
                             break;
                     }
+
+
                     if (BuscarFecha == true)
                     {
                         lista = lista.Where(p => p.Fecha >= DesdeFecha.Date && p.Fecha <= HastaFecha.Date).ToList();
@@ -271,6 +274,7 @@
                     {
                         await JS.Confirmar("top-center", "error", "Error", "No se han encontrado productos con este criterio", false, 2000);
                     }
+                    auxProductoslista = lista;
                 }
             }
         }

@@ -96,6 +96,7 @@
 
     Productos productos = new Productos();
     Categorias Categoria = new Categorias();
+    private string auxDescripcion { get; set; }
 
     protected override void OnParametersSet()
     {
@@ -143,16 +144,32 @@
         productos = new Productos();
     }
 
-    private bool Existe()
+    private void IgualarCampos()
     {
-        var lista = ProductosBLL.GetList(p => true);
-        bool paso = false;
+        auxDescripcion = productos.Descripcion;
+    }
 
-        foreach (var producto in lista)
+    private async Task<bool> Validar()
+    {
+        bool paso = true;
+
+        if(productos.ProductoId == 0)
         {
-            if (producto.Descripcion == productos.Descripcion)
+            if(ProductosBLL.VerificarExistenciaDelProducto(productos.Descripcion))
             {
-                return paso = true;
+                await JS.Confirmar("top-center", "info", "Aviso", "Este producto ya existe.", false, 2000);
+                paso = false;
+            }
+        }
+        else
+        {
+            if(productos.Descripcion != auxDescripcion)
+            {
+                if(ProductosBLL.VerificarExistenciaDelProducto(productos.Descripcion))
+                {
+                    await JS.Confirmar("top-center", "info", "Aviso", "Este producto ya existe.", false, 2000);
+                    paso = false;
+                }
             }
         }
 
@@ -161,23 +178,30 @@
 
     private async Task Guardar()
     {
-        if (!Existe())
-        {
-            bool guardado = ProductosBLL.Guardar(productos);
+        var validado = await Validar();
+        bool guardado = false;
 
-            if (guardado)
-            {
-                await JS.Confirmar("top-center", "success", "Guardado Exitosamente", "Buen trabajo", false, 2000);
-                Nuevo();
-            }
-            else
-            {
-                await JS.Confirmar("top-center", "error", "Error", "No se pudo guardar el producto", false, 2000);
-            }
+        if (!validado)
+            return;
+
+        if (productos.ProductoId == 0)
+        {
+            guardado = ProductosBLL.Guardar(productos);
         }
         else
         {
-            await JS.Confirmar("top-center", "error", "Error", "Ya existe un usuario con este descripcion", false, 2000);
+            if (ProductosBLL.ExisteParaModificar(productos.ProductoId))
+                guardado = ProductosBLL.Guardar(productos);
+        }
+
+        if (guardado)
+        {
+            Nuevo();
+            await JS.Confirmar("top-center", "success", "Guardado Exitosamente", "Buen trabajo", false, 2000);
+        }
+        else
+        {
+            await JS.Confirmar("top-center", "error", "Error", "No se pudo guardar el producto", false, 2000);
         }
     }
 
@@ -218,6 +242,7 @@
             if (Encontrado != null)
             {
                 this.productos = Encontrado;
+                IgualarCampos();
             }
             else
             {
@@ -235,6 +260,7 @@
             if (Encontrado != null)
             {
                 this.productos = Encontrado;
+                IgualarCampos();
             }
             else
             {

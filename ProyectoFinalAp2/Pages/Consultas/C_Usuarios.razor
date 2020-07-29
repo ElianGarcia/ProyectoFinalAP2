@@ -123,10 +123,12 @@
     Paginas pagina = new Paginas();
 
     private List<Usuarios> lista { get; set; }
+    //para fines de impresion
+    public List<Usuarios> auxUsuariosLista = new List<Usuarios>();
 
     private int Filtro { get; set; }
     private string Criterio { get; set; }
-    public bool BuscarFecha = false;
+    public bool BuscarFecha { get; set; }
     public DateTime DesdeFecha { get; set; }
     public DateTime HastaFecha { get; set; }
     int Cantidad;
@@ -218,9 +220,9 @@
 
     protected async Task ExportToPdf()
     {
-        using (MemoryStream excelStream = ExportService.CreatePdfUsuarios(lista, DateTime.Now.ToString(), Cantidad))
+        using (MemoryStream excelStream = ExportService.CreatePdfUsuarios(auxUsuariosLista, DateTime.Now.ToString(), Cantidad))
         {
-            await JS.SaveAs("Productos.pdf", excelStream.ToArray());
+            await JS.SaveAs("Usuarios.pdf", excelStream.ToArray());
         }
     }
 
@@ -228,7 +230,7 @@
     {
         try
         {
-            if (Filtro == null)
+            if (Filtro == 0)
             {
                 await JS.Confirmar("top-center", "info", "Aviso", "Debe seleccionar un filtro", false, 2000);
             }
@@ -257,6 +259,9 @@
                             lista = UsuariosBLL.GetList(e => e.NombreUsuario == Criterio);
                             break;
                     }
+
+
+
                     if (BuscarFecha == true)
                     {
                         lista = lista.Where(p => p.FechaIngreso >= DesdeFecha.Date && p.FechaIngreso <= HastaFecha.Date).ToList();
@@ -266,6 +271,8 @@
                     {
                         await JS.Confirmar("top-center", "error", "Error", "No se han encontrado usuarios con este criterio", false, 2000);
                     }
+
+                    auxUsuariosLista = lista;
                 }
             }
         }
