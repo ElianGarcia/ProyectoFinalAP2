@@ -399,7 +399,7 @@
         }
         else
         {
-            using (MemoryStream excelStream = ExportService.CreatePdfFacturaFinal(auxLista, DateTime.Now.ToString(), GetCliente(facturas.ClienteId), facturas.Total.ToString()))
+            using (MemoryStream excelStream = ExportService.CreatePdfFacturaFinal(auxLista, DateTime.Now.ToString("dd/MM/yyyy"), GetCliente(facturas.ClienteId), facturas.Total.ToString(), facturas.FacturaId.ToString()))
             {
                 await JS.SaveAs("FacturaConsumidorFinal.pdf", excelStream.ToArray());
             }

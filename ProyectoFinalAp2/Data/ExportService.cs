@@ -564,7 +564,7 @@ namespace ProyectoFinalAp2.Data
             }
         }
 
-        public static MemoryStream CreatePdfFacturaFinal(List<AuxFacturaFinal> forecasts, string Fecha, string cliente, string total)
+        public static MemoryStream CreatePdfFacturaFinal(List<AuxFacturaFinal> forecasts, string Fecha, string cliente, string total, string ID)
         {
             if (forecasts == null)
             {
@@ -584,11 +584,18 @@ namespace ProyectoFinalAp2.Data
                 PdfStandardFont clienteFont = new PdfStandardFont(PdfFontFamily.TimesRoman, 12);
 
                 //Create a text element to draw a text in PDF page
-                PdfTextElement title = new PdfTextElement("Factura a Consumidor Final", font, PdfBrushes.Black);
+                PdfTextElement title = new PdfTextElement("Factura a Consumidor", font, PdfBrushes.Black);
                 //Creando el nombre del cliente
                 PdfTextElement clienteTitle = new PdfTextElement("Cliente:"+cliente, clienteFont, PdfBrushes.Black);
+                //creando el id de la factura
+                PdfTextElement IDTitle = new PdfTextElement("Factura ID:" + ID, clienteFont, PdfBrushes.Black);
+                //dibujando
                 PdfLayoutResult result = title.Draw(page, new PointF(0, 0));
+                //dibujando el cliente y el ID
                 PdfLayoutResult resultCliente = clienteTitle.Draw(page, new PointF(395, 25));
+                PdfLayoutResult resultID = IDTitle.Draw(page, new PointF(250, 25));
+
+
 
                 PdfStandardFont contentFont = new PdfStandardFont(PdfFontFamily.TimesRoman, 12);
                 PdfTextElement content = new PdfTextElement("Fecha de impresión " + Fecha, contentFont, PdfBrushes.Black);
