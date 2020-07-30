@@ -1,0 +1,81 @@
+﻿@page "/Reportes/Marcas"
+@using ProyectoFinalAp2.Models;
+@using ProyectoFinalAp2.Controllers;
+@using ProyectoFinalAp2.BLL;
+@using ProyectoFinalAp2.Data;
+@using System.IO;
+@inject ExportService exportService
+@inject Microsoft.JSInterop.IJSRuntime JS
+
+<div class="card">
+    <div class="card-header alert-info">
+        <div class="text-center">
+            <img src="Resources/favicon.ico" height="90" />
+        </div>
+
+        <div class="text-center">
+            <h3 class="text-center text-black-50">ButterSoft</h3>
+            <h3 class="text-center text-black-50">Reporte de Marcas</h3>
+        </div>
+
+        <div class="float-right mb-4">
+            <label for="FECHA">Fecha de impresion: @Fecha </label>
+        </div>
+    </div>
+
+    <div class="card-body">
+        <table class="table mb-3">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre de Marca</th>
+                </tr>
+            </thead>
+            <tbody class="table-striped">
+                @foreach (var item in lista)
+                {
+                    <tr>
+                        <td>@item.MarcaId</td>
+                        <td>@item.NombreMarca</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div class="card-footer">
+        <div class="form-group">
+            <label>Total de Marcas</label>
+            <input @bind="@total" class="form-control" readonly />
+        </div>
+    </div>
+    <button class="btn btn-primary" @onclick="@ExportToPdf">Exportar a PDF</button>
+</div>
+
+
+@code {
+
+    List<Marcas> lista = new List<Marcas>();
+    private String Fecha;
+    private int total = 0;
+
+    protected override void OnInitialized()
+    {
+        Fecha = DateTime.Now.ToShortDateString();
+        lista = MarcasBLL.GetList(c => true);
+        CalcularTotal();
+    }
+
+    private void CalcularTotal()
+    {
+        total = lista.Count();
+    }
+
+    protected async Task ExportToPdf()
+    {
+        using (MemoryStream excelStream = ExportService.CreatePdfMarcas(lista, Fecha, total.ToString()))
+        {
+            await JS.SaveAs("Marcas.pdf", excelStream.ToArray());
+        }
+    }
+}

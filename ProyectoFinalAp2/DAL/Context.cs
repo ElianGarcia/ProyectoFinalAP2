@@ -25,6 +25,12 @@ namespace ProyectoFinalAp2.Data
                 Descripcion = "CALZADOS"
             });
 
+            model.Entity<Marcas>().HasData(new Marcas
+            {
+                MarcaId = 1,
+                NombreMarca = "Coca-Cola"
+            });
+
             model.Entity<Usuarios>().HasData(new Usuarios
             {
                 UsuarioId = 1,
@@ -78,6 +84,6 @@ namespace ProyectoFinalAp2.Data
         public DbSet<Categorias> Categorias { get; set; }
         public DbSet<Usuarios> Usuarios { get; set; }
         public DbSet<Productos> Productos { get; set; }
-        //public DbSet<DetalleEntradaProductos> DetalleEntradaProductos { get; set; }
+        public DbSet<Marcas> Marcas { get; set; }
     }
 }

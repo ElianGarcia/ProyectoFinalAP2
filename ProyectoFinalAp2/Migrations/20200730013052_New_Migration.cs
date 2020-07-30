@@ -54,12 +54,26 @@ namespace ProyectoFinalAp2.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Marcas",
+                columns: table => new
+                {
+                    MarcaId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    NombreMarca = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Marcas", x => x.MarcaId);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Productos",
                 columns: table => new
                 {
                     ProductoId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     CategoriaiD = table.Column<int>(type: "int", nullable: false),
+                    MarcaiD = table.Column<int>(type: "int", nullable: false),
                     Descripcion = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Costo = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     Precio = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
@@ -163,18 +177,23 @@ namespace ProyectoFinalAp2.Migrations
                 values: new object[] { 1, "CALZADOS" });
 
             migrationBuilder.InsertData(
+                table: "Marcas",
+                columns: new[] { "MarcaId", "NombreMarca" },
+                values: new object[] { 1, "Coca-Cola" });
+
+            migrationBuilder.InsertData(
                 table: "Productos",
-                columns: new[] { "ProductoId", "Cantidad", "CategoriaiD", "Costo", "Descripcion", "Fecha", "Ganancia", "Precio", "Reorden" },
-                values: new object[] { 1, 25, 1, 100m, "Zapato", new DateTime(2020, 7, 26, 7, 39, 26, 749, DateTimeKind.Local).AddTicks(7161), 50m, 150m, 50 });
+                columns: new[] { "ProductoId", "Cantidad", "CategoriaiD", "Costo", "Descripcion", "Fecha", "Ganancia", "MarcaiD", "Precio", "Reorden" },
+                values: new object[] { 1, 25, 1, 100m, "Zapato", new DateTime(2020, 7, 29, 21, 30, 52, 111, DateTimeKind.Local).AddTicks(788), 50m, 0, 150m, 50 });
 
             migrationBuilder.InsertData(
                 table: "Usuarios",
                 columns: new[] { "UsuarioId", "Correo", "FechaIngreso", "IsAdministrator", "IsAuthenticated", "Nivel", "NombreUsuario", "Nombres", "PassWord" },
                 values: new object[,]
                 {
-                    { 1, "eliangarciarguez@gmail.com", new DateTime(2020, 7, 26, 7, 39, 26, 747, DateTimeKind.Local).AddTicks(6158), false, false, "Administrador", "Rguez12", "Elian Garcia", "dQBNAGIAUgBlAGwATABhADEANwA3ADIA" },
-                    { 2, "rehanicordero@gmail.com", new DateTime(2020, 7, 26, 7, 39, 26, 747, DateTimeKind.Local).AddTicks(7158), false, false, "Administrador", "rehani97", "Rehani Cordero", "MQAyADMANAA=" },
-                    { 3, "invitado@gmail.com", new DateTime(2020, 7, 26, 7, 39, 26, 747, DateTimeKind.Local).AddTicks(7250), false, false, "Usuario", "Invitado", "Usuario Invitado", "QgB1AHQAdABlAHIAcwBvAGYAdAA=" }
+                    { 1, "eliangarciarguez@gmail.com", new DateTime(2020, 7, 29, 21, 30, 52, 109, DateTimeKind.Local).AddTicks(9805), false, false, "Administrador", "Rguez12", "Elian Garcia", "dQBNAGIAUgBlAGwATABhADEANwA3ADIA" },
+                    { 2, "rehanicordero@gmail.com", new DateTime(2020, 7, 29, 21, 30, 52, 110, DateTimeKind.Local).AddTicks(562), false, false, "Administrador", "rehani97", "Rehani Cordero", "MQAyADMANAA=" },
+                    { 3, "invitado@gmail.com", new DateTime(2020, 7, 29, 21, 30, 52, 110, DateTimeKind.Local).AddTicks(637), false, false, "Usuario", "Invitado", "Usuario Invitado", "QgB1AHQAdABlAHIAcwBvAGYAdAA=" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -203,6 +222,9 @@ namespace ProyectoFinalAp2.Migrations
 
             migrationBuilder.DropTable(
                 name: "DetalleFacturas");
+
+            migrationBuilder.DropTable(
+                name: "Marcas");
 
             migrationBuilder.DropTable(
                 name: "Productos");

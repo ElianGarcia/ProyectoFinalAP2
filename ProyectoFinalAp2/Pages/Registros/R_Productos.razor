@@ -3,6 +3,7 @@
 
 @using ProyectoFinalAp2.Models
 @using ProyectoFinalAp2.Controllers
+@using ProyectoFinalAp2.BLL
 @using ProyectoFinalAp2.Data
 
 @inject IToastService toast
@@ -14,7 +15,7 @@
         <div class="card-header  alert-info">
             <h3>Registro de Productos</h3>
         </div>
-        
+
         <div class="card-body">
             <label for="Id">ID</label>
             <div class="input-group">
@@ -36,12 +37,24 @@
             <div class="form-group">
                 <select class="form-control" @bind="productos.CategoriaiD" @onclick="CargarCategoria">
                     <option value="" disabled selected>Seleccione una Categoria</option>
-                    @foreach (var item in CargarCombo())
+                    @foreach (var item in CargarComboCategorias())
                     {
                         <option value="@item.CategoriaId">@item.Descripcion</option>
                     }
                 </select>
                 <ValidationMessage For="(() => productos.CategoriaiD)"></ValidationMessage>
+            </div>
+
+            <label for="MARCAS">Marca</label>
+            <div class="form-group">
+                <select class="form-control" @bind="productos.MarcaiD" @onclick="CargarMarca">
+                    <option value="" disabled selected>Seleccione una Marca</option>
+                    @foreach (var item in CargarComboMarcas())
+                    {
+                        <option value="@item.MarcaId">@item.NombreMarca</option>
+                    }
+                </select>
+                <ValidationMessage For="(() => productos.MarcaiD)"></ValidationMessage>
             </div>
 
             <div class="form-group">
@@ -52,7 +65,7 @@
 
             <div class="form-group">
                 <label for="CANTIDAD">Cantidad</label>
-                <InputNumber @bind-Value="productos.Cantidad" class="form-control"  readonly="true"></InputNumber>
+                <InputNumber @bind-Value="productos.Cantidad" class="form-control" readonly="true"></InputNumber>
                 <ValidationMessage For="(() => productos.Cantidad)"></ValidationMessage>
             </div>
 
@@ -96,6 +109,7 @@
 
     Productos productos = new Productos();
     Categorias Categoria = new Categorias();
+    Marcas Marca = new Marcas();
     private string auxDescripcion { get; set; }
 
     protected override void OnParametersSet()
@@ -108,7 +122,8 @@
     {
         Nuevo();
         var s = Buscar();
-        CargarCombo();
+        CargarComboCategorias();
+        CargarComboMarcas();
     }
 
     private void CargarCategoria()
@@ -123,10 +138,30 @@
         }
     }
 
-    private List<Categorias> CargarCombo()
+    private void CargarMarca()
+    {
+        try
+        {
+            Marca = MarcasBLL.Buscar(Convert.ToInt32(productos.MarcaiD));
+        }
+        catch (Exception ex)
+        {
+            toast.ShowError(ex.ToString(), "Error");
+        }
+    }
+
+    private List<Categorias> CargarComboCategorias()
     {
         List<Categorias> lista = new List<Categorias>();
         lista = CategoriasBLL.GetList(p => true);
+
+        return lista;
+    }
+
+    private List<Marcas> CargarComboMarcas()
+    {
+        List<Marcas> lista = new List<Marcas>();
+        lista = MarcasBLL.GetList(p => true);
 
         return lista;
     }
@@ -153,9 +188,9 @@
     {
         bool paso = true;
 
-        if(productos.ProductoId == 0)
+        if (productos.ProductoId == 0)
         {
-            if(ProductosBLL.VerificarExistenciaDelProducto(productos.Descripcion))
+            if (ProductosBLL.VerificarExistenciaDelProducto(productos.Descripcion))
             {
                 await JS.Confirmar("top-center", "info", "Aviso", "Este producto ya existe.", false, 2000);
                 paso = false;
@@ -163,9 +198,9 @@
         }
         else
         {
-            if(productos.Descripcion != auxDescripcion)
+            if (productos.Descripcion != auxDescripcion)
             {
-                if(ProductosBLL.VerificarExistenciaDelProducto(productos.Descripcion))
+                if (ProductosBLL.VerificarExistenciaDelProducto(productos.Descripcion))
                 {
                     await JS.Confirmar("top-center", "info", "Aviso", "Este producto ya existe.", false, 2000);
                     paso = false;
@@ -184,24 +219,31 @@
         if (!validado)
             return;
 
-        if (productos.ProductoId == 0)
+        if(productos.Precio <= productos.Costo)
         {
-            guardado = ProductosBLL.Guardar(productos);
+            await JS.Confirmar("top-center", "error", "Error", "El precio no puede ser menor o igual al costo", false, 2000);
         }
         else
         {
-            if (ProductosBLL.ExisteParaModificar(productos.ProductoId))
+            if (productos.ProductoId == 0)
+            {
                 guardado = ProductosBLL.Guardar(productos);
-        }
+            }
+            else
+            {
+                if (ProductosBLL.ExisteParaModificar(productos.ProductoId))
+                    guardado = ProductosBLL.Guardar(productos);
+            }
 
-        if (guardado)
-        {
-            Nuevo();
-            await JS.Confirmar("top-center", "success", "Guardado Exitosamente", "Buen trabajo", false, 2000);
-        }
-        else
-        {
-            await JS.Confirmar("top-center", "error", "Error", "No se pudo guardar el producto", false, 2000);
+            if (guardado)
+            {
+                Nuevo();
+                await JS.Confirmar("top-center", "success", "Guardado Exitosamente", "Buen trabajo", false, 2000);
+            }
+            else
+            {
+                await JS.Confirmar("top-center", "error", "Error", "No se pudo guardar el producto", false, 2000);
+            }
         }
     }
 

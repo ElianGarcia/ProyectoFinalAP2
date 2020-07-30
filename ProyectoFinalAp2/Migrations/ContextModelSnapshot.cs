@@ -174,6 +174,30 @@ namespace ProyectoFinalAp2.Migrations
                     b.ToTable("Facturas");
                 });
 
+            modelBuilder.Entity("ProyectoFinalAp2.Models.Marcas", b =>
+                {
+                    b.Property<int>("MarcaId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("NombreMarca")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(30)")
+                        .HasMaxLength(30);
+
+                    b.HasKey("MarcaId");
+
+                    b.ToTable("Marcas");
+
+                    b.HasData(
+                        new
+                        {
+                            MarcaId = 1,
+                            NombreMarca = "Coca-Cola"
+                        });
+                });
+
             modelBuilder.Entity("ProyectoFinalAp2.Models.Productos", b =>
                 {
                     b.Property<int>("ProductoId")
@@ -201,6 +225,9 @@ namespace ProyectoFinalAp2.Migrations
                     b.Property<decimal>("Ganancia")
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<int>("MarcaiD")
+                        .HasColumnType("int");
+
                     b.Property<decimal>("Precio")
                         .HasColumnType("decimal(18,2)");
 
@@ -219,8 +246,9 @@ namespace ProyectoFinalAp2.Migrations
                             CategoriaiD = 1,
                             Costo = 100m,
                             Descripcion = "Zapato",
-                            Fecha = new DateTime(2020, 7, 26, 7, 39, 26, 749, DateTimeKind.Local).AddTicks(7161),
+                            Fecha = new DateTime(2020, 7, 29, 21, 30, 52, 111, DateTimeKind.Local).AddTicks(788),
                             Ganancia = 50m,
+                            MarcaiD = 0,
                             Precio = 150m,
                             Reorden = 50
                         });
@@ -275,7 +303,7 @@ namespace ProyectoFinalAp2.Migrations
                         {
                             UsuarioId = 1,
                             Correo = "eliangarciarguez@gmail.com",
-                            FechaIngreso = new DateTime(2020, 7, 26, 7, 39, 26, 747, DateTimeKind.Local).AddTicks(6158),
+                            FechaIngreso = new DateTime(2020, 7, 29, 21, 30, 52, 109, DateTimeKind.Local).AddTicks(9805),
                             IsAdministrator = false,
                             IsAuthenticated = false,
                             Nivel = "Administrador",
@@ -287,7 +315,7 @@ namespace ProyectoFinalAp2.Migrations
                         {
                             UsuarioId = 2,
                             Correo = "rehanicordero@gmail.com",
-                            FechaIngreso = new DateTime(2020, 7, 26, 7, 39, 26, 747, DateTimeKind.Local).AddTicks(7158),
+                            FechaIngreso = new DateTime(2020, 7, 29, 21, 30, 52, 110, DateTimeKind.Local).AddTicks(562),
                             IsAdministrator = false,
                             IsAuthenticated = false,
                             Nivel = "Administrador",
@@ -299,7 +327,7 @@ namespace ProyectoFinalAp2.Migrations
                         {
                             UsuarioId = 3,
                             Correo = "invitado@gmail.com",
-                            FechaIngreso = new DateTime(2020, 7, 26, 7, 39, 26, 747, DateTimeKind.Local).AddTicks(7250),
+                            FechaIngreso = new DateTime(2020, 7, 29, 21, 30, 52, 110, DateTimeKind.Local).AddTicks(637),
                             IsAdministrator = false,
                             IsAuthenticated = false,
                             Nivel = "Usuario",

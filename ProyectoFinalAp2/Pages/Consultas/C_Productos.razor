@@ -75,22 +75,26 @@
                         <th>Descripción</th>
                         <th>Categoria</th>
                         <th>Cantidad Existente</th>
+                        <th>Costo</th>
                         <th>Precio</th>
+                        <th>Inventario</th>
                         <th>Fecha de Registro</th>
                     </tr>
                 </thead>
                 <tbody class="table-striped">
                     @foreach (var item in lista)
                     {
-                        <tr>
-                            <td>@item.ProductoId</td>
-                            <td>@item.Descripcion</td>
-                            <td>@CategoriasBLL.Buscar(item.CategoriaiD).Descripcion</td>
-                            <td>@item.Cantidad</td>
-                            <td>@item.Precio</td>
-                            <td>@item.Fecha</td>
-                            <td><a class="btn btn-outline-info" href="Registros/Productos/@item.ProductoId">Ver</a></td>
-                        </tr>
+                    <tr>
+                        <td>@item.ProductoId</td>
+                        <td>@item.Descripcion</td>
+                        <td>@CategoriasBLL.Buscar(item.CategoriaiD).Descripcion</td>
+                        <td>@item.Cantidad</td>
+                        <td>@item.Costo</td>
+                        <td>@item.Precio</td>
+                        <td>@(item.Costo * item.Cantidad)</td>
+                        <td>@item.Fecha</td>
+                        <td><a class="btn btn-outline-info" href="Registros/Productos/@item.ProductoId">Ver</a></td>
+                    </tr>
                     }
                 </tbody>
             </table>
@@ -105,7 +109,7 @@
             <ul class="pagination pagination-lg">
                 @for (int i = 1; i <= cantidadDePaginas; i++)
                 {
-                    <li class="page-item Azul"><a class="page-link Azul" @onclick="SaltarPagina" href="Consultas/Productos/@i">@i</a></li>
+                    <li class="page-item Azul"><a class="page-link Azul" @onclick="SaltarPagina" href="Consultas/Marcas/@i">@i</a></li>
                 }
                 <li class="page-item text-black-50"><a class="page-link text-black-50" @onclick="Salto"> ► </a></li>
             </ul>

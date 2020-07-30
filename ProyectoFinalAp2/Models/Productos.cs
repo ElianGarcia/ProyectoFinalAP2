@@ -18,6 +18,10 @@ namespace ProyectoFinalAp2.Models
         [ForeignKey("CategoriaId")]
         public int CategoriaiD { get; set; }
 
+        [Required(ErrorMessage = "Tienes que elegir una marca.")]
+        [ForeignKey("MarcaId")]
+        public int MarcaiD { get; set; }
+
         [Required(ErrorMessage = "La descripción no puede estar vacía.")]
         [MinLength(3, ErrorMessage = "La descripción es muy corta.")]
         [MaxLength(50, ErrorMessage = "La descripción es muy larga.")]

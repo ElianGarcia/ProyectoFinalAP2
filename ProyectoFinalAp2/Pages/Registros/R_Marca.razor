@@ -1,0 +1,174 @@
+﻿@page "/Registros/Marcas"
+@page "/Registros/Marcas/{marcaId:int}"
+@using ProyectoFinalAp2.Models
+@using ProyectoFinalAp2.Controllers
+@using ProyectoFinalAp2.BLL
+@using ProyectoFinalAp2.Data
+
+@inject IToastService toast
+@inject IJSRuntime JS
+
+
+<EditForm Model="marca" OnValidSubmit="Guardar">
+    <DataAnnotationsValidator />
+
+    <div class="card">
+
+        <div class="card-header alert-info">
+            <h3>Registo de Marcas</h3>
+        </div>
+
+        <div class="card-body">
+            <label for="Id">ID</label>
+            <div class="input-group">
+                <InputNumber @bind-Value="marca.MarcaId" class="form-control"></InputNumber>
+                <ValidationMessage For="(() => marca.MarcaId)"></ValidationMessage>
+                <div class="input-group-append">
+                    <button type="button" class="btn btn-primary" @onclick="Buscar"><span class="icon-search"></span>Buscar</button>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="Descripcion">Descripción</label>
+                <InputText @bind-Value="marca.NombreMarca" class="form-control"></InputText>
+                <ValidationMessage For="(() => marca.NombreMarca)"></ValidationMessage>
+            </div>
+        </div>
+
+
+        <div class="card-footer">
+            <div class="form-group text-center" display: inline-block>
+                <button type="button" class="btn btn-secondary" @onclick="Nuevo"><span class="icon-add"></span> Nuevo </button>
+                <button type="submit" class="btn btn-success"><span class="icon-save"></span> Guardar </button>
+                <button type="button" class="btn btn-danger" @onclick="Eliminar"><span class="icon-delete_forever"></span> Eliminar </button>
+            </div>
+        </div>
+
+    </div>
+</EditForm>
+
+
+@code {
+
+    [Parameter]
+    public int marcaId { get; set; }
+
+    Marcas marca = new Marcas();
+
+    private string auxDescripcion { get; set; }
+
+    protected override void OnInitialized()
+    {
+        Nuevo();
+        var auxMarca = Buscar(marcaId);
+    }
+
+    private void Nuevo()
+    {
+        this.marca = new Marcas();
+    }
+
+    private async Task Buscar()
+    {
+        var encontrado = MarcasBLL.Buscar(marca.MarcaId);
+        if (encontrado != null)
+        {
+            this.marca = encontrado;
+            IgualarCampos();
+        }
+        else
+            await JS.Confirmar("top-center", "info", "Aviso", "Marca no encontrada", false, 2000);
+    }
+
+    private async Task Buscar(int id)
+    {
+        if (id > 0)
+        {
+            var auxMarca = MarcasBLL.Buscar(marcaId);
+            if (auxMarca != null)
+            {
+                this.marca = auxMarca;
+                IgualarCampos();
+            }
+            else
+                await JS.Confirmar("top-center", "info", "Aviso", "Marca no encontrada", false, 2000);
+        }
+    }
+
+    private async Task Guardar()
+    {
+        bool paso = false;
+        bool aux = await ValidarCamposEnBD();
+        if (!aux)
+            return;
+
+        if (marca.MarcaId == 0)
+            paso = MarcasBLL.Guardar(marca);
+        else
+        {
+            if (MarcasBLL.ExisteParaModificar(marca.MarcaId))
+                paso = MarcasBLL.Guardar(marca);
+        }
+
+        if (paso)
+        {
+            Nuevo();
+            await JS.Confirmar("top-center", "success", "Guardada Exitosamente", "Buen trabajo", false, 2000);
+        }
+        else
+        {
+            await JS.Confirmar("top-center", "error", "Error", "No fue posible guardar la marca", false, 2000);
+        }
+    }
+
+    private async Task Eliminar()
+    {
+        bool elimino;
+
+        if (await JS.ConfirmDelete("Confirmar", "¿Esta seguro que desea eliminar esta marca?", "question"))
+        {
+            elimino = MarcasBLL.Eliminar(marca.MarcaId);
+
+            if (elimino)
+            {
+                Nuevo();
+                await JS.Confirmar("top-center", "success", "Eliminado", "Eliminada correctamente", false, 2000);
+            }
+            else
+                await JS.Confirmar("top-center", "error", "Error", "No fue posible eliminar la marca", false, 2000);
+        }
+
+    }
+
+    private void IgualarCampos()
+    {
+        auxDescripcion = marca.NombreMarca;
+    }
+
+    private async Task<bool> ValidarCamposEnBD()
+    {
+        bool paso = true;
+
+        if (marca.MarcaId == 0)
+        {
+            if (MarcasBLL.YaExite(marca.NombreMarca))
+            {
+                await JS.Confirmar("top-center", "info", "Aviso", "Esta descripción ya existe.", false, 2000);
+                paso = false;
+            }
+        }
+        else
+        {
+            if (marca.NombreMarca != auxDescripcion)
+            {
+                if (MarcasBLL.YaExite(marca.NombreMarca))
+                {
+                    await JS.Confirmar("top-center", "info", "Aviso", "Este nombre de marca ya existe.", false, 2000);
+                    paso = false;
+                }
+            }
+        }
+
+        return paso;
+    }
+}

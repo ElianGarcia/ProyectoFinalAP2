@@ -1,0 +1,267 @@
+﻿@page "/Consultas/Marcas"
+@page "/Consultas/Marcas/{numPagina:int}"
+
+@inject IToastService toast
+
+@using ProyectoFinalAp2.Models
+@using ProyectoFinalAp2.Controllers
+@using ProyectoFinalAp2.BLL;
+@using ProyectoFinalAp2.Paginacion
+@using System.Linq.Expressions
+@using System.IO;
+@using ProyectoFinalAp2.Data;
+@inject Microsoft.JSInterop.IJSRuntime JS
+@inject ExportService exportService
+
+<div class="card">
+    <div class="card-header  alert-info">
+        <div class="text-center">
+            <img src="Resources/favicon.ico" height="90" />
+        </div>
+
+        <div class="text-center">
+            <h3 class="text-center text-black-50">Consulta de Marcas</h3>
+        </div>
+    </div>
+
+    <div class="card-body">
+        <div class="form-row">
+            <div class="col">
+                <label for="filtro">Filtro: </label>
+                <select class="form-control" @bind="filtro">
+                    <option value="" disabled selected>Seleccione un filtro</option>
+                    <option value="1">Todo</option>
+                    <option value="2">Id</option>
+                    <option value="3">Marca</option>
+                </select>
+            </div>
+
+            <div class="form-group col">
+                <label for="criterio"> Criterio: </label>
+                <input type="text" class="form-control" @bind="criterio" />
+            </div>
+
+            <div class="form-group col mt-1">
+                <br />
+                <button type="button" class="btn btn-outline-success" @onclick="Buscar">Buscar</button>
+            </div>
+        </div>
+
+        <table class="table mb-3">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Marca</th>
+                </tr>
+            </thead>
+            <tbody class="table-striped">
+                @foreach (var item in lista)
+                {
+                    <tr>
+                        <td>@item.MarcaId</td>
+                        <td>@item.NombreMarca</td>
+                        <td><a class="btn btn-outline-info" href="Categorias/@item.MarcaId">Ver</a></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <div class="form-group">
+            <label>Cantidad de marcas registradas</label>
+            <input type="number" @bind="cantidadDeMarcas" class="form-control" readonly />
+        </div>
+
+        <div class="form-group">
+            <ul class="pagination pagination-lg">
+                @for (int i = 1; i <= cantidadDePaginas; i++)
+                {
+                    <li class="page-item Azul"><a class="page-link Azul" @onclick="SaltarPagina" href="ConsultaCategorias/@i">@i</a></li>
+                }
+                <li class="page-item text-black-50"><a class="page-link text-black-50" @onclick="Salto"> ► </a></li>
+            </ul>
+        </div>
+
+    </div>
+
+    <div class="card-footer">
+        <div class="form-group">
+            <button type="button" class="btn btn-outline-primary form-control" @onclick="ExportToPdf">Exportar a PDF</button>
+        </div>
+
+    </div>
+</div>
+
+@code {
+
+    [Parameter]
+    public int numPagina { get; set; }
+
+    private double cantidadDePaginas { get; set; } = 0;
+    private double cantidadDeLista { get; set; } = 0;
+    private int contador { get; set; }
+    Paginas pagina = new Paginas();
+
+    List<Marcas> lista = new List<Marcas>();
+    private int filtro = 0;
+    private string criterio = string.Empty;
+    private int cantidadDeMarcas = 0;
+    public List<Marcas> auxMarcasLista = new List<Marcas>();
+
+
+    private void ContarPaginas(Expression<Func<Marcas, bool>> expression)
+    {
+        cantidadDeLista = MarcasBLL.GetList(expression).Count();
+        cantidadDePaginas = Math.Ceiling(cantidadDeLista / pagina.mostrarCantidad);
+    }
+
+    private void TomarPaginas(Expression<Func<Marcas, bool>> expression)
+    {
+        lista = MarcasBLL.GetList(expression);
+        this.lista = MarcasBLL.GetList(expression).Take(pagina.mostrarCantidad).ToList();
+    }
+
+    private void SaltarPagina()
+    {
+        contador = numPagina - 1;
+        Salto();
+    }
+
+    private void Salto()
+    {
+        contador += pagina.pagina;
+        contador = (contador >= cantidadDePaginas) ? 0 : contador;
+
+        if (filtro == 1)
+        {
+            this.lista = MarcasBLL.GetList(p => true).Skip(contador * pagina.mostrarCantidad).Take(pagina.mostrarCantidad).ToList();
+        }
+        if (filtro == 2)
+        {
+            int id = GetAuxId();
+            this.lista = MarcasBLL.GetList(p => p.MarcaId == id).Skip(contador * pagina.mostrarCantidad).Take(pagina.mostrarCantidad).ToList();
+        }
+        if (filtro == 3)
+        {
+            this.lista = MarcasBLL.GetList(p => p.NombreMarca == criterio).Skip(contador * pagina.mostrarCantidad).Take(pagina.mostrarCantidad).ToList();
+        }
+
+    }
+
+    private void Paginar(Expression<Func<Marcas, bool>> expression)
+    {
+        ContarPaginas(expression);
+        TomarPaginas(expression);
+        SaltarPagina();
+    }
+
+    private async Task Buscar()
+    {
+        try
+        {
+            if (filtro == 0)
+            {
+                filtro = 1;
+            }
+            else
+            {
+                switch (filtro)
+                {
+                    case 1: //Todos
+                        this.lista = MarcasBLL.GetList(c => true);
+                        Paginar(p => true);
+                        CargarParaExportar();
+                        break;
+                    case 2: //Id
+                        int ID = await GetId();
+                        this.lista = MarcasBLL.GetList(c => c.MarcaId == ID);
+                        Paginar(p => p.MarcaId == ID);
+                        CargarParaExportar();
+                        break;
+                    case 3: //descripcion
+                        this.lista = MarcasBLL.GetList(c => c.NombreMarca == criterio);
+                        Paginar(p => p.NombreMarca == criterio);
+                        CargarParaExportar();
+                        break;
+                }
+
+                this.auxMarcasLista = lista;
+            }
+            if (lista.Count() == 0)
+            {
+                await JS.Confirmar("top-center", "info", "Aviso", "No se ha encontrado marcas", false, 2000);
+            }
+            CalcularCantidad();
+        }
+        catch (Exception)
+        {
+
+            throw;
+        }
+    }
+
+    protected async Task ExportToPdf()
+    {
+        using (MemoryStream excelStream = ExportService.CreatePdfMarcas(auxMarcasLista, DateTime.Now.ToString(), cantidadDeMarcas.ToString()))
+        {
+            await JS.SaveAs("Marcas.pdf", excelStream.ToArray());
+        }
+    }
+
+
+    private async Task<int> GetId()
+    {
+        int resultado = 0;
+
+        try
+        {
+            resultado = Convert.ToInt32(criterio);
+            return resultado;
+        }
+        catch (Exception)
+        {
+
+            await JS.Confirmar("top-center", "error", "Error", "El Id debe ser numerico", false, 2000);
+        }
+
+        return resultado;
+    }
+
+    private int GetAuxId()
+    {
+        int resultado = 0;
+
+        try
+        {
+            resultado = Convert.ToInt32(criterio);
+            return resultado;
+        }
+        catch (Exception)
+        {
+        }
+
+        return resultado;
+    }
+
+    private void CargarParaExportar()
+    {
+        if (filtro == 1)
+        {
+            this.auxMarcasLista = MarcasBLL.GetList(p => true);
+        }
+        if (filtro == 2)
+        {
+            int id = GetAuxId();
+            this.auxMarcasLista = MarcasBLL.GetList(p => p.MarcaId == id);
+        }
+        if (filtro == 3)
+        {
+            this.auxMarcasLista = MarcasBLL.GetList(p => p.NombreMarca == criterio);
+        }
+    }
+
+    private void CalcularCantidad()
+    {
+        cantidadDeMarcas = auxMarcasLista.Count();
+    }
+
+}
