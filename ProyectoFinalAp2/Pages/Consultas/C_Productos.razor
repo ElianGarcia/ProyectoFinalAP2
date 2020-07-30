@@ -3,6 +3,7 @@
 
 @using ProyectoFinalAp2.Models;
 @using ProyectoFinalAp2.Controllers;
+@using ProyectoFinalAp2.BLL;
 @using ProyectoFinalAp2.Data;
 @using ProyectoFinalAp2.Paginacion;
 @using System.IO;
@@ -74,6 +75,7 @@
                         <th>ID</th>
                         <th>Descripción</th>
                         <th>Categoria</th>
+                        <th>Marca</th>
                         <th>Cantidad Existente</th>
                         <th>Costo</th>
                         <th>Precio</th>
@@ -84,17 +86,18 @@
                 <tbody class="table-striped">
                     @foreach (var item in lista)
                     {
-                    <tr>
-                        <td>@item.ProductoId</td>
-                        <td>@item.Descripcion</td>
-                        <td>@CategoriasBLL.Buscar(item.CategoriaiD).Descripcion</td>
-                        <td>@item.Cantidad</td>
-                        <td>@item.Costo</td>
-                        <td>@item.Precio</td>
-                        <td>@(item.Costo * item.Cantidad)</td>
-                        <td>@item.Fecha</td>
-                        <td><a class="btn btn-outline-info" href="Registros/Productos/@item.ProductoId">Ver</a></td>
-                    </tr>
+                        <tr>
+                            <td>@item.ProductoId</td>
+                            <td>@item.Descripcion</td>
+                            <td>@MarcasBLL.Buscar(item.MarcaiD).NombreMarca</td>
+                            <td>@CategoriasBLL.Buscar(item.CategoriaiD).Descripcion</td>
+                            <td>@item.Cantidad</td>
+                            <td>@item.Costo</td>
+                            <td>@item.Precio</td>
+                            <td>@(item.Costo * item.Cantidad)</td>
+                            <td>@item.Fecha</td>
+                            <td><a class="btn btn-outline-info" href="Registros/Productos/@item.ProductoId">Ver</a></td>
+                        </tr>
                     }
                 </tbody>
             </table>

@@ -268,7 +268,7 @@
                         email.Dispose();
                         await JS.Confirmar("top-center", "success", "Enviado", "El correo se envio correctamente", false, 2000);
                     }
-                    catch (Exception ex)
+                    catch
                     {
                         await JS.Confirmar("top-center", "error", "Error", "No se pudo enviar el correo", false, 2000);
                     }

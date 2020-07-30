@@ -68,6 +68,7 @@ namespace ProyectoFinalAp2.Data
             {
                 ProductoId = 1,
                 CategoriaiD = 1,
+                MarcaiD = 1,
                 Descripcion = "Zapato",
                 Reorden = 50,
                 Costo = Convert.ToDecimal(100.00),
