@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace ProyectoFinalAp2.Migrations
 {
-    public partial class CreateDB : Migration
+    public partial class New_Migration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -46,7 +46,8 @@ namespace ProyectoFinalAp2.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     UsuarioId = table.Column<int>(type: "int", nullable: false),
                     Fecha = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    CantidadTotal = table.Column<int>(type: "int", nullable: false)
+                    CantidadTotal = table.Column<int>(type: "int", nullable: false),
+                    ProveedorId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -202,16 +203,16 @@ namespace ProyectoFinalAp2.Migrations
             migrationBuilder.InsertData(
                 table: "Productos",
                 columns: new[] { "ProductoId", "Cantidad", "CategoriaiD", "Costo", "Descripcion", "Fecha", "Ganancia", "MarcaiD", "Precio", "Reorden" },
-                values: new object[] { 1, 25, 1, 100m, "Zapato", new DateTime(2020, 7, 30, 9, 47, 45, 466, DateTimeKind.Local).AddTicks(4762), 50m, 1, 150m, 50 });
+                values: new object[] { 1, 25, 1, 100m, "Zapato", new DateTime(2020, 7, 30, 13, 15, 13, 777, DateTimeKind.Local).AddTicks(3732), 50m, 1, 150m, 50 });
 
             migrationBuilder.InsertData(
                 table: "Usuarios",
                 columns: new[] { "UsuarioId", "Correo", "FechaIngreso", "IsAdministrator", "IsAuthenticated", "Nivel", "NombreUsuario", "Nombres", "PassWord" },
                 values: new object[,]
                 {
-                    { 1, "eliangarciarguez@gmail.com", new DateTime(2020, 7, 30, 9, 47, 45, 464, DateTimeKind.Local).AddTicks(4779), false, false, "Administrador", "Rguez12", "Elian Garcia", "dQBNAGIAUgBlAGwATABhADEANwA3ADIA" },
-                    { 2, "rehanicordero@gmail.com", new DateTime(2020, 7, 30, 9, 47, 45, 464, DateTimeKind.Local).AddTicks(6517), false, false, "Administrador", "rehani97", "Rehani Cordero", "MQAyADMANAA=" },
-                    { 3, "invitado@gmail.com", new DateTime(2020, 7, 30, 9, 47, 45, 464, DateTimeKind.Local).AddTicks(6603), false, false, "Usuario", "Invitado", "Usuario Invitado", "QgB1AHQAdABlAHIAcwBvAGYAdAA=" }
+                    { 1, "eliangarciarguez@gmail.com", new DateTime(2020, 7, 30, 13, 15, 13, 774, DateTimeKind.Local).AddTicks(6781), false, false, "Administrador", "Rguez12", "Elian Garcia", "dQBNAGIAUgBlAGwATABhADEANwA3ADIA" },
+                    { 2, "rehanicordero@gmail.com", new DateTime(2020, 7, 30, 13, 15, 13, 774, DateTimeKind.Local).AddTicks(8284), false, false, "Administrador", "rehani97", "Rehani Cordero", "MQAyADMANAA=" },
+                    { 3, "invitado@gmail.com", new DateTime(2020, 7, 30, 13, 15, 13, 774, DateTimeKind.Local).AddTicks(8472), false, false, "Usuario", "Invitado", "Usuario Invitado", "QgB1AHQAdABlAHIAcwBvAGYAdAA=" }
                 });
 
             migrationBuilder.CreateIndex(

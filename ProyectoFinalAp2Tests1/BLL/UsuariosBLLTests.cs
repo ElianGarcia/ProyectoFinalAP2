@@ -21,7 +21,7 @@ namespace ProyectoFinalAp2.Controllers.Tests
         [TestMethod()]
         public void ModificarTest()
         {
-            Usuarios usuario = new Usuarios(0, "Alberto Cortez", "Acort34", "acortez34@gmail.com", "Acortezsd34", DateTime.Now, "Usuario");
+            Usuarios usuario = new Usuarios(1, "Alberto Cortez", "Acort34", "acortez34@gmail.com", "Acortezsd34", DateTime.Now, "Usuario");
             bool guardado = UsuariosBLL.Modificar(usuario);
             Assert.AreEqual(guardado, true);
         }

@@ -10,8 +10,8 @@ using ProyectoFinalAp2.Data;
 namespace ProyectoFinalAp2.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20200730134746_CreateDB")]
-    partial class CreateDB
+    [Migration("20200730171515_New_Migration")]
+    partial class New_Migration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -145,6 +145,9 @@ namespace ProyectoFinalAp2.Migrations
                     b.Property<DateTime>("Fecha")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("ProveedorId")
+                        .HasColumnType("int");
+
                     b.Property<int>("UsuarioId")
                         .HasColumnType("int");
 
@@ -248,7 +251,7 @@ namespace ProyectoFinalAp2.Migrations
                             CategoriaiD = 1,
                             Costo = 100m,
                             Descripcion = "Zapato",
-                            Fecha = new DateTime(2020, 7, 30, 9, 47, 45, 466, DateTimeKind.Local).AddTicks(4762),
+                            Fecha = new DateTime(2020, 7, 30, 13, 15, 13, 777, DateTimeKind.Local).AddTicks(3732),
                             Ganancia = 50m,
                             MarcaiD = 1,
                             Precio = 150m,
@@ -344,7 +347,7 @@ namespace ProyectoFinalAp2.Migrations
                         {
                             UsuarioId = 1,
                             Correo = "eliangarciarguez@gmail.com",
-                            FechaIngreso = new DateTime(2020, 7, 30, 9, 47, 45, 464, DateTimeKind.Local).AddTicks(4779),
+                            FechaIngreso = new DateTime(2020, 7, 30, 13, 15, 13, 774, DateTimeKind.Local).AddTicks(6781),
                             IsAdministrator = false,
                             IsAuthenticated = false,
                             Nivel = "Administrador",
@@ -356,7 +359,7 @@ namespace ProyectoFinalAp2.Migrations
                         {
                             UsuarioId = 2,
                             Correo = "rehanicordero@gmail.com",
-                            FechaIngreso = new DateTime(2020, 7, 30, 9, 47, 45, 464, DateTimeKind.Local).AddTicks(6517),
+                            FechaIngreso = new DateTime(2020, 7, 30, 13, 15, 13, 774, DateTimeKind.Local).AddTicks(8284),
                             IsAdministrator = false,
                             IsAuthenticated = false,
                             Nivel = "Administrador",
@@ -368,7 +371,7 @@ namespace ProyectoFinalAp2.Migrations
                         {
                             UsuarioId = 3,
                             Correo = "invitado@gmail.com",
-                            FechaIngreso = new DateTime(2020, 7, 30, 9, 47, 45, 464, DateTimeKind.Local).AddTicks(6603),
+                            FechaIngreso = new DateTime(2020, 7, 30, 13, 15, 13, 774, DateTimeKind.Local).AddTicks(8472),
                             IsAdministrator = false,
                             IsAuthenticated = false,
                             Nivel = "Usuario",

@@ -29,7 +29,7 @@ namespace ProyectoFinalAp2.Controllers.Tests
         public void ModificarTest()
         {
             Categorias categorias = new Categorias();
-            categorias.CategoriaId = 3;
+            categorias.CategoriaId = 1;
             categorias.Descripcion = "Calzado";
             Assert.IsTrue(CategoriasBLL.Modificar(categorias));
         }
@@ -37,7 +37,7 @@ namespace ProyectoFinalAp2.Controllers.Tests
         [TestMethod()]
         public void EliminarTest()
         {
-            Assert.IsTrue(CategoriasBLL.Eliminar(3));
+            Assert.IsTrue(CategoriasBLL.Eliminar(1));
         }
 
         [TestMethod()]

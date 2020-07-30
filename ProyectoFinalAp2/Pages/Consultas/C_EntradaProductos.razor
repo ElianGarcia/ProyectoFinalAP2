@@ -3,6 +3,7 @@
 
 @using ProyectoFinalAp2.Models;
 @using ProyectoFinalAp2.Controllers;
+@using ProyectoFinalAp2.BLL;
 @using ProyectoFinalAp2.Data;
 @using ProyectoFinalAp2.Paginacion;
 @using System.IO;
@@ -71,6 +72,7 @@
                         <tr>
                             <th>ID</th>
                             <th>Fecha</th>
+                            <th>Proveedor</th>
                             <th>Cantidad Total</th>
                         </tr>
                     </thead>
@@ -80,6 +82,7 @@
                             <tr>
                                 <td>@item.EntradaProductoId</td>
                                 <td>@item.Fecha</td>
+                                <td>@ProveedorBLL.Buscar(item.ProveedorId).Nombre</td>
                                 <td>@item.CantidadTotal</td>
                                 <td><a class="btn btn-outline-info" href="Registros/EntradaProductos/@item.EntradaProductoId">Ver</a></td>
                             </tr>
@@ -220,7 +223,7 @@
         {
             if (Filtro == 0)
             {
-                await JS.Confirmar("top-center", "info", "Aviso", "Debe seleccionar un filtro", false, 2000);
+                Filtro = 1;
             }
             else
             {

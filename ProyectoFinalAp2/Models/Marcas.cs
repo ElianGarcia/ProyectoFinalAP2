@@ -18,6 +18,11 @@ namespace ProyectoFinalAp2.Models
         [MaxLength(30, ErrorMessage = "El nombre de marca es muy larga.")]
         public string NombreMarca { get; set; }
 
+        public Marcas(int marcaId, string nombreMarca)
+        {
+            MarcaId = marcaId;
+            NombreMarca = nombreMarca ?? throw new ArgumentNullException(nameof(nombreMarca));
+        }
 
         public Marcas()
         {
