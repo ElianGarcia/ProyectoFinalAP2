@@ -203,16 +203,16 @@ namespace ProyectoFinalAp2.Migrations
             migrationBuilder.InsertData(
                 table: "Productos",
                 columns: new[] { "ProductoId", "Cantidad", "CategoriaiD", "Costo", "Descripcion", "Fecha", "Ganancia", "MarcaiD", "Precio", "Reorden" },
-                values: new object[] { 1, 25, 1, 100m, "Zapato", new DateTime(2020, 7, 30, 13, 15, 13, 777, DateTimeKind.Local).AddTicks(3732), 50m, 1, 150m, 50 });
+                values: new object[] { 1, 25, 1, 100m, "Zapato", new DateTime(2020, 7, 30, 14, 11, 47, 692, DateTimeKind.Local).AddTicks(2413), 50m, 1, 150m, 50 });
 
             migrationBuilder.InsertData(
                 table: "Usuarios",
                 columns: new[] { "UsuarioId", "Correo", "FechaIngreso", "IsAdministrator", "IsAuthenticated", "Nivel", "NombreUsuario", "Nombres", "PassWord" },
                 values: new object[,]
                 {
-                    { 1, "eliangarciarguez@gmail.com", new DateTime(2020, 7, 30, 13, 15, 13, 774, DateTimeKind.Local).AddTicks(6781), false, false, "Administrador", "Rguez12", "Elian Garcia", "dQBNAGIAUgBlAGwATABhADEANwA3ADIA" },
-                    { 2, "rehanicordero@gmail.com", new DateTime(2020, 7, 30, 13, 15, 13, 774, DateTimeKind.Local).AddTicks(8284), false, false, "Administrador", "rehani97", "Rehani Cordero", "MQAyADMANAA=" },
-                    { 3, "invitado@gmail.com", new DateTime(2020, 7, 30, 13, 15, 13, 774, DateTimeKind.Local).AddTicks(8472), false, false, "Usuario", "Invitado", "Usuario Invitado", "QgB1AHQAdABlAHIAcwBvAGYAdAA=" }
+                    { 1, "eliangarciarguez@gmail.com", new DateTime(2020, 7, 30, 14, 11, 47, 689, DateTimeKind.Local).AddTicks(6616), false, false, "Administrador", "Rguez12", "Elian Garcia", "dQBNAGIAUgBlAGwATABhADEANwA3ADIA" },
+                    { 2, "rehanicordero@gmail.com", new DateTime(2020, 7, 30, 14, 11, 47, 689, DateTimeKind.Local).AddTicks(8228), false, false, "Administrador", "rehani97", "Rehani Cordero", "MQAyADMANAA=" },
+                    { 3, "invitado@gmail.com", new DateTime(2020, 7, 30, 14, 11, 47, 689, DateTimeKind.Local).AddTicks(8455), false, false, "Usuario", "Invitado", "Usuario Invitado", "QgB1AHQAdABlAHIAcwBvAGYAdAA=" }
                 });
 
             migrationBuilder.CreateIndex(

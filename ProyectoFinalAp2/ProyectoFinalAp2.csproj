@@ -3,6 +3,7 @@
   <PropertyGroup>
     <StartWorkingDirectory>$(MSBuilderProjectDirectory)</StartWorkingDirectory>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <UserSecretsId>f644d219-b3c5-459f-84ce-57ea965a9fb6</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
