@@ -90,7 +90,7 @@
                         <td>@item.RNC</td>
                         <td>@item.Direccion</td>
                         <td>@item.Telefono</td>
-                        <td>@item.Fecha</td>
+                        <td>@item.Fecha.ToString("dd/MM/yyyy")</td>
                         <td>@item.Email</td>
                         <td><a class="btn btn-outline-info" href="Clientes/@item.ClienteId">Ver</a></td>
                     </tr>
@@ -335,7 +335,7 @@
 
     protected async Task ExportToPdf()
     {
-        using (MemoryStream excelStream = ExportService.CreatePdfClientes(auxClienteLista, DateTime.Now.ToString(), cantidadCliente.ToString()))
+        using (MemoryStream excelStream = ExportService.CreatePdfClientes(auxClienteLista, DateTime.Now.ToString("dd/MM/yyyy"), cantidadCliente.ToString()))
         {
             await JS.SaveAs("Clientes.pdf", excelStream.ToArray());
         }

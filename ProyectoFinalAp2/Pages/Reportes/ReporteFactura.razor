@@ -39,7 +39,7 @@
                         <tr>
                             <td>@item.FacturaId</td>
                             <td>@GetNombre(item.ClienteId)</td>
-                            <td>@item.Fecha</td>
+                            <td>@item.Fecha.ToString("dd/MM/yyyy")</td>
                             <td>@item.Total</td>
                         </tr>
                     }
@@ -68,7 +68,7 @@
 
     protected override void OnInitialized()
     {
-        Fecha = DateTime.Now.ToShortDateString();
+        Fecha = DateTime.Now.ToString("dd/MM/yyyy");
         lista = FacturasBLL.GetList(c => true);
         CalcularTotal();
         CargarListaAux();
@@ -90,7 +90,7 @@
 
     protected async Task ExportToPdf()
     {
-        using (MemoryStream excelStream = ExportService.CreatePdfFacturas(auxLista, DateTime.Now.ToString(), total.ToString(),cantidad.ToString()))
+        using (MemoryStream excelStream = ExportService.CreatePdfFacturas(auxLista, DateTime.Now.ToString("dd/MM/yyyy"), total.ToString(),cantidad.ToString()))
         {
             await JS.SaveAs("Facturas.pdf", excelStream.ToArray());
         }

@@ -45,7 +45,7 @@
                         <td>@item.RNC</td>
                         <td>@item.Direccion</td>
                         <td>@item.Telefono</td>
-                        <td>@item.Fecha</td>
+                        <td>@item.Fecha.ToString("dd/MM/yyyy")</td>
                         <td>@item.TipoNegocio</td>
                     </tr>
                 }
@@ -71,7 +71,7 @@
 
     protected override void OnInitialized()
     {
-        Fecha = DateTime.Now.ToShortDateString();
+        Fecha = DateTime.Now.ToString("dd/MM/yyyy");
         lista = ProveedorBLL.GetList(c => true);
         CantidadProveedor();
     }

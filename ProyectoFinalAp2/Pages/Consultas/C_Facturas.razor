@@ -81,7 +81,7 @@
                     <tr>
                         <td>@item.FacturaId</td>
                         <td>@GetNombre(item.ClienteId)</td>
-                        <td>@item.Fecha</td>
+                        <td>@item.Fecha.ToString("dd/MM/yyyy")</td>
                         <td>@item.Total</td>
                         <td><a class="btn btn-outline-info" href="Facturas/@item.FacturaId">Ver</a></td>
                     </tr>
@@ -130,6 +130,7 @@
     public int filtro;
     public string criterio = string.Empty;
     public decimal total = 0;
+    private string auxTotal = string.Empty;
     private int cantidad = 0;
     public List<AuxFactura> auxLista;
     public List<Facturas> auxfacturaLista = new List<Facturas>();
@@ -299,7 +300,7 @@
     protected async Task ExportToPdf()
     {
         CargarListaAux();
-        using (MemoryStream excelStream = ExportService.CreatePdfFacturas(auxLista, DateTime.Now.ToString(), total.ToString(),cantidad.ToString()))
+        using (MemoryStream excelStream = ExportService.CreatePdfFacturas(auxLista, DateTime.Now.ToString("dd/MM/yyyy"), total.ToString(),cantidad.ToString()))
         {
             await JS.SaveAs("Facturas.pdf", excelStream.ToArray());
         }
