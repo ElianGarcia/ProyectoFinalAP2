@@ -1,0 +1,385 @@
+﻿@page "/ConsultaProveedores"
+@page "/ConsultaProveedores/{numPagina:int}"
+@using ProyectoFinalAp2.Controllers
+@using ProyectoFinalAp2.BLL 
+@using ProyectoFinalAp2.Paginacion
+@using ProyectoFinalAp2.Models
+@using System.IO;
+@using System.Linq.Expressions
+@using ProyectoFinalAp2.Data;
+@inject Microsoft.JSInterop.IJSRuntime JS
+@inject ExportService exportService
+
+@inject IToastService toast
+
+<div class="card">
+
+    <div class="card-header  alert-info">
+        <div class="text-center">
+            <img src="Resources/favicon.ico" height="90" />
+        </div>
+
+        <div class="text-center">
+            <h3 class="text-center text-black-50">Consulta de Proveedores</h3>
+        </div>
+    </div>
+
+    <div class="card-body">
+        <div class="form-row">
+            <div class="form-group col">
+                <br />
+                <input class="align-self-center" type="checkbox" @bind="BuscarFecha" id="defaultCheck1">
+                <label for="DesdeFecha">Filtrar por fecha</label>
+            </div>
+
+            @if (BuscarFecha)
+            {
+                <div class="form-group col">
+                    <label for="DesdeFecha">Desde: </label>
+                    <input id="DesdeFecha" type="date" @bind="DesdeFecha" class="form-control" input />
+                </div>
+
+                <div class="form-group col">
+                    <label for="HastaFechaInput" class="mr-3">Hasta:</label>
+                    <input type="date" Id="HastaFechaInput" @bind="HastaFecha" class="form-control" />
+                </div>
+            }
+
+            <div class="form-group col">
+                <label for="filtro">Filtro: </label>
+                <select class="form-control" @bind="filtro">
+                    <option value="" disabled selected>Seleccione un filtro</option>
+                    <option value="1">TODO</option>
+                    <option value="2">ID</option>
+                    <option value="3">NOMBRE</option>
+                    <option value="4">RNC</option>
+                    <option value="5">DIRECCION</option>
+                    <option value="6">TELEFONO</option>
+                    <option value="7">TIPO DE NEGOCIO</option>
+                </select>
+            </div>
+
+            <div class="form-group col">
+                <label for="criterio"> Criterio: </label>
+                <input type="text" class="form-control" @bind="criterio" />
+            </div>
+
+            <div class="form-group col mt-1">
+                <br />
+                <button type="button" class="btn btn-outline-success" @onclick="Buscar">Buscar</button>
+            </div>
+        </div>
+
+        <table class="table mb-3">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>NOMBRE</th>
+                    <th>RNC</th>
+                    <th>DIRECCION</th>
+                    <th>TELEFONO</th>
+                    <th>FECHA</th>
+                    <th>TIPO DE NEGOCIO</th>
+                </tr>
+            </thead>
+            <tbody class="table-striped">
+                @foreach (var item in lista)
+                {
+                    <tr>
+                        <td>@item.ProveedorId</td>
+                        <td>@item.Nombre</td>
+                        <td>@item.RNC</td>
+                        <td>@item.Direccion</td>
+                        <td>@item.Telefono</td>
+                        <td>@item.Fecha</td>
+                        <td>@item.TipoNegocio</td>
+                        <td><a class="btn btn-outline-info" href="Proveedor/@item.ProveedorId">Ver</a></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <div class="form-group">
+            <label>Cantidad de proveedores:</label>
+            <input type="number" @bind="cantidadProveedor" class="form-control" readonly />
+        </div>
+
+        <div class="form-group">
+            <ul class="pagination pagination-lg">
+                @for (int i = 1; i <= cantidadDePaginas; i++)
+                {
+                    <li class="page-item Azul"><a class="page-link Azul" @onclick="SaltarPagina" href="ConsultaProveedores/@i">@i</a></li>
+                }
+                <li class="page-item text-black-50"><a class="page-link text-black-50" @onclick="Salto"> ► </a></li>
+            </ul>
+        </div>
+    </div>
+
+
+    <div class="card-footer">
+        <div class="form-group">
+            <button type="button" class="btn btn-outline-primary form-control" @onclick="ExportToPdf">Exportar a PDF</button>
+        </div>
+    </div>
+</div>
+
+@code {
+
+    [Parameter]
+    public int numPagina { get; set; }
+
+    private double cantidadDePaginas { get; set; } = 0;
+    private double cantidadDeLista { get; set; } = 0;
+    private int contador { get; set; }
+    Paginas pagina = new Paginas();
+
+    List<Proveedor> lista = new List<Proveedor>();
+    List<Proveedor> auxProveedorLista = new List<Proveedor>();
+    public bool BuscarFecha { get; set; }
+    public DateTime DesdeFecha { get; set; }
+    public DateTime HastaFecha { get; set; }
+    public int filtro;
+    public string criterio = string.Empty;
+    private int cantidadProveedor = 0;
+
+    protected override void OnInitialized()
+    {
+        DesdeFecha = DateTime.Now;
+        HastaFecha = DateTime.Now;
+    }
+
+    private void ContarPaginas(Expression<Func<Proveedor, bool>> expression)
+    {
+        cantidadDeLista = ProveedorBLL.GetList(expression).Count();
+        cantidadDePaginas = Math.Ceiling(cantidadDeLista / pagina.mostrarCantidad);
+    }
+
+    private void TomarPaginas(Expression<Func<Proveedor, bool>> expression)
+    {
+        lista = ProveedorBLL.GetList(expression);
+        this.lista = ProveedorBLL.GetList(expression).Take(pagina.mostrarCantidad).ToList();
+    }
+
+    private void SaltarPagina()
+    {
+        contador = numPagina - 1;
+        Salto();
+    }
+
+    private void Salto()
+    {
+        contador += pagina.pagina;
+        contador = (contador >= cantidadDePaginas) ? 0 : contador;
+
+        if (filtro == 1 || filtro == 0)
+        {
+            this.lista = ProveedorBLL.GetList(p => true).Skip(contador * pagina.mostrarCantidad).Take(pagina.mostrarCantidad).ToList();
+        }
+        if (filtro == 2)
+        {
+            int id = GetAuxId();
+            this.lista = ProveedorBLL.GetList(p => p.ProveedorId == id).Skip(contador * pagina.mostrarCantidad).Take(pagina.mostrarCantidad).ToList();
+        }
+        if (filtro == 3)
+        {
+            this.lista = ProveedorBLL.GetList(p => p.Nombre == criterio).Skip(contador * pagina.mostrarCantidad).Take(pagina.mostrarCantidad).ToList();
+        }
+        if (filtro == 4)
+        {
+            this.lista = ProveedorBLL.GetList(p => p.RNC == criterio).Skip(contador * pagina.mostrarCantidad).Take(pagina.mostrarCantidad).ToList();
+        }
+        if (filtro == 5)
+        {
+            this.lista = ProveedorBLL.GetList(p => p.Direccion == criterio).Skip(contador * pagina.mostrarCantidad).Take(pagina.mostrarCantidad).ToList();
+        }
+        if (filtro == 6)
+        {
+            this.lista = ProveedorBLL.GetList(p => p.Telefono == criterio).Skip(contador * pagina.mostrarCantidad).Take(pagina.mostrarCantidad).ToList();
+        }
+        if (filtro == 7)
+        {
+            this.lista = ProveedorBLL.GetList(p => p.TipoNegocio == criterio).Skip(contador * pagina.mostrarCantidad).Take(pagina.mostrarCantidad).ToList();
+        }
+        if (BuscarFecha)
+        {
+            if (filtro == 1 || filtro==0)
+            {
+                this.lista = ProveedorBLL.GetList(p => true);
+                lista = lista.Where(f => f.Fecha.Date >= DesdeFecha.Date && f.Fecha.Date <= HastaFecha.Date).ToList();
+            }
+            else
+                lista = lista.Where(f => f.Fecha.Date >= DesdeFecha.Date && f.Fecha.Date <= HastaFecha.Date).ToList();
+        }
+    }
+
+    private void Paginar(Expression<Func<Proveedor, bool>> expression)
+    {
+        ContarPaginas(expression);
+        TomarPaginas(expression);
+        SaltarPagina();
+    }
+
+    private async Task Buscar()
+    {
+        try
+        {
+            if (criterio ==  string.Empty)
+            {
+                this.lista = ProveedorBLL.GetList(c => true);
+                Paginar(c => true);
+                CargarParaExportar();
+            }
+            else
+            {
+                if (filtro != 0)
+                {
+                    switch (filtro)
+                    {
+                        case 1: //Todos
+                            this.lista = ProveedorBLL.GetList(c => true);
+                            Paginar(c => true);
+                            CargarParaExportar();
+                            break;
+                        case 2: //Id
+                            int ID = await GetId();
+                            this.lista = ProveedorBLL.GetList(c => c.ProveedorId == ID);
+                            Paginar(c => c.ProveedorId == ID);
+                            CargarParaExportar();
+                            break;
+                        case 3: //nombre
+                            this.lista = ProveedorBLL.GetList(f => f.Nombre == criterio);
+                            Paginar(f => f.Nombre == criterio);
+                            CargarParaExportar();
+                            break;
+                        case 4: //rnc
+                            this.lista = ProveedorBLL.GetList(f => f.RNC == criterio);
+                            Paginar(f => f.RNC == criterio);
+                            CargarParaExportar();
+                            break;
+                        case 5: //direccion
+                            this.lista = ProveedorBLL.GetList(f => f.Direccion == criterio);
+                            Paginar(f => f.Direccion == criterio);
+                            CargarParaExportar();
+                            break;
+                        case 6: //telefono
+                            this.lista = ProveedorBLL.GetList(f => f.Telefono == criterio);
+                            Paginar(f => f.Telefono == criterio);
+                            CargarParaExportar();
+                            break;
+                        case 7: //tipo de negocio
+                            this.lista = ProveedorBLL.GetList(f => f.TipoNegocio == criterio);
+                            Paginar(f => f.TipoNegocio == criterio);
+                            CargarParaExportar();
+                            break;
+                    }
+                    if (BuscarFecha == true)
+                    {
+                        lista = lista.Where(f => f.Fecha.Date >= DesdeFecha.Date && f.Fecha.Date <= HastaFecha.Date).ToList();
+                        Paginar(f => f.Fecha.Date >= DesdeFecha.Date && f.Fecha.Date <= HastaFecha.Date);
+                        CargarParaExportar();
+                    }
+                    if (lista.Count() == 0)
+                    {
+                        await JS.Confirmar("top-center", "info", "Aviso", "No se ha encontrado proveedores.", false, 2000);
+                    }
+                }
+                else
+                {
+                    await JS.Confirmar("top-center", "info", "Aviso", "Debe seleccionar un filtro", false, 2000);
+                }
+            }
+            CantidadProveedor();
+        }
+        catch (Exception)
+        {
+
+            throw;
+        }
+    }
+
+    private void CargarParaExportar()
+    {
+        if (filtro == 1 || filtro==0)
+        {
+            this.auxProveedorLista = ProveedorBLL.GetList(p => true);
+        }
+        if (filtro == 2)
+        {
+            int id = GetAuxId();
+            this.auxProveedorLista = ProveedorBLL.GetList(p => p.ProveedorId == id);
+        }
+        if (filtro == 3)
+        {
+            this.auxProveedorLista = ProveedorBLL.GetList(p => p.Nombre == criterio);
+        }
+        if (filtro == 4)
+        {
+            this.auxProveedorLista = ProveedorBLL.GetList(p => p.RNC == criterio);
+        }
+        if (filtro == 5)
+        {
+            this.auxProveedorLista = ProveedorBLL.GetList(p => p.Direccion == criterio);
+        }
+        if (filtro == 6)
+        {
+            this.auxProveedorLista = ProveedorBLL.GetList(p => p.Telefono == criterio);
+        }
+        if (filtro == 7)
+        {
+            this.auxProveedorLista = ProveedorBLL.GetList(p => p.TipoNegocio == criterio);
+        }
+        if (BuscarFecha)
+        {
+            auxProveedorLista = auxProveedorLista.Where(f => f.Fecha.Date >= DesdeFecha.Date && f.Fecha.Date <= HastaFecha.Date).ToList();
+        }
+    }
+
+    protected async Task ExportToPdf()
+    {
+        using (MemoryStream excelStream = ExportService.CreatePdfProveedores(auxProveedorLista, DateTime.Now.ToString(), cantidadProveedor.ToString()))
+        {
+            await JS.SaveAs("Proveedores.pdf", excelStream.ToArray());
+        }
+    }
+
+    private async Task<int> GetId()
+    {
+        int resultado = 0;
+
+        try
+        {
+            resultado = Convert.ToInt32(criterio);
+            return resultado;
+        }
+        catch (Exception)
+        {
+
+            await JS.Confirmar("top-center", "error", "Error", "El Id debe ser numerico", false, 2000);
+        }
+
+        return resultado;
+    }
+
+    private int GetAuxId()
+    {
+        int resultado = 0;
+
+        try
+        {
+            resultado = Convert.ToInt32(criterio);
+            return resultado;
+        }
+        catch (Exception)
+        {
+        }
+
+        return resultado;
+    }
+
+
+    private void CantidadProveedor()
+    {
+        cantidadProveedor = this.auxProveedorLista.Count();
+    }
+
+}
