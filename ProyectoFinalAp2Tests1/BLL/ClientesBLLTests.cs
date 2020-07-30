@@ -61,5 +61,17 @@ namespace ProyectoFinalAp2.Controllers.Tests
         {
             Assert.IsTrue(ClientesBLL.Existe(2));
         }
+
+        [TestMethod()]
+        public void YaExisteTest()
+        {
+            Assert.IsTrue(ClientesBLL.YaExiste("Juan", 1));
+        }
+
+        [TestMethod()]
+        public void ExisteParaModificarTest()
+        {
+            Assert.IsTrue(ClientesBLL.ExisteParaModificar(1));
+        }
     }
 }

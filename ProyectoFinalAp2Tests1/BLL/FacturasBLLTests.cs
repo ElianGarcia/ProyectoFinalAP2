@@ -52,5 +52,11 @@ namespace ProyectoFinalAp2.Controllers.Tests
         {
             Assert.IsTrue(FacturasBLL.Existe(2));
         }
+
+        [TestMethod()]
+        public void ExisteParaModificarTest()
+        {
+            Assert.IsTrue(FacturasBLL.ExisteParaModificar(1));
+        }
     }
 }

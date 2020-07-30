@@ -19,7 +19,7 @@ namespace ProyectoFinalAp2.BLL
                 return Modificar(proveedor);
         }
 
-        public static bool Insertar(Proveedor proveedor)
+        private static bool Insertar(Proveedor proveedor)
         {
             bool guardado = false;
             Context context = new Context();

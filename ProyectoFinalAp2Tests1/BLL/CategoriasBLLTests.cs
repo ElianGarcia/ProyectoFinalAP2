@@ -51,5 +51,11 @@ namespace ProyectoFinalAp2.Controllers.Tests
         {
             Assert.IsNotNull(CategoriasBLL.GetList(p => true));
         }
+
+        [TestMethod()]
+        public void YaExiteTest()
+        {
+            Assert.IsTrue(CategoriasBLL.YaExite("CALZADOS"));
+        }
     }
 }
