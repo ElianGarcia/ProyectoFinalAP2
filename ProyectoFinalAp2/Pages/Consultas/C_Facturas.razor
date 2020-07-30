@@ -163,7 +163,7 @@
         contador += pagina.pagina;
         contador = (contador >= cantidadDePaginas) ? 0 : contador;
 
-        if (filtro == 1) //todo
+        if (filtro == 1 || filtro==0) //todo
         {
             this.lista = FacturasBLL.GetList(p => true).Skip(contador * pagina.mostrarCantidad).Take(pagina.mostrarCantidad).ToList();
         }
@@ -183,7 +183,7 @@
         }
         if (BuscarFecha)//Fecha
         {
-            if(filtro == 1)
+            if(filtro == 1 || filtro==0)
             {
                 this.lista = FacturasBLL.GetList(p => true);
                 lista = lista.Where(f => f.Fecha.Date >= DesdeFecha.Date && f.Fecha.Date <= HastaFecha.Date).ToList();
@@ -206,7 +206,7 @@
 
     private void CargarParaExportar()
     {
-        if (filtro == 1) //todo
+        if (filtro == 1 || filtro==0) //todo
         {
             this.auxfacturaLista = FacturasBLL.GetList(p => true);
         }
@@ -235,50 +235,59 @@
     {
         try
         {
-            if (filtro == 0)
+            if (criterio ==  string.Empty)
             {
-                await JS.Confirmar("top-center", "info", "Aviso", "Debe seleccionar un filtro", false, 2000);
+                this.lista = FacturasBLL.GetList(f => true);
+                Paginar(f => true);
+                CargarParaExportar();
+
             }
             else
             {
-                switch (filtro)
+                if (filtro != 0)
                 {
-                    case 1: //Todos
-                        this.lista = FacturasBLL.GetList(f => true);
-                        Paginar(f => true);
+                    switch (filtro)
+                    {
+                        case 1: //Todos
+                            this.lista = FacturasBLL.GetList(f => true);
+                            Paginar(f => true);
+                            CargarParaExportar();
+                            break;
+                        case 2: //Id
+                            int ID = await GetId();
+                            this.lista = FacturasBLL.GetList(f => f.FacturaId == ID);
+                            Paginar(f => f.FacturaId == ID);
+                            CargarParaExportar();
+                            break;
+                        case 3: //cliente
+                            this.lista = FacturasBLL.GetList(f => f.Clientes.Nombre == criterio);
+                            Paginar(f => f.Clientes.Nombre == criterio);
+                            CargarParaExportar();
+                            break;
+                        case 4: //Total
+                            decimal total = await GetTotal();
+                            this.lista = FacturasBLL.GetList(f => f.Total == total);
+                            Paginar(f => f.Total == total);
+                            CargarParaExportar();
+                            break;
+                    }
+                    if (BuscarFecha == true)
+                    {
+                        lista = lista.Where(f => f.Fecha.Date >= DesdeFecha.Date && f.Fecha.Date <= HastaFecha.Date).ToList();
+                        Paginar(f => f.Fecha.Date >= DesdeFecha.Date && f.Fecha.Date <= HastaFecha.Date);
                         CargarParaExportar();
-                        break;
-                    case 2: //Id
-                        int ID = await GetId();
-                        this.lista = FacturasBLL.GetList(f => f.FacturaId == ID);
-                        Paginar(f => f.FacturaId == ID);
-                        CargarParaExportar();
-                        break;
-                    case 3: //cliente
-                        this.lista = FacturasBLL.GetList(f => f.Clientes.Nombre == criterio);
-                        Paginar(f => f.Clientes.Nombre == criterio);
-                        CargarParaExportar();
-                        break;
-                    case 4: //Total
-                        decimal total = await GetTotal();
-                        this.lista = FacturasBLL.GetList(f => f.Total == total);
-                        Paginar(f => f.Total == total);
-                        CargarParaExportar();
-                        break;
+                    }
+                    if (lista.Count() == 0)
+                    {
+                        await JS.Confirmar("top-center", "info", "Aviso", "No se ha encontrado nada.", false, 2000);
+                    }
                 }
-                if (BuscarFecha == true)
+                else
                 {
-                    lista = lista.Where(f => f.Fecha.Date >= DesdeFecha.Date && f.Fecha.Date <= HastaFecha.Date).ToList();
-                    Paginar(f => f.Fecha.Date >= DesdeFecha.Date && f.Fecha.Date <= HastaFecha.Date);
-                    CargarParaExportar();
+                    await JS.Confirmar("top-center", "info", "Aviso", "Debe seleccionar un filtro", false, 2000);
                 }
-                if (lista.Count()==0)
-                {
-                    await JS.Confirmar("top-center", "info", "Aviso", "No se ha encontrado nada.", false, 2000);
-                }
-
-                CalcularTotal();
             }
+            CalcularTotal();
         }
         catch (Exception)
         {

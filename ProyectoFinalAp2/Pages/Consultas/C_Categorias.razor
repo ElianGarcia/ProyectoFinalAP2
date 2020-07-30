@@ -157,31 +157,41 @@
     {
         try
         {
-            if (filtro == 0)
+            if (criterio== string.Empty)
             {
-                await JS.Confirmar("top-center", "info", "Aviso", "Debe seleccionar un filtro", false, 2000);
+                this.lista = CategoriasBLL.GetList(c => true);
+                Paginar(p => true);
+                CargarParaExportar();
             }
             else
             {
-                switch (filtro)
+                if (filtro != 0)
                 {
-                    case 1: //Todos
-                        this.lista = CategoriasBLL.GetList(c => true);
-                        Paginar(p => true);
-                        CargarParaExportar();
-                        break;
-                    case 2: //Id
-                        int ID = await GetId();
-                        this.lista = CategoriasBLL.GetList(c => c.CategoriaId == ID);
-                        Paginar(p => p.CategoriaId == ID);
-                        CargarParaExportar();
-                        break;
-                    case 3: //descripcion
-                        this.lista = CategoriasBLL.GetList(c => c.Descripcion == criterio);
-                        Paginar(p => p.Descripcion == criterio);
-                        CargarParaExportar();
-                        break;
+                    switch (filtro)
+                    {
+                        case 1: //Todos
+                            this.lista = CategoriasBLL.GetList(c => true);
+                            Paginar(p => true);
+                            CargarParaExportar();
+                            break;
+                        case 2: //Id
+                            int ID = await GetId();
+                            this.lista = CategoriasBLL.GetList(c => c.CategoriaId == ID);
+                            Paginar(p => p.CategoriaId == ID);
+                            CargarParaExportar();
+                            break;
+                        case 3: //descripcion
+                            this.lista = CategoriasBLL.GetList(c => c.Descripcion == criterio);
+                            Paginar(p => p.Descripcion == criterio);
+                            CargarParaExportar();
+                            break;
+                    }
                 }
+                else
+                {
+                    await JS.Confirmar("top-center", "info", "Aviso", "Debe seleccionar un filtro", false, 2000);
+                }
+
 
                 this.auxCategoriaLista = lista;
             }
@@ -243,7 +253,7 @@
 
     private void CargarParaExportar()
     {
-        if (filtro == 1)
+        if (filtro == 1 || filtro==0)
         {
             this.auxCategoriaLista = CategoriasBLL.GetList(p => true);
         }
