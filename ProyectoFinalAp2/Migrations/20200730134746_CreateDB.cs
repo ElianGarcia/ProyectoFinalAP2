@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace ProyectoFinalAp2.Migrations
 {
-    public partial class New_Migration : Migration
+    public partial class CreateDB : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -85,6 +85,24 @@ namespace ProyectoFinalAp2.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Productos", x => x.ProductoId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Proveedores",
+                columns: table => new
+                {
+                    ProveedorId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Nombre = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    RNC = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Direccion = table.Column<string>(type: "nvarchar(40)", maxLength: 40, nullable: false),
+                    Telefono = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
+                    TipoNegocio = table.Column<string>(type: "nvarchar(40)", maxLength: 40, nullable: false),
+                    Fecha = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Proveedores", x => x.ProveedorId);
                 });
 
             migrationBuilder.CreateTable(
@@ -184,16 +202,16 @@ namespace ProyectoFinalAp2.Migrations
             migrationBuilder.InsertData(
                 table: "Productos",
                 columns: new[] { "ProductoId", "Cantidad", "CategoriaiD", "Costo", "Descripcion", "Fecha", "Ganancia", "MarcaiD", "Precio", "Reorden" },
-                values: new object[] { 1, 25, 1, 100m, "Zapato", new DateTime(2020, 7, 29, 21, 30, 52, 111, DateTimeKind.Local).AddTicks(788), 50m, 0, 150m, 50 });
+                values: new object[] { 1, 25, 1, 100m, "Zapato", new DateTime(2020, 7, 30, 9, 47, 45, 466, DateTimeKind.Local).AddTicks(4762), 50m, 1, 150m, 50 });
 
             migrationBuilder.InsertData(
                 table: "Usuarios",
                 columns: new[] { "UsuarioId", "Correo", "FechaIngreso", "IsAdministrator", "IsAuthenticated", "Nivel", "NombreUsuario", "Nombres", "PassWord" },
                 values: new object[,]
                 {
-                    { 1, "eliangarciarguez@gmail.com", new DateTime(2020, 7, 29, 21, 30, 52, 109, DateTimeKind.Local).AddTicks(9805), false, false, "Administrador", "Rguez12", "Elian Garcia", "dQBNAGIAUgBlAGwATABhADEANwA3ADIA" },
-                    { 2, "rehanicordero@gmail.com", new DateTime(2020, 7, 29, 21, 30, 52, 110, DateTimeKind.Local).AddTicks(562), false, false, "Administrador", "rehani97", "Rehani Cordero", "MQAyADMANAA=" },
-                    { 3, "invitado@gmail.com", new DateTime(2020, 7, 29, 21, 30, 52, 110, DateTimeKind.Local).AddTicks(637), false, false, "Usuario", "Invitado", "Usuario Invitado", "QgB1AHQAdABlAHIAcwBvAGYAdAA=" }
+                    { 1, "eliangarciarguez@gmail.com", new DateTime(2020, 7, 30, 9, 47, 45, 464, DateTimeKind.Local).AddTicks(4779), false, false, "Administrador", "Rguez12", "Elian Garcia", "dQBNAGIAUgBlAGwATABhADEANwA3ADIA" },
+                    { 2, "rehanicordero@gmail.com", new DateTime(2020, 7, 30, 9, 47, 45, 464, DateTimeKind.Local).AddTicks(6517), false, false, "Administrador", "rehani97", "Rehani Cordero", "MQAyADMANAA=" },
+                    { 3, "invitado@gmail.com", new DateTime(2020, 7, 30, 9, 47, 45, 464, DateTimeKind.Local).AddTicks(6603), false, false, "Usuario", "Invitado", "Usuario Invitado", "QgB1AHQAdABlAHIAcwBvAGYAdAA=" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -228,6 +246,9 @@ namespace ProyectoFinalAp2.Migrations
 
             migrationBuilder.DropTable(
                 name: "Productos");
+
+            migrationBuilder.DropTable(
+                name: "Proveedores");
 
             migrationBuilder.DropTable(
                 name: "Usuarios");

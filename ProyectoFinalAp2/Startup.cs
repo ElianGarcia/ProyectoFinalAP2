@@ -66,6 +66,7 @@ namespace ProyectoFinalAp2
             services.AddScoped<Usuarios>();
             services.AddScoped<Facturas>();
             services.AddScoped<Marcas>();
+            services.AddScoped<Proveedor>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

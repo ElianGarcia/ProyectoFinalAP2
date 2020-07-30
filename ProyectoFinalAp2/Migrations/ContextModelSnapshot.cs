@@ -246,12 +246,51 @@ namespace ProyectoFinalAp2.Migrations
                             CategoriaiD = 1,
                             Costo = 100m,
                             Descripcion = "Zapato",
-                            Fecha = new DateTime(2020, 7, 29, 21, 30, 52, 111, DateTimeKind.Local).AddTicks(788),
+                            Fecha = new DateTime(2020, 7, 30, 9, 47, 45, 466, DateTimeKind.Local).AddTicks(4762),
                             Ganancia = 50m,
-                            MarcaiD = 0,
+                            MarcaiD = 1,
                             Precio = 150m,
                             Reorden = 50
                         });
+                });
+
+            modelBuilder.Entity("ProyectoFinalAp2.Models.Proveedor", b =>
+                {
+                    b.Property<int>("ProveedorId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Direccion")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(40)")
+                        .HasMaxLength(40);
+
+                    b.Property<DateTime>("Fecha")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Nombre")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(50)")
+                        .HasMaxLength(50);
+
+                    b.Property<string>("RNC")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Telefono")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(10)")
+                        .HasMaxLength(10);
+
+                    b.Property<string>("TipoNegocio")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(40)")
+                        .HasMaxLength(40);
+
+                    b.HasKey("ProveedorId");
+
+                    b.ToTable("Proveedores");
                 });
 
             modelBuilder.Entity("ProyectoFinalAp2.Models.Usuarios", b =>
@@ -303,7 +342,7 @@ namespace ProyectoFinalAp2.Migrations
                         {
                             UsuarioId = 1,
                             Correo = "eliangarciarguez@gmail.com",
-                            FechaIngreso = new DateTime(2020, 7, 29, 21, 30, 52, 109, DateTimeKind.Local).AddTicks(9805),
+                            FechaIngreso = new DateTime(2020, 7, 30, 9, 47, 45, 464, DateTimeKind.Local).AddTicks(4779),
                             IsAdministrator = false,
                             IsAuthenticated = false,
                             Nivel = "Administrador",
@@ -315,7 +354,7 @@ namespace ProyectoFinalAp2.Migrations
                         {
                             UsuarioId = 2,
                             Correo = "rehanicordero@gmail.com",
-                            FechaIngreso = new DateTime(2020, 7, 29, 21, 30, 52, 110, DateTimeKind.Local).AddTicks(562),
+                            FechaIngreso = new DateTime(2020, 7, 30, 9, 47, 45, 464, DateTimeKind.Local).AddTicks(6517),
                             IsAdministrator = false,
                             IsAuthenticated = false,
                             Nivel = "Administrador",
@@ -327,7 +366,7 @@ namespace ProyectoFinalAp2.Migrations
                         {
                             UsuarioId = 3,
                             Correo = "invitado@gmail.com",
-                            FechaIngreso = new DateTime(2020, 7, 29, 21, 30, 52, 110, DateTimeKind.Local).AddTicks(637),
+                            FechaIngreso = new DateTime(2020, 7, 30, 9, 47, 45, 464, DateTimeKind.Local).AddTicks(6603),
                             IsAdministrator = false,
                             IsAuthenticated = false,
                             Nivel = "Usuario",

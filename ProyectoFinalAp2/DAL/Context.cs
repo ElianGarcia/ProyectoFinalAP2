@@ -86,5 +86,6 @@ namespace ProyectoFinalAp2.Data
         public DbSet<Usuarios> Usuarios { get; set; }
         public DbSet<Productos> Productos { get; set; }
         public DbSet<Marcas> Marcas { get; set; }
+        public DbSet<Proveedor> Proveedores { get; set; }
     }
 }
