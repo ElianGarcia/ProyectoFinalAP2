@@ -1,0 +1,92 @@
+﻿@page "/Reportes/Proveedor"
+@using ProyectoFinalAp2.Models;
+@using ProyectoFinalAp2.BLL; 
+@using ProyectoFinalAp2.Controllers;
+@using ProyectoFinalAp2.Data;
+@using System.IO;
+@inject ExportService exportService
+@inject Microsoft.JSInterop.IJSRuntime JS
+
+<div class="card">
+    <div class="card-header alert-info">
+        <div class="text-center">
+            <img src="Resources/favicon.ico" height="90" />
+        </div>
+
+        <div class="text-center">
+            <h3 class="text-center text-black-50">ButterSoft</h3>
+            <h3 class="text-center text-black-50">Reporte de Proveedores</h3>
+        </div>
+
+        <div class="float-right mb-4">
+            <label for="FECHA">Fecha de impresion: @Fecha </label>
+        </div>
+    </div>
+
+    <div class="card-body">
+        <table class="table mb-3">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>NOMBRE</th>
+                    <th>RNC</th>
+                    <th>DIRECCION</th>
+                    <th>TELEFONO</th>
+                    <th>FECHA</th>
+                    <th>TIPO DE NEGOCIO</th>
+                </tr>
+            </thead>
+            <tbody class="table-striped">
+                @foreach (var item in lista)
+                {
+                    <tr>
+                        <td>@item.ProveedorId</td>
+                        <td>@item.Nombre</td>
+                        <td>@item.RNC</td>
+                        <td>@item.Direccion</td>
+                        <td>@item.Telefono</td>
+                        <td>@item.Fecha</td>
+                        <td>@item.TipoNegocio</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div class="card-footer">
+        <div class="form-group">
+            <label>Total de Proveedores</label>
+            <input @bind="@cantidadProveedor" class="form-control" readonly />
+        </div>
+    </div>
+    <button class="btn btn-primary" @onclick="@ExportToPdf">Exportar a PDF</button>
+</div>
+
+
+@code {
+
+    List<Proveedor> lista = new List<Proveedor>();
+    private String Fecha;
+    private int cantidadProveedor = 0;
+
+    protected override void OnInitialized()
+    {
+        Fecha = DateTime.Now.ToShortDateString();
+        lista = ProveedorBLL.GetList(c => true);
+        CantidadProveedor();
+    }
+
+    private void CantidadProveedor()
+    {
+        cantidadProveedor = this.lista.Count();
+    }
+
+    protected async Task ExportToPdf()
+    {
+        using (MemoryStream excelStream = ExportService.CreatePdfProveedores(lista, Fecha, cantidadProveedor.ToString()))
+        {
+            await JS.SaveAs("Proveedores.pdf", excelStream.ToArray());
+        }
+    }
+}
+
