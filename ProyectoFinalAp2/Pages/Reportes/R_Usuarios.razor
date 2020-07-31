@@ -61,7 +61,7 @@
 
     protected override void OnInitialized()
     {
-        Fecha = DateTime.Now.ToShortDateString();
+        Fecha = DateTime.Now.ToString("dd/MM/yyyy");
         Lista = UsuariosBLL.GetList(e => true);
         CalcularTotal();
     }

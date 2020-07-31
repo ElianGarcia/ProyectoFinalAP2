@@ -81,7 +81,7 @@
                         {
                             <tr>
                                 <td>@item.EntradaProductoId</td>
-                                <td>@item.Fecha</td>
+                                <td>@item.Fecha.ToString("dd/MM/yyyy")</td>
                                 <td>@ProveedorBLL.Buscar(item.ProveedorId).Nombre</td>
                                 <td>@item.CantidadTotal</td>
                                 <td><a class="btn btn-outline-info" href="Registros/EntradaProductos/@item.EntradaProductoId">Ver</a></td>
@@ -191,7 +191,7 @@
         contador += pagina.pagina;
         contador = (contador >= cantidadDePaginas) ? 0 : contador;
 
-        if (Filtro == 1)
+        if (Filtro == 1 || Filtro == 0)
         {
             this.lista = EntradaProductoBLL.GetList(p => true).Skip(contador * pagina.mostrarCantidad).Take(pagina.mostrarCantidad).ToList();
         }
@@ -211,7 +211,7 @@
 
     protected async Task ExportToPdf()
     {
-        using (MemoryStream excelStream = ExportService.CreatePdfEntradaProductos(lista, DateTime.Now.ToString(), Total))
+        using (MemoryStream excelStream = ExportService.CreatePdfEntradaProductos(lista, DateTime.Now.ToString("dd/MM/yyyy"), Total))
         {
             await JS.SaveAs("EntradaProductos.pdf", excelStream.ToArray());
         }
@@ -242,13 +242,14 @@
                             Paginar(e => true);
                             break;
                         case 2:
-                            lista = EntradaProductoBLL.GetList(e => e.UsuarioId == Convert.ToInt32(Criterio));
-                            Paginar(e => e.UsuarioId == Convert.ToInt32(Criterio));
+                            int id = await GetId();
+                            lista = EntradaProductoBLL.GetList(e => e.UsuarioId == id);
+                            Paginar(e => e.UsuarioId == id);
                             break;
                     }
                     if (BuscarFecha == true)
                     {
-                        lista = lista.Where(p => p.Fecha >= DesdeFecha.Date && p.Fecha <= HastaFecha.Date).ToList();
+                        lista = lista.Where(p => p.Fecha.Date >= DesdeFecha.Date && p.Fecha.Date <= HastaFecha.Date).ToList();
                     }
 
                     if (lista.Count == 0)
@@ -265,5 +266,23 @@
             throw;
         }
         CalcularTotal();
+    }
+
+    private async Task<int> GetId()
+    {
+        int resultado = 0;
+
+        try
+        {
+            resultado = Convert.ToInt32(Criterio);
+            return resultado;
+        }
+        catch (Exception)
+        {
+
+            await JS.Confirmar("top-center", "error", "Error", "El Id debe ser numerico", false, 2000);
+        }
+
+        return resultado;
     }
 }

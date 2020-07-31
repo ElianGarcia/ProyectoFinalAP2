@@ -60,7 +60,7 @@
                     <tr>
                         <td>@item.MarcaId</td>
                         <td>@item.NombreMarca</td>
-                        <td><a class="btn btn-outline-info" href="Categorias/@item.MarcaId">Ver</a></td>
+                        <td><a class="btn btn-outline-info" href="/Registros/Marcas/@item.MarcaId">Ver</a></td>
                     </tr>
                 }
             </tbody>
@@ -75,7 +75,7 @@
             <ul class="pagination pagination-lg">
                 @for (int i = 1; i <= cantidadDePaginas; i++)
                 {
-                    <li class="page-item Azul"><a class="page-link Azul" @onclick="SaltarPagina" href="ConsultaCategorias/@i">@i</a></li>
+                    <li class="page-item Azul"><a class="page-link Azul" @onclick="SaltarPagina" href="Consultas/Marcas/@i">@i</a></li>
                 }
                 <li class="page-item text-black-50"><a class="page-link text-black-50" @onclick="Salto"> ► </a></li>
             </ul>
@@ -131,7 +131,7 @@
         contador += pagina.pagina;
         contador = (contador >= cantidadDePaginas) ? 0 : contador;
 
-        if (filtro == 1)
+        if (filtro == 1 || filtro==0)
         {
             this.lista = MarcasBLL.GetList(p => true).Skip(contador * pagina.mostrarCantidad).Take(pagina.mostrarCantidad).ToList();
         }
@@ -158,38 +158,47 @@
     {
         try
         {
-            if (filtro == 0)
+            if (criterio == string.Empty)
             {
-                filtro = 1;
+                this.lista = MarcasBLL.GetList(c => true);
+                Paginar(p => true);
+                CargarParaExportar();
             }
             else
             {
-                switch (filtro)
+                if (filtro != 0)
                 {
-                    case 1: //Todos
-                        this.lista = MarcasBLL.GetList(c => true);
-                        Paginar(p => true);
-                        CargarParaExportar();
-                        break;
-                    case 2: //Id
-                        int ID = await GetId();
-                        this.lista = MarcasBLL.GetList(c => c.MarcaId == ID);
-                        Paginar(p => p.MarcaId == ID);
-                        CargarParaExportar();
-                        break;
-                    case 3: //descripcion
-                        this.lista = MarcasBLL.GetList(c => c.NombreMarca == criterio);
-                        Paginar(p => p.NombreMarca == criterio);
-                        CargarParaExportar();
-                        break;
+                    switch (filtro)
+                    {
+                        case 1: //Todos
+                            this.lista = MarcasBLL.GetList(c => true);
+                            Paginar(p => true);
+                            CargarParaExportar();
+                            break;
+                        case 2: //Id
+                            int ID = await GetId();
+                            this.lista = MarcasBLL.GetList(c => c.MarcaId == ID);
+                            Paginar(p => p.MarcaId == ID);
+                            CargarParaExportar();
+                            break;
+                        case 3: //descripcion
+                            this.lista = MarcasBLL.GetList(c => c.NombreMarca == criterio);
+                            Paginar(p => p.NombreMarca == criterio);
+                            CargarParaExportar();
+                            break;
+                    }
                 }
-
+                else
+                {
+                    await JS.Confirmar("top-center", "info", "Aviso", "Debe seleccionar un filtro", false, 2000);
+                }
                 this.auxMarcasLista = lista;
             }
             if (lista.Count() == 0)
             {
-                await JS.Confirmar("top-center", "info", "Aviso", "No se ha encontrado marcas", false, 2000);
+                await JS.Confirmar("top-center", "info", "Aviso", "No se ha encontrado marcas.", false, 2000);
             }
+
             CalcularCantidad();
         }
         catch (Exception)
@@ -244,7 +253,7 @@
 
     private void CargarParaExportar()
     {
-        if (filtro == 1)
+        if (filtro == 1 || filtro==0)
         {
             this.auxMarcasLista = MarcasBLL.GetList(p => true);
         }

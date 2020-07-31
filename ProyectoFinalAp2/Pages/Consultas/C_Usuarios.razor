@@ -84,7 +84,7 @@
                                 <td>@item.UsuarioId</td>
                                 <td>@item.Nombres</td>
                                 <td>@item.NombreUsuario</td>
-                                <td>@item.FechaIngreso</td>
+                                <td>@item.FechaIngreso.ToString("dd/MM/yyyy")</td>
                                 <td><a class="btn btn-outline-info" href="Registros/Usuarios/@item.UsuarioId">Ver</a></td>
                             </tr>
                         }
@@ -192,7 +192,7 @@
         contador += pagina.pagina;
         contador = (contador >= cantidadDePaginas) ? 0 : contador;
 
-        if (Filtro == 1)
+        if (Filtro == 1 || Filtro==0)
         {
             this.lista = UsuariosBLL.GetList(p => true).Skip(contador * pagina.mostrarCantidad).Take(pagina.mostrarCantidad).ToList();
         }
@@ -209,6 +209,16 @@
         {
             this.lista = UsuariosBLL.GetList(p => p.NombreUsuario == Criterio).Skip(contador * pagina.mostrarCantidad).Take(pagina.mostrarCantidad).ToList();
         }
+        if (BuscarFecha)
+        {
+            if (Filtro == 1 || Filtro == 0)
+            {
+                this.lista = UsuariosBLL.GetList(p => true);
+                lista = lista.Where(f => f.FechaIngreso.Date >= DesdeFecha.Date && f.FechaIngreso.Date <= HastaFecha.Date).ToList();
+            }
+            else
+                lista = lista.Where(f => f.FechaIngreso.Date >= DesdeFecha.Date && f.FechaIngreso.Date <= HastaFecha.Date).ToList();
+        }
     }
 
     private void Paginar(Expression<Func<Usuarios, bool>> expression)
@@ -220,7 +230,7 @@
 
     protected async Task ExportToPdf()
     {
-        using (MemoryStream excelStream = ExportService.CreatePdfUsuarios(auxUsuariosLista, DateTime.Now.ToString(), Cantidad))
+        using (MemoryStream excelStream = ExportService.CreatePdfUsuarios(auxUsuariosLista, DateTime.Now.ToString("dd/MM/yyyy"), Cantidad))
         {
             await JS.SaveAs("Usuarios.pdf", excelStream.ToArray());
         }
@@ -251,8 +261,9 @@
                             Paginar(p => true);
                             break;
                         case 2:
-                            lista = UsuariosBLL.GetList(e => e.UsuarioId == Convert.ToInt32(Criterio));
-                            Paginar(e => e.UsuarioId == Convert.ToInt32(Criterio));
+                            int id = await GetId();
+                            lista = UsuariosBLL.GetList(e => e.UsuarioId == id);
+                            Paginar(e => e.UsuarioId == id);
                             break;
                         case 3:
                             lista = UsuariosBLL.GetList(e => e.Nombres == Criterio);
@@ -268,7 +279,8 @@
 
                     if (BuscarFecha == true)
                     {
-                        lista = lista.Where(p => p.FechaIngreso >= DesdeFecha.Date && p.FechaIngreso <= HastaFecha.Date).ToList();
+                        lista = lista.Where(p => p.FechaIngreso.Date >= DesdeFecha.Date && p.FechaIngreso.Date <= HastaFecha.Date).ToList();
+                        Paginar(f => f.FechaIngreso.Date >= DesdeFecha.Date && f.FechaIngreso.Date <= HastaFecha.Date);
                     }
 
                     if (lista.Count == 0)
@@ -285,5 +297,23 @@
             throw;
         }
         CalcularTotal();
+    }
+
+    private async Task<int> GetId()
+    {
+        int resultado = 0;
+
+        try
+        {
+            resultado = Convert.ToInt32(Criterio);
+            return resultado;
+        }
+        catch (Exception)
+        {
+
+            await JS.Confirmar("top-center", "error", "Error", "El Id debe ser numerico", false, 2000);
+        }
+
+        return resultado;
     }
 }

@@ -36,7 +36,7 @@
                 {
                     <tr>
                         <td>@item.EntradaProductoId</td>
-                        <td>@item.Fecha</td>
+                        <td>@item.Fecha.ToString("dd/MM/yyyy")</td>
                         <td>@item.CantidadTotal</td>
                     </tr>
                 }
@@ -60,7 +60,7 @@
 
     protected override void OnInitialized()
     {
-        Fecha = DateTime.Now.ToShortDateString();
+        Fecha = DateTime.Now.ToString("dd/MM/yyyy");
         Lista = EntradaProductoBLL.GetList(e => true);
         CalcularTotal();
     }

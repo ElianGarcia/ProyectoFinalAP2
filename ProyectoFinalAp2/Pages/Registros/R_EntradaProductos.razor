@@ -230,7 +230,7 @@
 
     private async Task Eliminar()
     {
-        if (await JS.ConfirmDelete("Confirmar", "¿Esta seguro que desea eliminar este usuario?", "question"))
+        if (await JS.ConfirmDelete("Confirmar", "¿Esta seguro que desea eliminar este entrada?", "question"))
         {
             bool eliminado = EntradaProductoBLL.Eliminar(entradaProductos.EntradaProductoId);
 
