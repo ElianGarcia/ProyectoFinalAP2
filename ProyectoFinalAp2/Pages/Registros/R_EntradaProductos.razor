@@ -31,7 +31,7 @@
 
             <label for="Proveedor">Proveedor</label>
             <div class="form-group">
-                <select class="form-control" @bind="productos.MarcaiD" @onclick="CargarProveedor">
+                <select class="form-control" @bind="entradaProductos.ProveedorId" @onclick="CargarProveedor">
                     <option value="" disabled selected>Seleccione un Proveedor</option>
                     @foreach (var item in CargarComboProveedores())
                     {

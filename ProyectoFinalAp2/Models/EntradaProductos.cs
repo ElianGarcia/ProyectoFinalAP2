@@ -15,6 +15,9 @@ namespace ProyectoFinalAp2.Models
         public int UsuarioId { get; set; }
         public DateTime Fecha { get; set; }
         public int CantidadTotal { get; set; }
+
+        [Range(1, 1000000, ErrorMessage = "Debe seleccionar un proveedor.")]
+        [Required(ErrorMessage = "Debe seleccionar un proveedor")]
         public int ProveedorId { get; set; }
 
         [ForeignKey("EntradaProductoId")]
