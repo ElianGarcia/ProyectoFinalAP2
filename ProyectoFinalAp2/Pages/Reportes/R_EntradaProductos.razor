@@ -99,10 +99,19 @@
     }
 
     protected async Task ExportToPdf()
-    {
-        using (MemoryStream excelStream = ExportService.CreatePdfEntradaProductos(auxLista, Fecha, Total))
+    {   
+        
+        if(auxLista.Count()==0 || auxLista == null)
         {
-            await JS.SaveAs("EntradaProductos.pdf", excelStream.ToArray());
+            await JS.Confirmar("top-center", "info", "Aviso", "No hay anda para exportar.", false, 2000);
         }
+        else
+        {
+            using (MemoryStream excelStream = ExportService.CreatePdfEntradaProductos(auxLista, Fecha, Total))
+            {
+                await JS.SaveAs("EntradaProductos.pdf", excelStream.ToArray());
+            }
+        }
+
     }
 }

@@ -95,9 +95,17 @@
 
     protected async Task ExportToPdf()
     {
-        using (MemoryStream excelStream = ExportService.CreatePdfReorden(Lista, Fecha, Total))
+        if(Lista.Count()==0 || Lista == null)
         {
-            await JS.SaveAs("Reorden.pdf", excelStream.ToArray());
+            await JS.Confirmar("top-center", "info", "Aviso", "No hay anda para exportar.", false, 2000);
         }
+        else
+        {
+            using (MemoryStream excelStream = ExportService.CreatePdfReorden(Lista, Fecha, Total))
+            {
+                await JS.SaveAs("Reorden.pdf", excelStream.ToArray());
+            }
+        }
+
     }
 }

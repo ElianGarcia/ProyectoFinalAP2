@@ -82,9 +82,17 @@
 
     protected async Task ExportToPdf()
     {
-        using (MemoryStream excelStream = ExportService.CreatePdfClientes(lista, Fecha, cantidadCliente.ToString()))
+        if(lista.Count()==0 || lista == null)
         {
-            await JS.SaveAs("Clientes.pdf", excelStream.ToArray());
+            await JS.Confirmar("top-center", "info", "Aviso", "No hay anda para exportar.", false, 2000);
         }
+        else
+        {
+            using (MemoryStream excelStream = ExportService.CreatePdfClientes(lista, Fecha, cantidadCliente.ToString()))
+            {
+                await JS.SaveAs("Clientes.pdf", excelStream.ToArray());
+            }
+        }
+
     }
 }
