@@ -210,10 +210,18 @@
 
     protected async Task ExportToPdf()
     {
-        using (MemoryStream excelStream = ExportService.CreatePdfCategorias(auxCategoriaLista, DateTime.Now.ToString(), cantidadDeCategorias.ToString()))
+        if(auxCategoriaLista.Count == 0 || auxCategoriaLista == null)
         {
-            await JS.SaveAs("Categorias.pdf", excelStream.ToArray());
+            await JS.Confirmar("top-center", "info", "Aviso", "No hay anda para exportar", false, 2000);
         }
+        else
+        {
+            using (MemoryStream excelStream = ExportService.CreatePdfCategorias(auxCategoriaLista, DateTime.Now.ToString(), cantidadDeCategorias.ToString()))
+            {
+                await JS.SaveAs("Categorias.pdf", excelStream.ToArray());
+            }
+        }
+
     }
 
 

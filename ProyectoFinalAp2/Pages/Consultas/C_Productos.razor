@@ -53,8 +53,10 @@
                         <option value="" disabled selected>Seleccione un filtro</option>
                         <option value="1">Todo</option>
                         <option value="2">ID</option>
-                        <option value="3">Categoria</option>
-                        <option value="4">Descripción</option>
+                        <option value="3">Descripción</option>
+                        <option value="4">Cantidad Existente</option>
+                        <option value="5">Costo</option>
+                        <option value="6">Precio</option>
                     </select>
                 </div>
 
@@ -112,7 +114,7 @@
             <ul class="pagination pagination-lg">
                 @for (int i = 1; i <= cantidadDePaginas; i++)
                 {
-                    <li class="page-item Azul"><a class="page-link Azul" @onclick="SaltarPagina" href="Consultas/Marcas/@i">@i</a></li>
+                    <li class="page-item Azul"><a class="page-link Azul" @onclick="SaltarPagina" href="/Consultas/Productos/@i">@i</a></li>
                 }
                 <li class="page-item text-black-50"><a class="page-link text-black-50" @onclick="Salto"> ► </a></li>
             </ul>
@@ -147,6 +149,7 @@
     protected override void OnInitialized()
     {
         lista = new List<Productos>();
+        auxProductoslista = new List<Productos>();
 
         DesdeFecha = DateTime.Now;
         HastaFecha = DateTime.Now;
@@ -216,6 +219,22 @@
         {
             this.lista = ProductosBLL.GetList(p => p.Descripcion == Criterio).Skip(contador * pagina.mostrarCantidad).Take(pagina.mostrarCantidad).ToList();
         }
+        if(Filtro == 4)
+        {
+            int cantidad = GetCantidad();
+            this.lista = ProductosBLL.GetList(p => p.Cantidad == cantidad).Skip(contador * pagina.mostrarCantidad).Take(pagina.mostrarCantidad).ToList();
+        }
+        if (Filtro == 5)
+        {
+            decimal costo = GetCostoOPrecio();
+            this.lista = ProductosBLL.GetList(p => p.Costo == costo).Skip(contador * pagina.mostrarCantidad).Take(pagina.mostrarCantidad).ToList();
+        }
+        if (Filtro == 6)
+        {
+            decimal precio = GetCostoOPrecio();
+            this.lista = ProductosBLL.GetList(p => p.Precio == precio).Skip(contador * pagina.mostrarCantidad).Take(pagina.mostrarCantidad).ToList();
+        }
+
     }
 
     private void Paginar(Expression<Func<Productos, bool>> expression)
@@ -227,10 +246,19 @@
 
     protected async Task ExportToPdf()
     {
-        using (MemoryStream excelStream = ExportService.CreatePdfProductos(auxProductoslista, DateTime.Now.ToString(), Total))
+        if(auxProductoslista.Count() ==0 || auxProductoslista == null)
         {
-            await JS.SaveAs("Productos.pdf", excelStream.ToArray());
+            await JS.Confirmar("top-center", "Info", "Aviso", "No hay nada para exportar.", false, 2000);
+
         }
+        else
+        {
+            using (MemoryStream excelStream = ExportService.CreatePdfProductos(auxProductoslista, DateTime.Now.ToString(), Total))
+            {
+                await JS.SaveAs("Productos.pdf", excelStream.ToArray());
+            }
+        }
+
     }
 
     private async Task Buscar()
@@ -239,51 +267,56 @@
         {
             if (Filtro == 0)
             {
-                Filtro = 1;
+                lista = ProductosBLL.GetList(e => true);
+                Paginar(p => true);
+                auxProductoslista = lista;
             }
             else
             {
-                lista = ProductosBLL.GetList(e => true);
+                switch (Filtro)
+                {
+                    case 1:
+                        lista = ProductosBLL.GetList(e => true);
+                        Paginar(p => true);
+                        break;
+                    case 2:
+                        int id = await GetId();
+                        lista = ProductosBLL.GetList(e => e.ProductoId == id);
+                        Paginar(e => e.ProductoId == id);
+                        break;
+                    case 3:
+                        lista = ProductosBLL.GetList(e => e.Descripcion == Criterio);
+                        Paginar(e => e.Descripcion == Criterio);
+                        break;
+                    case 4:
+                        int cantidad = await GetAuxCantidad();
+                        lista = ProductosBLL.GetList(e => e.Cantidad == cantidad);
+                        Paginar(e => e.Cantidad == cantidad);
+                        break;
+                    case 5:
+                        decimal costo = await GetAuxCosto();
+                        lista = ProductosBLL.GetList(e => e.Costo == costo);
+                        Paginar(e => e.Costo == costo);
+                        break;
+                    case 6:
+                        decimal precio = await GetAuxPrecio();
+                        lista = ProductosBLL.GetList(e => e.Precio == precio);
+                        Paginar(e => e.Precio == precio);
+                        break;
+                }
+
+                if (BuscarFecha == true)
+                {
+                    lista = lista.Where(p => p.Fecha >= DesdeFecha.Date && p.Fecha <= HastaFecha.Date).ToList();
+                }
 
                 if (lista.Count == 0)
                 {
-                    await JS.Confirmar("top-center", "info", "Aviso", "No hay productos registrados", false, 2000);
+                    await JS.Confirmar("top-center", "error", "Error", "No se han encontrado productos con este criterio", false, 2000);
                 }
-                else
-                {
-                    switch (Filtro)
-                    {
-                        case 1:
-                            lista = ProductosBLL.GetList(e => true);
-                            Paginar(p => true);
-                            break;
-                        case 2:
-                            int id = await GetId();
-                            lista = ProductosBLL.GetList(e => e.ProductoId == id);
-                            Paginar(e => e.ProductoId == id);
-                            break;
-                        case 3:
-                            lista = ProductosBLL.GetList(e => CategoriasBLL.Buscar(e.CategoriaiD).Descripcion == Criterio);
-                            Paginar(e => CategoriasBLL.Buscar(e.CategoriaiD).Descripcion == Criterio);
-                            break;
-                        case 4:
-                            lista = ProductosBLL.GetList(e => e.Descripcion == Criterio);
-                            Paginar(e => e.Descripcion == Criterio);
-                            break;
-                    }
 
-
-                    if (BuscarFecha == true)
-                    {
-                        lista = lista.Where(p => p.Fecha >= DesdeFecha.Date && p.Fecha <= HastaFecha.Date).ToList();
-                    }
-
-                    if (lista.Count == 0)
-                    {
-                        await JS.Confirmar("top-center", "error", "Error", "No se han encontrado productos con este criterio", false, 2000);
-                    }
+                if(lista.Count!=0)
                     auxProductoslista = lista;
-                }
             }
         }
         catch (Exception)
@@ -335,6 +368,95 @@
         {
 
             await JS.Confirmar("top-center", "error", "Error", "El Id debe ser numerico", false, 2000);
+        }
+
+        return resultado;
+    }
+
+    private int GetCantidad()
+    {
+        int resultado = 0;
+
+        try
+        {
+            resultado = Convert.ToInt32(Criterio);
+            return resultado;
+        }
+        catch (Exception)
+        {
+
+
+        }
+
+        return resultado;
+    }
+    private decimal GetCostoOPrecio()
+    {
+        decimal resultado = 0;
+
+        try
+        {
+            resultado = Convert.ToDecimal(Criterio);
+            return resultado;
+        }
+        catch (Exception)
+        {
+
+
+        }
+
+        return resultado;
+    }
+
+    private async Task<int> GetAuxCantidad()
+    {
+        int resultado = 0;
+
+        try
+        {
+            resultado = Convert.ToInt32(Criterio);
+            return resultado;
+        }
+        catch (Exception)
+        {
+            await JS.Confirmar("top-center", "error", "Error", "La cantidad debe ser numerica. ", false, 2000);
+
+        }
+
+        return resultado;
+    }
+
+    private async Task<decimal> GetAuxCosto()
+    {
+        decimal resultado = 0;
+
+        try
+        {
+            resultado = Convert.ToDecimal(Criterio);
+            return resultado;
+        }
+        catch (Exception)
+        {
+            await JS.Confirmar("top-center", "error", "Error", "La costo debe ser numerica.", false, 2000);
+
+        }
+
+        return resultado;
+    }
+
+    private async Task<decimal> GetAuxPrecio()
+    {
+        decimal resultado = 0;
+
+        try
+        {
+            resultado = Convert.ToDecimal(Criterio);
+            return resultado;
+        }
+        catch (Exception)
+        {
+            await JS.Confirmar("top-center", "error", "Error", "El precio debe ser numerica.", false, 2000);
+
         }
 
         return resultado;

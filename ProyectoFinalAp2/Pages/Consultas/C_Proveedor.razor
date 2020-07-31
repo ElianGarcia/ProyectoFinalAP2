@@ -336,10 +336,18 @@
 
     protected async Task ExportToPdf()
     {
-        using (MemoryStream excelStream = ExportService.CreatePdfProveedores(auxProveedorLista, DateTime.Now.ToString("dd/MM/yyyy"), cantidadProveedor.ToString()))
+        if(auxProveedorLista.Count() == 0 || auxProveedorLista == null)
         {
-            await JS.SaveAs("Proveedores.pdf", excelStream.ToArray());
+            await JS.Confirmar("top-center", "info", "Aviso", "No hay nada para exportar.", false, 2000);
         }
+        else
+        {
+            using (MemoryStream excelStream = ExportService.CreatePdfProveedores(auxProveedorLista, DateTime.Now.ToString("dd/MM/yyyy"), cantidadProveedor.ToString()))
+            {
+                await JS.SaveAs("Proveedores.pdf", excelStream.ToArray());
+            }
+        }
+
     }
 
     private async Task<int> GetId()

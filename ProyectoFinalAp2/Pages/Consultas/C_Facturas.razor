@@ -300,10 +300,18 @@
     protected async Task ExportToPdf()
     {
         CargarListaAux();
-        using (MemoryStream excelStream = ExportService.CreatePdfFacturas(auxLista, DateTime.Now.ToString("dd/MM/yyyy"), total.ToString("N2"),cantidad.ToString()))
+        if(auxLista.Count() == 0 || auxLista == null)
         {
-            await JS.SaveAs("Facturas.pdf", excelStream.ToArray());
+            await JS.Confirmar("top-center", "info", "Aviso", "No hay nada para exportar.", false, 2000);
         }
+        else
+        {
+            using (MemoryStream excelStream = ExportService.CreatePdfFacturas(auxLista, DateTime.Now.ToString("dd/MM/yyyy"), total.ToString("N2"), cantidad.ToString()))
+            {
+                await JS.SaveAs("Facturas.pdf", excelStream.ToArray());
+            }
+        }
+
     }
 
     private void CargarListaAux()
