@@ -207,5 +207,27 @@ namespace ProyectoFinalAp2.Controllers
             }
             return paso;
         }
+        public static bool ExisteParaModificar(int id)
+        {
+            bool paso = false;
+            Context context = new Context();
+            try
+            {
+                var aux = context.EntradaProductos.Find(id);
+                if (aux != null)
+                    paso = true;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            finally
+            {
+                context.Dispose();
+            }
+
+            return paso;
+        }
     }
 }
