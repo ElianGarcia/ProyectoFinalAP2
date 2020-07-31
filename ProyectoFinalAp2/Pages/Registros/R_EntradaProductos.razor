@@ -74,7 +74,7 @@
                         <th> Categoria </th>
                         <th> Descripción </th>
                         <th> Cantidad </th>
-                        <th> Precio </th>
+                        <th> Costo </th>
                         <th> Importe </th>
                     </tr>
                 </thead>
@@ -86,8 +86,8 @@
                             <td>@GetCategoria(item.ProductoId)</td>
                             <td>@GetProducto(item.ProductoId)</td>
                             <td>@item.Cantidad</td>
-                            <td>@GetPrecio(item)</td>
-                            <td>@(item.Cantidad * GetPrecio(item))</td>
+                            <td>@GetCosto(item)</td>
+                            <td>@(item.Cantidad * GetCosto(item))</td>
                             <td><button type="button" class="btn btn-outline-danger" @onclick="(()=> EliminarProducto(item))"><span class="icon-remove"> </span> Eliminar</button></td>
                         </tr>
                     }
@@ -203,19 +203,34 @@
         }
     }
 
-    private void Agregar()
+    private async Task Agregar()
     {
-        this.entradaProductos.DetalleEntrada.Add(new Entidades.DetalleEntradaProductos
+        if(productoiD == 0)
         {
-            DetalleEntradaProductosId = 0,
-            EntradaProductoId = entradaProductos.EntradaProductoId,
-            Cantidad = cantidad,
-            ProductoId = productoiD
-        });
+            await JS.Confirmar("top-center", "Infor", "Aviso", "Debe elegir un producto", false, 2000);
+            return;
+        }
+        if(cantidad == 0)
+        {
+            await JS.Confirmar("top-center", "Infor", "Aviso", "La cantidad debe ser mayor a cero.", false, 2000);
+            return;
+        }
+        else
+        {
+            this.entradaProductos.DetalleEntrada.Add(new Entidades.DetalleEntradaProductos
+            {
+                DetalleEntradaProductosId = 0,
+                EntradaProductoId = entradaProductos.EntradaProductoId,
+                Cantidad = cantidad,
+                ProductoId = productoiD
+            });
 
-        productoiD = 0;
-        cantidad = 0;
+            productoiD = 0;
+            cantidad = 0;
+
+        }
         CalcularTotal();
+
     }
 
     private void CalcularTotal()
@@ -266,20 +281,20 @@
         return Categoria;
     }
 
-    private decimal GetPrecio(Entidades.DetalleEntradaProductos item)
+    private decimal GetCosto(Entidades.DetalleEntradaProductos item)
     {
-        decimal Precio = 0;
+        decimal Costo = 0;
         try
         {
             Productos p = ProductosBLL.Buscar(item.ProductoId);
-            Precio = p.Precio;
+            Costo = p.Costo;
         }
         catch
         {
 
         }
 
-        return Precio;
+        return Costo;
     }
 
     private string GetProducto(int id)

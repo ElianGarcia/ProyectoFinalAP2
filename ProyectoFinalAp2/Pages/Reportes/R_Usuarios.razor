@@ -56,6 +56,7 @@
 
 @code {
     List<Usuarios> Lista = new List<Usuarios>();
+    List<AuxUsuario> auxLista;
     String Fecha;
     int Cantidad;
 
@@ -64,6 +65,7 @@
         Fecha = DateTime.Now.ToString("dd/MM/yyyy");
         Lista = UsuariosBLL.GetList(e => true);
         CalcularTotal();
+        CargarListaAux();
     }
 
     private int CalcularTotal()
@@ -77,9 +79,36 @@
         return Cantidad;
     }
 
+    private void CargarListaAux()
+    {
+        try
+        {
+            this.auxLista = new List<AuxUsuario>();
+            if (Lista.Count()!=0)
+            {
+                foreach (var item in Lista)
+                {
+                    this.auxLista.Add(new AuxUsuario
+                    {
+                        ID = item.UsuarioId,
+                        Nombres = item.Nombres,
+                        Nombre_Usuario = item.NombreUsuario,
+                        Fecha_Ingreso = item.FechaIngreso
+                    });
+                }
+            }
+        }
+        catch (Exception)
+        {
+
+            throw;
+        }
+
+    }
+
     protected async Task ExportToPdf()
     {
-        using (MemoryStream excelStream = ExportService.CreatePdfUsuarios(Lista, Fecha, Cantidad))
+        using (MemoryStream excelStream = ExportService.CreatePdfUsuarios(auxLista, Fecha, Cantidad))
         {
             await JS.SaveAs("Usuarios.pdf", excelStream.ToArray());
         }

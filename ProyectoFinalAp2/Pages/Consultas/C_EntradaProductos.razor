@@ -125,6 +125,7 @@
 
     private List<EntradaProductos> lista { get; set; }
     private List<EntradaProductos> auxEntradaLista { get; set; }
+    private List<AuxEntrada> auxLista;
 
     private int Filtro { get; set; }
     private string Criterio { get; set; }
@@ -211,7 +212,7 @@
 
     protected async Task ExportToPdf()
     {
-        using (MemoryStream excelStream = ExportService.CreatePdfEntradaProductos(lista, DateTime.Now.ToString("dd/MM/yyyy"), Total))
+        using (MemoryStream excelStream = ExportService.CreatePdfEntradaProductos(auxLista, DateTime.Now.ToString("dd/MM/yyyy"), Total))
         {
             await JS.SaveAs("EntradaProductos.pdf", excelStream.ToArray());
         }
@@ -258,6 +259,7 @@
                     }
 
                     auxEntradaLista = lista;
+                    CargarParaExportar();
                 }
             }
         }
@@ -284,5 +286,24 @@
         }
 
         return resultado;
+    }
+
+    private void CargarParaExportar()
+    {
+        this.auxLista = new List<AuxEntrada>();
+        if (auxEntradaLista.Count() != 0)
+        {
+            foreach (var item in auxEntradaLista)
+            {
+                this.auxLista.Add(new AuxEntrada
+                {
+                    ID = item.EntradaProductoId,
+                    Fecha = item.Fecha,
+                    ProveedorId = item.ProveedorId,
+                    Cantidad_Total = item.CantidadTotal
+                });
+            }
+        }
+
     }
 }

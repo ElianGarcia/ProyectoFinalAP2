@@ -177,16 +177,24 @@ namespace ProyectoFinalAp2.Controllers
             Context db = new Context();
             try
             {
-                foreach (var item in Anterior.DetalleEntrada)
+                if (Existe(ID))
                 {
-                    var Producto = db.Productos.Find(item.ProductoId);
-                    if (Producto != null)
-                        Producto.Cantidad -= item.Cantidad;
-                }
+                    foreach (var item in Anterior.DetalleEntrada)
+                    {
+                        var Producto = db.Productos.Find(item.ProductoId);
+                        if (Producto != null)
+                            Producto.Cantidad -= item.Cantidad;
+                    }
 
-                var eliminar = db.EntradaProductos.Find(ID);
-                db.Entry(eliminar).State = EntityState.Deleted;
-                paso = db.SaveChanges() > 0;
+                    var eliminar = db.EntradaProductos.Find(ID);
+                    if (eliminar != null)
+                    {
+                        db.Entry(eliminar).State = EntityState.Deleted;
+                        paso = db.SaveChanges() > 0;
+                    }
+                }
+               
+                
             }
             catch (Exception)
             {

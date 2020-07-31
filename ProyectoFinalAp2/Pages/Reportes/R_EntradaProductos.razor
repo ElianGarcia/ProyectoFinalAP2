@@ -55,6 +55,7 @@
 
 @code {
     List<EntradaProductos> Lista = new List<EntradaProductos>();
+    List<AuxEntrada> auxLista;
     String Fecha;
     int Total = 0;
 
@@ -63,6 +64,7 @@
         Fecha = DateTime.Now.ToString("dd/MM/yyyy");
         Lista = EntradaProductoBLL.GetList(e => true);
         CalcularTotal();
+        CargarParaExportar();
     }
 
     private decimal CalcularTotal()
@@ -76,9 +78,29 @@
         return Total;
     }
 
+
+    private void CargarParaExportar()
+    {
+        this.auxLista = new List<AuxEntrada>();
+        if (Lista != null)
+        {
+            foreach (var item in Lista)
+            {
+                this.auxLista.Add(new AuxEntrada
+                {
+                    ID = item.EntradaProductoId,
+                    Fecha = item.Fecha,
+                    ProveedorId = item.ProveedorId,
+                    Cantidad_Total = item.CantidadTotal
+                });
+            }
+        }
+
+    }
+
     protected async Task ExportToPdf()
     {
-        using (MemoryStream excelStream = ExportService.CreatePdfEntradaProductos(Lista, Fecha, Total))
+        using (MemoryStream excelStream = ExportService.CreatePdfEntradaProductos(auxLista, Fecha, Total))
         {
             await JS.SaveAs("EntradaProductos.pdf", excelStream.ToArray());
         }

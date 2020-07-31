@@ -11,8 +11,14 @@ namespace ProyectoFinalAp2.Models
     public class EntradaProductos
     {
         [Key]
+        [Required(ErrorMessage = "El Id debe ser un numero.")]
+        [Range(0, 100000000, ErrorMessage = "El campo Id no puede ser menor que cero ni mayor a 1000000.")]
         public int EntradaProductoId { get; set; }
         public int UsuarioId { get; set; }
+
+        [DataType(DataType.DateTime)]
+        [DisplayFormat(DataFormatString = "{0:dd,mm, yyyy}")]
+        [Required(ErrorMessage = "El campo fecha no puede estar vacío.")]
         public DateTime Fecha { get; set; }
         public int CantidadTotal { get; set; }
 

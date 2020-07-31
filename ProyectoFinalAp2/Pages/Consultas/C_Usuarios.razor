@@ -125,6 +125,7 @@
     private List<Usuarios> lista { get; set; }
     //para fines de impresion
     public List<Usuarios> auxUsuariosLista = new List<Usuarios>();
+    List<AuxUsuario> auxLista;
 
     private int Filtro { get; set; }
     private string Criterio { get; set; }
@@ -230,7 +231,7 @@
 
     protected async Task ExportToPdf()
     {
-        using (MemoryStream excelStream = ExportService.CreatePdfUsuarios(auxUsuariosLista, DateTime.Now.ToString("dd/MM/yyyy"), Cantidad))
+        using (MemoryStream excelStream = ExportService.CreatePdfUsuarios(auxLista, DateTime.Now.ToString("dd/MM/yyyy"), Cantidad))
         {
             await JS.SaveAs("Usuarios.pdf", excelStream.ToArray());
         }
@@ -289,6 +290,7 @@
                     }
 
                     auxUsuariosLista = lista;
+                    CargarListaAux();
                 }
             }
         }
@@ -316,4 +318,32 @@
 
         return resultado;
     }
+
+    private void CargarListaAux()
+    {
+        try
+        {
+            this.auxLista = new List<AuxUsuario>();
+            if (lista.Count() != 0)
+            {
+                foreach (var item in auxUsuariosLista)
+                {
+                    this.auxLista.Add(new AuxUsuario
+                    {
+                        ID = item.UsuarioId,
+                        Nombres = item.Nombres,
+                        Nombre_Usuario = item.NombreUsuario,
+                        Fecha_Ingreso = item.FechaIngreso
+                    });
+                }
+            }
+        }
+        catch (Exception)
+        {
+
+            throw;
+        }
+
+    }
+
 }

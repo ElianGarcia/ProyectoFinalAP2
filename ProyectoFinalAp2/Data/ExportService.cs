@@ -36,7 +36,7 @@ namespace ProyectoFinalAp2.Data
                 PdfLayoutResult result = title.Draw(page, new PointF(0, 0));
 
                 PdfStandardFont contentFont = new PdfStandardFont(PdfFontFamily.Courier, 12);
-                PdfTextElement content = new PdfTextElement("Fecha de impresión " + Fecha, contentFont, PdfBrushes.Black);
+                PdfTextElement content = new PdfTextElement("Fecha de impresión: " + Fecha, contentFont, PdfBrushes.Black);
                 PdfLayoutFormat format = new PdfLayoutFormat();
                 format.Layout = PdfLayoutType.Paginate;
 
@@ -95,7 +95,7 @@ namespace ProyectoFinalAp2.Data
                 PdfLayoutResult result = title.Draw(page, new PointF(0, 0));
 
                 PdfStandardFont contentFont = new PdfStandardFont(PdfFontFamily.Courier, 12);
-                PdfTextElement content = new PdfTextElement("Fecha de impresión " + Fecha, contentFont, PdfBrushes.Black);
+                PdfTextElement content = new PdfTextElement("Fecha de impresión: " + Fecha, contentFont, PdfBrushes.Black);
                 PdfLayoutFormat format = new PdfLayoutFormat();
                 format.Layout = PdfLayoutType.Paginate;
 
@@ -131,7 +131,7 @@ namespace ProyectoFinalAp2.Data
             }
         }
 
-        public static MemoryStream CreatePdfUsuarios(List<Usuarios> forecasts, string Fecha, int Cantidad)
+        public static MemoryStream CreatePdfUsuarios(List<AuxUsuario> forecasts, string Fecha, int Cantidad)
         {
             if (forecasts == null)
             {
@@ -154,7 +154,7 @@ namespace ProyectoFinalAp2.Data
                 PdfLayoutResult result = title.Draw(page, new PointF(0, 0));
 
                 PdfStandardFont contentFont = new PdfStandardFont(PdfFontFamily.TimesRoman, 12);
-                PdfTextElement content = new PdfTextElement("Fecha de impresión " + Fecha, contentFont, PdfBrushes.Black);
+                PdfTextElement content = new PdfTextElement("Fecha de impresión: " + Fecha, contentFont, PdfBrushes.Black);
                 PdfLayoutFormat format = new PdfLayoutFormat();
                 format.Layout = PdfLayoutType.Paginate;
 
@@ -192,7 +192,7 @@ namespace ProyectoFinalAp2.Data
             }
         }
 
-        public static MemoryStream CreatePdfEntradaProductos(List<EntradaProductos> forecasts, string Fecha, int Cantidad)
+        public static MemoryStream CreatePdfEntradaProductos(List<AuxEntrada> forecasts, string Fecha, int Cantidad)
         {
             if (forecasts == null)
             {
@@ -215,7 +215,7 @@ namespace ProyectoFinalAp2.Data
                 PdfLayoutResult result = title.Draw(page, new PointF(0, 0));
 
                 PdfStandardFont contentFont = new PdfStandardFont(PdfFontFamily.TimesRoman, 12);
-                PdfTextElement content = new PdfTextElement("Fecha de impresión " + Fecha, contentFont, PdfBrushes.Black);
+                PdfTextElement content = new PdfTextElement("Fecha de impresión: " + Fecha, contentFont, PdfBrushes.Black);
                 PdfLayoutFormat format = new PdfLayoutFormat();
                 format.Layout = PdfLayoutType.Paginate;
 
@@ -399,7 +399,7 @@ namespace ProyectoFinalAp2.Data
                 PdfLayoutResult result = title.Draw(page, new PointF(0, 0));
 
                 PdfStandardFont contentFont = new PdfStandardFont(PdfFontFamily.TimesRoman, 12);
-                PdfTextElement content = new PdfTextElement("Fecha de impresión " + Fecha, contentFont, PdfBrushes.Black);
+                PdfTextElement content = new PdfTextElement("Fecha de impresión: " + Fecha, contentFont, PdfBrushes.Black);
                 PdfLayoutFormat format = new PdfLayoutFormat();
                 format.Layout = PdfLayoutType.Paginate;
 
@@ -461,7 +461,7 @@ namespace ProyectoFinalAp2.Data
                 PdfLayoutResult result = title.Draw(page, new PointF(0, 0));
 
                 PdfStandardFont contentFont = new PdfStandardFont(PdfFontFamily.TimesRoman, 12);
-                PdfTextElement content = new PdfTextElement("Fecha de impresión " + Fecha, contentFont, PdfBrushes.Black);
+                PdfTextElement content = new PdfTextElement("Fecha de impresión: " + Fecha, contentFont, PdfBrushes.Black);
                 PdfLayoutFormat format = new PdfLayoutFormat();
                 format.Layout = PdfLayoutType.Paginate;
 
@@ -523,7 +523,7 @@ namespace ProyectoFinalAp2.Data
                 PdfLayoutResult result = title.Draw(page, new PointF(0, 0));
 
                 PdfStandardFont contentFont = new PdfStandardFont(PdfFontFamily.TimesRoman, 12);
-                PdfTextElement content = new PdfTextElement("Fecha de impresión " + Fecha, contentFont, PdfBrushes.Black);
+                PdfTextElement content = new PdfTextElement("Fecha de impresión: " + Fecha, contentFont, PdfBrushes.Black);
                 PdfLayoutFormat format = new PdfLayoutFormat();
                 format.Layout = PdfLayoutType.Paginate;
 
