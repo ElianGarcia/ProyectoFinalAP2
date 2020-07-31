@@ -82,7 +82,7 @@
                         <td>@item.FacturaId</td>
                         <td>@GetNombre(item.ClienteId)</td>
                         <td>@item.Fecha.ToString("dd/MM/yyyy")</td>
-                        <td>@item.Total.ToString("N2")</td>
+                        <td>@item.Total</td>
                         <td><a class="btn btn-outline-info" href="Facturas/@item.FacturaId">Ver</a></td>
                     </tr>
                 }
@@ -90,7 +90,7 @@
         </table>
         <div class="form-group">
             <label>Suma total</label>
-            <input  @bind="auxTotal2" class="form-control" readonly />
+            <input  @bind="total" class="form-control" readonly />
         </div>
 
         <div class="form-group">
@@ -431,7 +431,6 @@
 
         total = auxTotal;
         cantidad = auxCantidad;
-        auxTotal2 = total.ToString("N2");
     }
 
 

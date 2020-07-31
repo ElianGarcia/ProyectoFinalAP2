@@ -40,7 +40,7 @@
                             <td>@item.FacturaId</td>
                             <td>@GetNombre(item.ClienteId)</td>
                             <td>@item.Fecha.ToString("dd/MM/yyyy")</td>
-                            <td>@item.Total.ToString("N2")</td>
+                            <td>@item.Total</td>
                         </tr>
                     }
                 </tbody>
@@ -50,7 +50,7 @@
         <div class="card-footer">
             <div class="form-group">
                 <label>Suma de los totales:</label>
-                <input @bind="@auxTotal2" class="form-control" readonly />
+                <input @bind="@total" class="form-control" readonly />
             </div>
         </div>
         <button class="btn btn-primary" @onclick="@ExportToPdf">Exportar a PDF</button>
@@ -63,7 +63,6 @@
     private String Fecha;
     private int cantidad;
     private decimal total = 0;
-    private string auxTotal2 = string.Empty;
     List<AuxFactura> auxLista;
     AuxFactura aux = new AuxFactura();
 
@@ -87,7 +86,6 @@
 
         total = auxTotal;
         cantidad = auxCantidad;
-        auxTotal2 = total.ToString("N2");
         
     }
 

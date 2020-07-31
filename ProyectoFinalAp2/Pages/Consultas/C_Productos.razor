@@ -258,8 +258,9 @@
                             Paginar(p => true);
                             break;
                         case 2:
-                            lista = ProductosBLL.GetList(e => e.ProductoId == Convert.ToInt32(Criterio));
-                            Paginar(e => e.ProductoId == Convert.ToInt32(Criterio));
+                            int id = await GetId();
+                            lista = ProductosBLL.GetList(e => e.ProductoId == id);
+                            Paginar(e => e.ProductoId == id);
                             break;
                         case 3:
                             lista = ProductosBLL.GetList(e => CategoriasBLL.Buscar(e.CategoriaiD).Descripcion == Criterio);
@@ -319,5 +320,23 @@
             encontrado = "Categoria eliminada.";
 
         return encontrado;
+    }
+
+    private async Task<int> GetId()
+    {
+        int resultado = 0;
+
+        try
+        {
+            resultado = Convert.ToInt32(Criterio);
+            return resultado;
+        }
+        catch (Exception)
+        {
+
+            await JS.Confirmar("top-center", "error", "Error", "El Id debe ser numerico", false, 2000);
+        }
+
+        return resultado;
     }
 }

@@ -59,7 +59,7 @@ namespace ProyectoFinalAp2.Data
                 pdfGrid.Draw(page, new PointF(0, result.Bounds.Bottom + paragraphAfterSpacing));
 
                 PdfTextElement text = new PdfTextElement("Total: " + Total, font, PdfBrushes.Black);
-                PdfLayoutResult result1 = text.Draw(page, new PointF(400, result.Bounds.Bottom * 5 + paragraphAfterSpacing));
+                PdfLayoutResult result1 = text.Draw(page, new PointF(400, result.Bounds.Bottom * 9 + paragraphAfterSpacing));
 
                 using (MemoryStream stream = new MemoryStream())
                 {
