@@ -89,13 +89,13 @@
                         <tr>
                             <td>@item.ProductoId</td>
                             <td>@item.Descripcion</td>
-                            <td>@MarcasBLL.Buscar(item.MarcaiD).NombreMarca</td>
-                            <td>@CategoriasBLL.Buscar(item.CategoriaiD).Descripcion</td>
+                            <td>@GetNombreMarca(item.MarcaiD)</td>
+                            <td>@GetNombreCategoria(item.CategoriaiD)</td>
                             <td>@item.Cantidad</td>
                             <td>@item.Costo</td>
                             <td>@item.Precio</td>
                             <td>@(item.Costo * item.Cantidad)</td>
-                            <td>@item.Fecha</td>
+                            <td>@item.Fecha.ToString("dd/MM/yyyy")</td>
                             <td><a class="btn btn-outline-info" href="Registros/Productos/@item.ProductoId">Ver</a></td>
                         </tr>
                     }
@@ -291,5 +291,33 @@
         }
 
         CalcularTotal();
+    }
+
+    private string GetNombreMarca(int id)
+    {
+        var aux = MarcasBLL.Buscar(id);
+        string encontrado = string.Empty;
+        if (aux != null)
+        {
+            encontrado = aux.NombreMarca;
+        }
+        else
+            encontrado = "Marca eliminada.";
+
+        return encontrado;
+    }
+
+    private string GetNombreCategoria(int id)
+    {
+        var aux = CategoriasBLL.Buscar(id);
+        string encontrado = string.Empty;
+        if (aux != null)
+        {
+            encontrado = aux.Descripcion;
+        }
+        else
+            encontrado = "Categoria eliminada.";
+
+        return encontrado;
     }
 }

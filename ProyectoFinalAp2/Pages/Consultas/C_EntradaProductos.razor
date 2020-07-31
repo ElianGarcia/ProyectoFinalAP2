@@ -82,7 +82,7 @@
                             <tr>
                                 <td>@item.EntradaProductoId</td>
                                 <td>@item.Fecha.ToString("dd/MM/yyyy")</td>
-                                <td>@ProveedorBLL.Buscar(item.ProveedorId).Nombre</td>
+                                <td>@GetNombreProveedor(item.ProveedorId)</td>
                                 <td>@item.CantidadTotal</td>
                                 <td><a class="btn btn-outline-info" href="Registros/EntradaProductos/@item.EntradaProductoId">Ver</a></td>
                             </tr>
@@ -305,5 +305,20 @@
             }
         }
 
+    }
+
+    private string GetNombreProveedor(int id)
+    {
+        var aux = ProveedorBLL.Buscar(id);
+        string encontrado = string.Empty;
+        if (aux != null)
+        {
+            encontrado = aux.Nombre;
+        }
+        else
+        {
+            encontrado = "Proveedor Eliminado.";
+        }
+        return encontrado;
     }
 }
