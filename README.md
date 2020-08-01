@@ -20,6 +20,9 @@ hemos diseñado formularios intuitivos y faciles de rellenar, ademas con varias 
   ## Registro de Usuarios
   <img src="https://github.com/ElianGarcia/ProyectoFinalAp2/blob/master/ProyectoFinalAp2/wwwroot/Resources/Registro%20Usuarios.png"></img>
   
+  ## Registro de Marcas
+  <img src="https://github.com/ElianGarcia/ProyectoFinalAp2/blob/master/ProyectoFinalAp2/wwwroot/Resources/Registro%20Marcas.png"></img>
+  
   ## Registro de Categorias
   <img src="https://github.com/ElianGarcia/ProyectoFinalAp2/blob/master/ProyectoFinalAp2/wwwroot/Resources/Registro%20Categorias.png"></img>
   
@@ -28,6 +31,9 @@ hemos diseñado formularios intuitivos y faciles de rellenar, ademas con varias 
   
   ## Facturacion
   <img src="https://github.com/ElianGarcia/ProyectoFinalAp2/blob/master/ProyectoFinalAp2/wwwroot/Resources/Registro%20Facturas.png"></img>
+  
+  ## Registro de Proveedores
+  <img src="https://github.com/ElianGarcia/ProyectoFinalAp2/blob/master/ProyectoFinalAp2/wwwroot/Resources/Registro%20Proveedores.png"></img>
   
   ## Entrada de Productos
   <img src="https://github.com/ElianGarcia/ProyectoFinalAp2/blob/master/ProyectoFinalAp2/wwwroot/Resources/Registro%20Entrada%20Productos.png"></img>
@@ -41,8 +47,14 @@ hemos diseñado formularios intuitivos y faciles de rellenar, ademas con varias 
   ## Consulta de Usuarios
   <img src="https://github.com/ElianGarcia/ProyectoFinalAp2/blob/master/ProyectoFinalAp2/wwwroot/Resources/Consulta%20Usuarios.png"></img>
   
+  ## Consulta de Marcas
+  <img src="https://github.com/ElianGarcia/ProyectoFinalAp2/blob/master/ProyectoFinalAp2/wwwroot/Resources/Consulta%20Marcas.png"></img>
+  
   ## Consulta de Categorias
   <img src="https://github.com/ElianGarcia/ProyectoFinalAp2/blob/master/ProyectoFinalAp2/wwwroot/Resources/Consulta%20Categorias.png"></img>
+  
+  ## Consulta de Proveedores
+  <img src="https://github.com/ElianGarcia/ProyectoFinalAp2/blob/master/ProyectoFinalAp2/wwwroot/Resources/Consulta%20Proveedores.png"></img>
   
   ## Consulta de Productos
   <img src="https://github.com/ElianGarcia/ProyectoFinalAp2/blob/master/ProyectoFinalAp2/wwwroot/Resources/Consulta%20Productos.png"></img>
@@ -61,6 +73,12 @@ hemos diseñado formularios intuitivos y faciles de rellenar, ademas con varias 
   
   ## Reporte de Usuarios
   <img src="https://github.com/ElianGarcia/ProyectoFinalAp2/blob/master/ProyectoFinalAp2/wwwroot/Resources/Reporte%20Usuarios.png"></img>
+  
+  ## Reporte de Marcas
+  <img src="https://github.com/ElianGarcia/ProyectoFinalAp2/blob/master/ProyectoFinalAp2/wwwroot/Resources/Reporte%20Marcas.png"></img>
+  
+  ## Reporte de Proveedores
+  <img src="https://github.com/ElianGarcia/ProyectoFinalAp2/blob/master/ProyectoFinalAp2/wwwroot/Resources/Reporte%20Proveedores.png"></img>
   
   ## Reporte de Categorias
   <img src="https://github.com/ElianGarcia/ProyectoFinalAp2/blob/master/ProyectoFinalAp2/wwwroot/Resources/Reporte%20Categorias.png"></img>
