@@ -15,8 +15,8 @@ namespace ProyectoFinalAp2.Data
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             base.OnConfiguring(optionsBuilder);
-            optionsBuilder.UseSqlServer(@"Server = tcp:buttersoft.database.windows.net, 1433; Initial Catalog = ButtersoftDB; Persist Security Info = False; User ID = buttersoftuser; Password = buttersoft_20; MultipleActiveResultSets = False; Encrypt = True; TrustServerCertificate = False; Connection Timeout = 30;");
-            //optionsBuilder.UseSqlServer(@"Server = .\SqlExpress; Database = ButterSoftDB; Trusted_Connection = True; ");
+            //optionsBuilder.UseSqlServer(@"Server = tcp:buttersoft.database.windows.net, 1433; Initial Catalog = ButtersoftDB; Persist Security Info = False; User ID = buttersoftuser; Password = buttersoft_20; MultipleActiveResultSets = False; Encrypt = True; TrustServerCertificate = False; Connection Timeout = 30;");
+            optionsBuilder.UseSqlServer(@"Server = .\SqlExpress; Database = ButterSoftDB; Trusted_Connection = True; ");
         }
 
         protected override void OnModelCreating(ModelBuilder model)
